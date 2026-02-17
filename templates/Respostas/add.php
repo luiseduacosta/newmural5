@@ -5,7 +5,6 @@
  * @var \Cake\Collection\CollectionInterface|string[] $questiones
  * @var \Cake\Collection\CollectionInterface|string[] $estagiarios
  */
-// pr($estagiario)
 ?>
 
 <?php echo $this->element('menu_mural') ?>

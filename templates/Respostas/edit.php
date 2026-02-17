@@ -5,8 +5,6 @@
  * @var string[]|\Cake\Collection\CollectionInterface $questiones
  * @var string[]|\Cake\Collection\CollectionInterface $estagiarios
  */
-// pr($avaliacoes);
-// die();
 ?>
 
 <?= $this->element('menu_mural') ?>

@@ -4,7 +4,6 @@
  * @var \App\Model\Entity\Folhadeatividade $folhadeatividade
  */
 $user = $this->getRequest()->getAttribute('identity');
-// pr($estagiario);
 ?>
 
 <?php echo $this->element('menu_mural') ?>

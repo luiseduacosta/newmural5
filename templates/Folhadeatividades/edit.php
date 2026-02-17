@@ -4,8 +4,8 @@
  * @var \App\Model\Entity\Folhadeatividade $folhadeatividade
  */
 $user = $this->getRequest()->getAttribute('identity');
-// pr($estagiario);
 ?>
+
 <?php echo $this->element('menu_mural') ?>
 
 <nav class="navbar navbar-expand-lg py-2 navbar-light bg-light" id="actions-sidebar">

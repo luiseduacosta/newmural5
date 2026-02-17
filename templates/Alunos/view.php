@@ -4,7 +4,6 @@
  * @var \App\Model\Entity\Aluno $aluno
  */
 $user = $this->getRequest()->getAttribute('identity');
-// pr($aluno);
 ?>
 
 <?php echo $this->element('menu_mural') ?>

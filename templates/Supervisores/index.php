@@ -4,7 +4,6 @@
  * @var \App\Model\Entity\Supervisor[]|\Cake\Collection\CollectionInterface $supervisores 
  */ 
 $user = $this->getRequest()->getAttribute('identity');
-// pr($supervisores);
 ?>
 
 <?php echo $this->element('menu_mural') ?>

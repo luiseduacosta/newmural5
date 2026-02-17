@@ -5,10 +5,7 @@ use Cake\I18n\Time;
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Folhadeatividade[]|\Cake\Collection\CollectionInterface $folhadeatividades
  */
-pr($estagiario);
-pr($folhadeatividades);
 $user = $this->getRequest()->getAttribute('identity');
-// pr($id);
 
 $supervisora = isset($estagiario->supervisor->nome) ? $estagiario->supervisor->nome : '_______________';
 $cress = isset($estagiario->supervisor->cress) ? $estagiario->supervisor->cress : '_______________';

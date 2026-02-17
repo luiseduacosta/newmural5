@@ -4,8 +4,6 @@
  * @var \App\Model\Entity\Supervisor $supervisor
  */
 $user = $this->getRequest()->getAttribute("identity");
-// pr($supervisor->nome);
-// die();
 ?>
 
 <?php echo $this->element("menu_mural"); ?>

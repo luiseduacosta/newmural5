@@ -4,8 +4,6 @@
  * @var \App\Model\Entity\Estagiario[]|\Cake\Collection\CollectionInterface $estagiarios
  */
 $user = $this->getRequest()->getAttribute('identity');
-// pr($estagiario->item->estudante);
-// die();
 ?>
 
 <?php echo $this->element('menu_mural') ?>

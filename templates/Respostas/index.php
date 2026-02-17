@@ -5,8 +5,6 @@ use Cake\I18n\Time;
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Resposta> $respostas
  */
-// pr($respostas);
-// die();
 ?>
 
 <?php echo $this->element('menu_mural') ?>

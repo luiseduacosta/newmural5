@@ -5,6 +5,7 @@
  */
 $user = $this->getRequest()->getAttribute('identity');
 ?>
+
 <?php echo $this->element('menu_mural') ?>
 
 <nav class="navbar navbar-expand-lg py-2 navbar-light bg-light" id="actions-sidebar">
