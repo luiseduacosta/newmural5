@@ -14,12 +14,11 @@ class AgendamentotccsTablePolicy {
     /**
      * Check if $user can index Agendamentotccs
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Table\AgendamentotccsTable $agendamentotccss
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, AgendamentotccsTable $agendamentotccs) {
-        return isset($user->categoria) && $user->categoria == '1';
+    public function canIndex(?IdentityInterface $user, AgendamentotccsTable $agendamentotccs) {
+        return true;
     }
-
 }

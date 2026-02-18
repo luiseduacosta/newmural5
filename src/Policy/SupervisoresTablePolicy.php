@@ -19,7 +19,7 @@ class SupervisoresTablePolicy {
      * @param \App\Model\Table\SupervisoresTable $supervisores
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, SupervisoresTable $supervisores) {
+    public function canw+(?IdentityInterface $user, SupervisoresTable $supervisores) {
         return isset($user->categoria) && $user->categoria == '1' || $user->categoria == '4';
     }
 

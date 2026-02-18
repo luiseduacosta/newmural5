@@ -14,12 +14,12 @@ class TurmaestagiosTablePolicy {
     /**
      * Check if $user can index Areaestagios
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Table\TurmaestagiosTable $turmaestagios
      * @return bool
      */
     public function canIndex(?IdentityInterface $user, TurmaestagiosTable $areaestagios) {
-        return isset($user) && $user->categoria == '1';
+        return isset ($user);
     }
     
 }

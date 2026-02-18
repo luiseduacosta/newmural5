@@ -18,8 +18,12 @@ class questionariosPolicy
      * @param \App\Model\Entity\questionarios $questionarios
      * @return bool
      */
-    public function canAdd(IdentityInterface $user, questionarios $questionarios)
+    public function canAdd(?IdentityInterface $user, questionarios $questionarios)
     {
+        if (isset($user) && $user->categoria_id === '1') {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -29,8 +33,12 @@ class questionariosPolicy
      * @param \App\Model\Entity\questionarios $questionarios
      * @return bool
      */
-    public function canEdit(IdentityInterface $user, questionarios $questionarios)
+    public function canEdit(?IdentityInterface $user, questionarios $questionarios)
     {
+        if (isset($user) && $user->categoria_id === '1') {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -40,8 +48,12 @@ class questionariosPolicy
      * @param \App\Model\Entity\questionarios $questionarios
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, questionarios $questionarios)
+    public function canDelete(?IdentityInterface $user, questionarios $questionarios)
     {
+        if (isset($user) && $user->categoria_id === '1') {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -51,7 +63,8 @@ class questionariosPolicy
      * @param \App\Model\Entity\questionarios $questionarios
      * @return bool
      */
-    public function canView(IdentityInterface $user, questionarios $questionarios)
+    public function canView(?IdentityInterface $user, questionarios $questionarios)
     {
+        return isset($user);
     }
 }

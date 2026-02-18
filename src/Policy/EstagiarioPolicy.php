@@ -18,9 +18,9 @@ class EstagiarioPolicy
          * @param \App\Model\Entity\Estagiario $estagiario
          * @return bool
          */
-        public function canAdd(IdentityInterface $user, Estagiario $estagiario)
+        public function canAdd(?IdentityInterface $user, Estagiario $estagiario)
         {
-                return isset($user->categoria) && $user->categoria == '1';
+        return isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2');
         }
 
         /**
@@ -30,7 +30,7 @@ class EstagiarioPolicy
          * @param \App\Model\Entity\Estagiario $estagiario
          * @return bool
          */
-        public function canEdit(IdentityInterface $user, Estagiario $estagiario)
+        public function canEdit(?IdentityInterface $user, Estagiario $estagiario)
         {
                 return isset($user->categoria) && $user->categoria == '1';
         }
@@ -42,7 +42,7 @@ class EstagiarioPolicy
          * @param \App\Model\Entity\Estagiario $estagiario
          * @return bool
          */
-        public function canDelete(IdentityInterface $user, Estagiario $estagiario)
+        public function canDelete(?IdentityInterface $user, Estagiario $estagiario)
         {
                 return isset($user->categoria) && $user->categoria == '1';
         }
@@ -54,7 +54,7 @@ class EstagiarioPolicy
          * @param \App\Model\Entity\Estagiario $estagiario
          * @return bool
          */
-        public function canView(IdentityInterface $user, Estagiario $estagiario)
+        public function canView(?IdentityInterface $user, Estagiario $estagiario)
         {
                 return true;
         }
@@ -66,7 +66,7 @@ class EstagiarioPolicy
          * @param \App\Model\Entity\Estagiario $estagiario
          * @return bool
          */
-        public function canNovotermodecompromisso(IdentityInterface $user, Estagiario $estagiario)
+        public function canNovoTermoDeCompromisso(?IdentityInterface $user, Estagiario $estagiario)
         {
                 return isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2');
         }

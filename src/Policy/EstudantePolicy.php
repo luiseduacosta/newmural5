@@ -19,8 +19,8 @@ class EstudantePolicy {
      * @param \App\Model\Entity\Estudante $estudante
      * @return bool
      */
-    public function canAdd(IdentityInterface $user, Estudante $estudante) {
-        return isset($user->categoria) && $user->categoria == '1';
+    public function canAdd(?IdentityInterface $user, Estudante $estudante) {
+        return isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2');
     }
 
     /**
@@ -30,8 +30,14 @@ class EstudantePolicy {
      * @param \App\Model\Entity\Estudante $estudante
      * @return bool
      */
-    public function canEdit(IdentityInterface $user, Estudante $estudante) {
-        return isset($user->categoria) && $user->categoria == '1';
+    public function canEdit(?IdentityInterface $user, Estudante $estudante) {
+
+        if ($user->categoria == '1')
+            return true;
+        elseif ($user->categoria == '2') {
+            return $estudante->id == $user->aluno_id;
+        }
+        return false;
     }
 
     /**
@@ -41,7 +47,7 @@ class EstudantePolicy {
      * @param \App\Model\Entity\Estudante $estudante
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, Estudante $estudante) {
+    public function canDelete(?IdentityInterface $user, Estudante $estudante) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 
@@ -52,8 +58,7 @@ class EstudantePolicy {
      * @param \App\Model\Entity\Estudante $estudante
      * @return bool
      */
-    public function canView(IdentityInterface $user, Estudante $estudante) {
+    public function canView(?IdentityInterface $user, Estudante $estudante) {
         return true;
     }
-
 }

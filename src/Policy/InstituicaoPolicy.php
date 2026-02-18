@@ -15,7 +15,7 @@ class InstituicaoPolicy {
     /**
      * Check if $user can create Instituicao
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Instituicao $instituicao
      * @return bool
      */
@@ -26,7 +26,7 @@ class InstituicaoPolicy {
     /**
      * Check if $user can update Instituicao
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Instituicao $instituicao
      * @return bool
      */
@@ -37,7 +37,7 @@ class InstituicaoPolicy {
     /**
      * Check if $user can delete Instituicao
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Instituicao $instituicao
      * @return bool
      */
@@ -48,7 +48,7 @@ class InstituicaoPolicy {
     /**
      * Check if $user can view Instituicao
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Instituicao $instituicao
      * @return bool
      */

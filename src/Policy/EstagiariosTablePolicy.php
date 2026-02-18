@@ -19,8 +19,8 @@ class EstagiariosTablePolicy {
      * @param \App\Model\Table\EstagiariosTable $estagiarios
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, EstagiariosTable $estagiarios) {
-        return isset($user->categoria) && $user->categoria == '1';
+    public function canView(?IdentityInterface $user, EstagiariosTable $estagiarios) {
+        return isset($user);
     }
 
 }

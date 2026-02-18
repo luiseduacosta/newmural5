@@ -18,8 +18,12 @@ class questionesPolicy
      * @param \App\Model\Entity\questiones $questiones
      * @return bool
      */
-    public function canAdd(IdentityInterface $user, questiones $questiones)
+    public function canAdd(?IdentityInterface $user, questiones $questiones)
     {
+        if (isset($user) && $user->categoria_id === '1') {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -29,8 +33,12 @@ class questionesPolicy
      * @param \App\Model\Entity\questiones $questiones
      * @return bool
      */
-    public function canEdit(IdentityInterface $user, questiones $questiones)
+    public function canEdit(?IdentityInterface $user, questiones $questiones)
     {
+        if (isset($user) && $user->categoria_id === '1') {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -40,8 +48,12 @@ class questionesPolicy
      * @param \App\Model\Entity\questiones $questiones
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, questiones $questiones)
+    public function canDelete(?IdentityInterface $user, questiones $questiones)
     {
+        if (isset($user) && $user->categoria_id === '1') {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -51,7 +63,8 @@ class questionesPolicy
      * @param \App\Model\Entity\questiones $questiones
      * @return bool
      */
-    public function canView(IdentityInterface $user, questiones $questiones)
+    public function canView(?IdentityInterface $user, questiones $questiones)
     {
+        return isset($user);
     }
 }

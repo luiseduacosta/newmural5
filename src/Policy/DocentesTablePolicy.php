@@ -20,7 +20,7 @@ class DocentesTablePolicy
      * @param \App\Model\Table\DocentesTable $docentes
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, DocentesTable $Docentes)
+    public function canIndex(?IdentityInterface $user, DocentesTable $Docentes)
     {
         if (isset($user->categoria) && $user->categoria == '1' || $user->categoria == '3') {
             return true;
@@ -35,7 +35,7 @@ class DocentesTablePolicy
      * @param \App\Model\Table\DocentesTable $docentes
      * @return bool
      */
-    public function canIndex0(IdentityInterface $user, DocentesTable $Docentes)
+    public function canIndex0(?IdentityInterface $user, DocentesTable $Docentes)
     {
 
         if (isset($user->categoria) && $user->categoria == '1' || $user->categoria == '3') {
@@ -50,7 +50,7 @@ class DocentesTablePolicy
      * @param \App\Model\Table\DocentesTable $docentes
      * @return bool
      */
-    public function canIndex1(IdentityInterface $user, DocentesTable $Docentes)
+    public function canIndex1(?IdentityInterface $user, DocentesTable $Docentes)
     {
 
         if (isset($user->categoria) && $user->categoria == '1' || $user->categoria == '3') {
@@ -66,7 +66,7 @@ class DocentesTablePolicy
      * @param \App\Model\Table\DocentesTable $docente
      * @return bool
      */
-    public function canIndex2(IdentityInterface $user, DocentesTable $Docentes)
+    public function canIndex2(?IdentityInterface $user, DocentesTable $Docentes)
     {
 
         if (isset($user->categoria) && $user->categoria == '1' || $user->categoria == '3') {
@@ -82,7 +82,7 @@ class DocentesTablePolicy
      * @param \App\Model\Table\DocentesTable $docentes
      * @return bool
      */
-    public function canIndex3(IdentityInterface $user, DocentesTable $Docentes)
+    public function canIndex3(?IdentityInterface $user, DocentesTable $Docentes)
     {
 
         if (isset($user->categoria) && $user->categoria == '1' || $user->categoria == '3') {

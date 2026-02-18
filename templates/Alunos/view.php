@@ -3,7 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Aluno $aluno
  */
-$user = $this->getRequest()->getAttribute('identity');
 ?>
 
 <?php echo $this->element('menu_mural') ?>

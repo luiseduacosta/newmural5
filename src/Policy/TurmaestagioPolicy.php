@@ -15,7 +15,7 @@ class TurmaestagioPolicy {
     /**
      * Check if $user can add Turmaestagio
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Turmaestagio $turmaestagio
      * @return bool
      */
@@ -26,7 +26,7 @@ class TurmaestagioPolicy {
     /**
      * Check if $user can edit Turmaestagio
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Turmaestagio $turmaestagio
      * @return bool
      */
@@ -37,7 +37,7 @@ class TurmaestagioPolicy {
     /**
      * Check if $user can delete Turmaestagio
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Turmaestagio $turmaestagio
      * @return bool
      */
@@ -48,12 +48,12 @@ class TurmaestagioPolicy {
     /**
      * Check if $user can view Turmaestagio
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Turmaestagio $turmaestagio
      * @return bool
      */
     public function canView(?IdentityInterface $user, Turmaestagio $areaestagio) {
-        return true;
+        return isset($user);
     }
 
 }

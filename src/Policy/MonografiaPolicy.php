@@ -18,7 +18,7 @@ class MonografiaPolicy
      * @param \App\Model\Entity\Monografia $monografia
      * @return bool
      */
-    public function canAdd(IdentityInterface $user, Monografia $monografia)
+    public function canAdd(?IdentityInterface $user, Monografia $monografia)
     {
         return isset($user->categoria) && $user->categoria == '1';
     }
@@ -30,7 +30,7 @@ class MonografiaPolicy
      * @param \App\Model\Entity\Monografia $monografia
      * @return bool
      */
-    public function canEdit(IdentityInterface $user, Monografia $monografia)
+    public function canEdit(?IdentityInterface $user, Monografia $monografia)
     {
         return isset($user->categoria) && $user->categoria == '1';
     }
@@ -42,7 +42,7 @@ class MonografiaPolicy
      * @param \App\Model\Entity\Monografia $monografia
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, Monografia $monografia)
+    public function canDelete(?IdentityInterface $user, Monografia $monografia)
     {
         return isset($user->categoria) && $user->categoria == '1';
     }
@@ -54,9 +54,8 @@ class MonografiaPolicy
      * @param \App\Model\Entity\Monografia $monografia
      * @return bool
      */
-    public function canView(IdentityInterface $user, Monografia $monografia)
+    public function canView(?IdentityInterface $user, Monografia $monografia)
     {
-
         return true;
     }
 }

@@ -15,11 +15,11 @@ class ComplementosTablePolicy
     /**
      * Check if $user can index Complementos
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Table\ComplementosTable $complementos
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, ComplementosTable $complementos) {
+    public function canIndex(?IdentityInterface $user, ComplementosTable $complementos) {
         return isset($user->categoria) && $user->categoria == '1';
     }
     

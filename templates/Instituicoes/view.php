@@ -3,8 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Instituicao $instituicao
  */
-$user = $this->getRequest()->getAttribute('identity');
-// pr($instituicao->muralestagios);
 ?>
 
 <?php echo $this->element('menu_mural') ?>
@@ -68,11 +66,11 @@ $user = $this->getRequest()->getAttribute('identity');
                 </tr>
                 <tr>
                     <th><?= __('Instituição') ?></th>
-                    <td><?= $instituicao->instituicao ?></td>
+                    <td><?= $instituicao->instituicao ? h($instituicao->instituicao) : 's/d' ?></td>
                 </tr>
                 <tr>
                     <th><?= __('Área instituicao') ?></th>
-                    <td><?= $instituicao->has('areainstituicao') ? $this->Html->link($instituicao->areainstituicao->area, ['controller' => 'Areainstituicoes', 'action' => 'view', $instituicao->areainstituicao->id]) : '' ?>
+                    <td><?= $instituicao->hasvalue('areainstituicao') ? $this->Html->link($instituicao->areainstituicao->area, ['controller' => 'Areainstituicoes', 'action' => 'view', $instituicao->areainstituicao->id]) : 's/d' ?>
                     </td>
                 </tr>
                 <tr>
@@ -223,26 +221,26 @@ $user = $this->getRequest()->getAttribute('identity');
                             <tr>
                                 <td><?= h($estagiarios->id) ?></td>
                                 <?php if (isset($user) && $user->categoria == '1'): ?>
-                                    <td><?= $estagiarios->has('aluno') ? $this->Html->link($estagiarios->aluno->nome, ['controller' => 'alunos', 'action' => 'view', $estagiarios->aluno_id]) : '' ?>
+                                    <td><?= $estagiarios->hasvalue('aluno') ? $this->Html->link($estagiarios->aluno->nome, ['controller' => 'alunos', 'action' => 'view', $estagiarios->aluno_id]) : '' ?>
                                     </td>
                                 <?php else: ?>
-                                    <td><?= $estagiarios->has('aluno') ? $estagiarios->aluno->nome : '' ?></td>
+                                    <td><?= $estagiarios->hasvalue('aluno') ? $estagiarios->aluno->nome : '' ?></td>
                                 <?php endif; ?>
 
                                 <td><?= h($estagiarios->registro) ?></td>
 
                                 <?php if (isset($user) && $user->categoria == '1'): ?>
-                                    <td><?= $estagiarios->has('supervisor') ? $this->Html->link(h($estagiarios->supervisor->nome), ['controller' => 'supervisores', 'action' => 'view', $estagiarios->supervisor_id]) : '' ?>
+                                    <td><?= $estagiarios->hasvalue('supervisor') ? $this->Html->link(h($estagiarios->supervisor->nome), ['controller' => 'supervisores', 'action' => 'view', $estagiarios->supervisor_id]) : '' ?>
                                     </td>
                                 <?php else: ?>
-                                    <td><?= $estagiarios->has('supervisor') ? $estagiarios->supervisor->nome : '' ?></td>
+                                    <td><?= $estagiarios->hasvalue('supervisor') ? $estagiarios->supervisor->nome : '' ?></td>
                                 <?php endif; ?>
 
                                 <?php if (isset($user) && $user->categoria == '1'): ?>
-                                    <td><?= $estagiarios->has('professor') ? $this->Html->link($estagiarios->professor->nome, ['controller' => 'Professores', 'action' => 'view', $estagiarios->professor_id]) : '' ?>
+                                    <td><?= $estagiarios->hasvalue('professor') ? $this->Html->link($estagiarios->professor->nome, ['controller' => 'Professores', 'action' => 'view', $estagiarios->professor_id]) : '' ?>
                                     </td>
                                 <?php else: ?>
-                                    <td><?= $estagiarios->has('professor') ? $estagiarios->professor->nome : '' ?></td>
+                                    <td><?= $estagiarios->hasvalue('professor') ? $estagiarios->professor->nome : '' ?></td>
                                 <?php endif; ?>
 
                                 <td><?= h($estagiarios->periodo) ?></td>

@@ -19,8 +19,8 @@ class MuralestagiosTablePolicy {
      * @param \App\Model\Table\MuralestagiosTable $muralestagios
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, MuralestagiosTable $muralestagios) {
-        return isset($user->categoria) && $user->categoria == '1';
+    public function canIndex(?IdentityInterface $user, MuralestagiosTable $muralestagios) {
+        return true;
     }
 
 }

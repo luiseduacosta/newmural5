@@ -3,7 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Instituicao[]|\Cake\Collection\CollectionInterface $instituicao
  */
-$user = $this->getRequest()->getAttribute('identity');
 // pr($instituicoes);
 ?>
 
@@ -80,7 +79,7 @@ $user = $this->getRequest()->getAttribute('identity');
                             <td><?= $instituicao->id ?></td>
                             <td><?= $this->Html->link($instituicao->instituicao, ['controller' => 'Instituicoes', 'action' => 'view', $instituicao->id]) ?>
                             </td>
-                            <td><?= $instituicao->has('areainstituicao') ? $this->Html->link($instituicao->areainstituicao->area, ['controller' => 'Areainstituicoes', 'action' => 'view', $instituicao->areainstituicao->id]) : 's/d' ?>
+                            <td><?= $instituicao->hasvalue('areainstituicao') ? $this->Html->link($instituicao->areainstituicao->area, ['controller' => 'Areainstituicoes', 'action' => 'view', $instituicao->areainstituicao->id]) : 's/d' ?>
                             </td>
                             <td><?= h($instituicao->natureza) ?></td>
                             <td><?= h($instituicao->cnpj) ?></td>

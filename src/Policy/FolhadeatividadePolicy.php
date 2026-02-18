@@ -19,7 +19,7 @@ class FolhadeatividadePolicy {
      * @param \App\Model\Entity\Folhadeatividade $folhadeatividade
      * @return bool
      */
-    public function canAdd(IdentityInterface $user, Folhadeatividade $folhadeatividade) {
+    public function canAdd(?IdentityInterface $user, Folhadeatividade $folhadeatividade) {
         return isset($user->categoria) && $user->categoria == '1' || $user->categoria == '2';
     }
 
@@ -30,8 +30,14 @@ class FolhadeatividadePolicy {
      * @param \App\Model\Entity\Folhadeatividade $folhadeatividade
      * @return bool
      */
-    public function canEdit(IdentityInterface $user, Folhadeatividade $folhadeatividade) {
-        return isset($user->categoria) && $user->categoria == '1' || $user->categoria == '2';
+    public function canEdit(?IdentityInterface $user, Folhadeatividade $folhadeatividade) {
+        if ($user->categoria == '1') {
+            return true;
+        } elseif ($user->categoria == '2') {
+            $estagiario = TableRegistry::getTableLocator()->get('Estagiario')->get($user->aluno_id);
+            return $folhadeatividade->estagiario_id == $estagiario->aluno_id;
+        }
+        return false;
     }
 
     /**
@@ -41,8 +47,14 @@ class FolhadeatividadePolicy {
      * @param \App\Model\Entity\Folhadeatividade $folhadeatividade
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, Folhadeatividade $folhadeatividade) {
-        return isset($user->categoria) && $user->categoria == '1' || $user->categoria == '2';
+    public function canDelete(?IdentityInterface $user, Folhadeatividade $folhadeatividade) {
+                if ($user->categoria == '1') {
+            return true;
+        } elseif ($user->categoria == '2') {
+            $estagiario = TableRegistry::getTableLocator()->get('Estagiario')->get($user->aluno_id);
+            return $folhadeatividade->estagiario_id == $estagiario->aluno_id;
+        }
+        return false;
     }
 
     /**
@@ -52,19 +64,8 @@ class FolhadeatividadePolicy {
      * @param \App\Model\Entity\Folhadeatividade $folhadeatividade
      * @return bool
      */
-    public function canView(IdentityInterface $user, Folhadeatividade $folhadeatividade) {
+    public function canView(?IdentityInterface $user, Folhadeatividade $folhadeatividade) {
         return true;
-    }
-
-    /**
-     * Check if $user can atividade Folhadeatividade
-     *
-     * @param \Authorization\IdentityInterface $user The user.
-     * @param \App\Model\Entity\Folhadeatividade $folhadeatividade
-     * @return bool
-     */
-    public function canAtividade(IdentityInterface $user, Folhadeatividade $folhadeatividade) {
-        return isset($user->categoria) && $user->categoria == '1' || $user->categoria == '2';
     }
 
     /**
@@ -74,7 +75,7 @@ class FolhadeatividadePolicy {
      * @param \App\Model\Entity\Folhadeatividade $folhadeatividade
      * @return bool
      */
-    public function canFolhadeatividadespdf(IdentityInterface $user, Folhadeatividade $folhadeatividade) {
+    public function canFolhaDeAtividadePdf(?IdentityInterface $user, Folhadeatividade $folhadeatividade) {
         return isset($user->categoria) && $user->categoria == '1' || $user->categoria == '2';
     }
 }

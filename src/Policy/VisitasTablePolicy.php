@@ -19,7 +19,7 @@ class VisitasTablePolicy {
      * @param \App\Model\Table\VisitasTable $visitas
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, VisitasTable $visitas) {
+    public function canIndex(?IdentityInterface $user, VisitasTable $visitas) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 

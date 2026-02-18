@@ -19,7 +19,7 @@ class EstudantesTablePolicy {
      * @param \App\Model\Table\EstudantesTable $estudantes
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, EstudantesTable $estudantes) {
+    public function canIndex(?IdentityInterface $user, EstudantesTable $estudantes) {
         return isset($user->categoria) && ($user->categoria == '1') || ($user->categoria == '2');
     }
 

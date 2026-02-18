@@ -19,7 +19,7 @@ class TccestudantesTablePolicy {
      * @param \App\Model\Entity\Monografia $monografia
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, TccestudantesTable $tccestudantes) {
+    public function canwIndex(?IdentityInterface $user, TccestudantesTable $tccestudantes) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 

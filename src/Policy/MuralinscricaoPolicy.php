@@ -19,7 +19,7 @@ class MuralinscricaoPolicy {
      * @param \App\Model\Entity\Muralinscricao $muralinscricao
      * @return bool
      */
-    public function canAdd(IdentityInterface $user, Muralinscricao $muralinscricao) {
+    public function canAdd(?IdentityInterface $user, Muralinscricao $muralinscricao) {
         return isset($user->categoria) && $user->categoria == '1' || $user->categoria == '2';
     }
 
@@ -30,7 +30,7 @@ class MuralinscricaoPolicy {
      * @param \App\Model\Entity\Muralinscricao $muralinscricao
      * @return bool
      */
-    public function canEdit(IdentityInterface $user, Muralinscricao $muralinscricao) {
+    public function canEdit(?IdentityInterface $user, Muralinscricao $muralinscricao) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 
@@ -41,8 +41,14 @@ class MuralinscricaoPolicy {
      * @param \App\Model\Entity\Muralinscricao $muralinscricao
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, Muralinscricao $muralinscricao) {
-        return isset($user->categoria) && $user->categoria == '1' || $user->categoria == '2';
+    public function canDelete(?IdentityInterface $user, Muralinscricao $muralinscricao) {
+
+        if (isset($user->categoria) && $user->categoria == '1'){
+            return true;
+        } elseif (isset($user->categoria) && $user->categoria == '2') {
+            return $muralinscricao->aluno_id == $user->aluno_id;
+        }
+        return false;
     }
 
     /**
@@ -52,8 +58,8 @@ class MuralinscricaoPolicy {
      * @param \App\Model\Entity\Muralinscricao $muralinscricao
      * @return bool
      */
-    public function canView(IdentityInterface $user, Muralinscricao $muralinscricao) {
-        return true;
+    public function canView(?IdentityInterface $user, Muralinscricao $muralinscricao) {
+        return isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2');
     }
 
 }

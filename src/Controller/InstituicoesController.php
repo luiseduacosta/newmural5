@@ -37,6 +37,8 @@ class InstituicoesController extends AppController
      */
     public function view($id = null)
     {
+        // Aumentar a memória
+        ini_set('memory_limit', '512M');
         $this->Authorization->skipAuthorization();
         try {
             $instituicao = $this->Instituicoes->get($id, [

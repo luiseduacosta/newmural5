@@ -14,11 +14,11 @@ class AvaliacoesTablePolicy {
     /**
      * Check if $user can index Avaliacoes
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Table\AvaliacoesTable $avaliacoes
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, AvaliacoesTable $avaliacoes) {
-        return true;
+    public function canIndex(?IdentityInterface $user, AvaliacoesTable $avaliacoes) {
+        return ($user->categoria == '1' || $user->categoria == '4');
     }
 }

@@ -19,7 +19,7 @@ class MuralestagioPolicy {
      * @param \App\Model\Entity\Muralestagio $muralestagio
      * @return bool
      */
-    public function canAdd(IdentityInterface $user, Muralestagio $muralestagio) {
+    public function canAdd(?IdentityInterface $user, Muralestagio $muralestagio) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 
@@ -30,7 +30,7 @@ class MuralestagioPolicy {
      * @param \App\Model\Entity\Muralestagio $muralestagio
      * @return bool
      */
-    public function canEdit(IdentityInterface $user, Muralestagio $muralestagio) {
+    public function canEdit(?IdentityInterface $user, Muralestagio $muralestagio) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 
@@ -41,7 +41,7 @@ class MuralestagioPolicy {
      * @param \App\Model\Entity\Muralestagio $muralestagio
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, Muralestagio $muralestagio) {
+    public function canDelete(?IdentityInterface $user, Muralestagio $muralestagio) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 
@@ -52,9 +52,8 @@ class MuralestagioPolicy {
      * @param \App\Model\Entity\Muralestagio $muralestagio
      * @return bool
      */
-    public function canView(IdentityInterface $user, Muralestagio $muralestagio) {
-        return true;
-        //return isset($user->categoria) && $user->categoria == '1';
+    public function canView(?IdentityInterface $user, Muralestagio $muralestagio) {
+        return isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2');
     }
 
 }

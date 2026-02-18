@@ -18,8 +18,13 @@ class respostasPolicy
      * @param \App\Model\Entity\respostas $respostas
      * @return bool
      */
-    public function canAdd(IdentityInterface $user, respostas $respostas)
+    public function canAdd(?IdentityInterface $user, respostas $respostas)
     {
+        if (isset($user->categoria) && $user->categoria === '1') {
+            return true;
+        } elseif (isset($user->categoria) && $user->categoria === '4') {
+            return true;
+        }
     }
 
     /**
@@ -29,8 +34,12 @@ class respostasPolicy
      * @param \App\Model\Entity\respostas $respostas
      * @return bool
      */
-    public function canEdit(IdentityInterface $user, respostas $respostas)
+    public function canEdit(?IdentityInterface $user, respostas $respostas)
     {
+        if (isset($user->categoria) && $user->categoria === '1') {
+            return true;
+        } elseif (isset($user->categoria) && $user->categoria === '4')
+            return true;
     }
 
     /**
@@ -40,8 +49,12 @@ class respostasPolicy
      * @param \App\Model\Entity\respostas $respostas
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, respostas $respostas)
+    public function canDelete(?IdentityInterface $user, respostas $respostas)
     {
+        if (isset($user->categoria) && $user->categoria === '1') {
+            return true;
+        } elseif (isset($user->categoria) && $user->categoria === '4')
+            return true;
     }
 
     /**
@@ -51,7 +64,8 @@ class respostasPolicy
      * @param \App\Model\Entity\respostas $respostas
      * @return bool
      */
-    public function canView(IdentityInterface $user, respostas $respostas)
-    {
+    public function canView(?IdentityInterface $user, respostas $respostas)
+    {   
+        return isset($user);
     }
 }

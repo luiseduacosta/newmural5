@@ -19,7 +19,7 @@ class MonografiasTablePolicy {
      * @param \App\Model\Table\MonografiasTable $monografias
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, MonografiasTable $monografias) {
+    public function canIndex(?IdentityInterface $user, MonografiasTable $monografias) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 

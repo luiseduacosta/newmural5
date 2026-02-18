@@ -16,11 +16,11 @@ class AgendamentotccPolicy
     /**
      * Check if $user can add Agendamentotcc
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Agendamentotcc $agendamentotcc
      * @return bool
      */
-    public function canAdd(IdentityInterface $user, Agendamentotcc $agendamentotcc)
+    public function canAdd(?IdentityInterface $user, Agendamentotcc $agendamentotcc)
     {
         return isset($user->categoria) && $user->categoria == '1';
     }
@@ -28,11 +28,11 @@ class AgendamentotccPolicy
     /**
      * Check if $user can edit Agendamentotcc
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Agendamentotcc $agendamentotcc
      * @return bool
      */
-    public function canEdit(IdentityInterface $user, Agendamentotcc $agendamentotcc)
+    public function canEdit(?IdentityInterface $user, Agendamentotcc $agendamentotcc)
     {
         return isset($user->categoria) && $user->categoria == '1';
     }
@@ -40,11 +40,11 @@ class AgendamentotccPolicy
     /**
      * Check if $user can delete Agendamentotcc
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Agendamentotcc $agendamentotcc
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, Agendamentotcc $agendamentotcc)
+    public function canDelete(?IdentityInterface $user, Agendamentotcc $agendamentotcc)
     {
         return isset($user->categoria) && $user->categoria == '1';
     }

@@ -19,7 +19,7 @@ class InstituicoesTablePolicy {
      * @param \App\Model\Table\InstituicoesTable $instituicoes
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, InstituicoesTable $instituicoes) {
+    public function canIndex(?IdentityInterface $user, InstituicoesTable $instituicoes) {
         return true;
     }
 

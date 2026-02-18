@@ -19,8 +19,14 @@ class MuralinscricoesTablePolicy {
      * @param \App\Model\Table\MuralinscricoesTable $muralinscricoes
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, MuralinscricoesTable $muralinscricoes) {
-        return isset($user->categoria) && $user->categoria == '1';
+    public function canIndex(?IdentityInterface $user, MuralinscricoesTable $muralinscricoes) {
+
+        if (isset($user) && $user->categoria_id === '1') {
+            return true;
+        } elseif (isset($user) && $user->categoria_id === '2') {
+            return $aluno->id === $user->aluno_id;
+        } 
+        return false;
     }
 
 }

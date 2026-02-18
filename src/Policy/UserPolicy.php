@@ -14,11 +14,11 @@ class UserPolicy
     /**
      * Check if $user can create User
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\User $resource
      * @return bool
      */
-    public function canAdd(IdentityInterface $user, User $resourse)
+    public function canAdd(?IdentityInterface $user, User $resource)
     {
 
         return true;
@@ -27,11 +27,11 @@ class UserPolicy
     /**
      * Check if $user can update User
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\User $resource
      * @return bool
      */
-    public function canEdit(IdentityInterface $user, User $resource)
+    public function canEdit(?IdentityInterface $user, User $resource)
     {
         return isset($user) && $user->categoria == '1';
     }
@@ -39,11 +39,11 @@ class UserPolicy
     /**
      * Check if $user can delete User
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\User $resource
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, User $resource)
+    public function canDelete(?IdentityInterface $user, User $resource)
     {
         return isset($user) && ($user->categoria == '1');
     }
@@ -51,11 +51,11 @@ class UserPolicy
     /**
      * Check if $user can view User
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\User $resource
      * @return bool
      */
-    public function canView(IdentityInterface $user, User $resource)
+    public function canView(?IdentityInterface $user, User $resource)
     {
         return isset($user) && $user->categoria == '1';
     }

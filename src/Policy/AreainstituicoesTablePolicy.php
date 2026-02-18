@@ -14,11 +14,11 @@ class AreainstituicoesTablePolicy {
     /**
      * Check if $user can index Areainstituicoes
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Table\AreainstituicoesTable $areainstituicoes
      * @return bool
      */
-    public function canIndex(IdentityInterface $user, AreainstituicoesTable $areainstituicoes) {
+    public function canIndex(?IdentityInterface $user, AreainstituicoesTable $areainstituicoes) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 

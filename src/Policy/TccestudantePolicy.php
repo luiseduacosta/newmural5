@@ -19,7 +19,7 @@ class TccestudantePolicy {
      * @param \App\Model\Entity\Tccestudante $tccestudante
      * @return bool
      */
-    public function canAdd(IdentityInterface $user, Tccestudante $tccestudante) {
+    public function canAdd(?IdentityInterface $user, Tccestudante $tccestudante) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 
@@ -30,7 +30,7 @@ class TccestudantePolicy {
      * @param \App\Model\Entity\Tccestudante $tccestudante
      * @return bool
      */
-    public function canEdit(IdentityInterface $user, Tccestudante $tccestudante) {
+    public function canEdit(?IdentityInterface $user, Tccestudante $tccestudante) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 
@@ -41,7 +41,7 @@ class TccestudantePolicy {
      * @param \App\Model\Entity\Tccestudante $tccestudante
      * @return bool
      */
-    public function canDelete(IdentityInterface $user, Tccestudante $tccestudante) {
+    public function canDelete(?IdentityInterface $user, Tccestudante $tccestudante) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 
@@ -52,7 +52,7 @@ class TccestudantePolicy {
      * @param \App\Model\Entity\Tccestudante $tccestudante
      * @return bool
      */
-    public function canView(IdentityInterface $user, Tccestudante $tccestudante) {
+    public function canView(?IdentityInterface $user, Tccestudante $tccestudante) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 
