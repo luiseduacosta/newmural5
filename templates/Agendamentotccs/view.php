@@ -3,8 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Agendamentotcc $agendamentotcc
  */
-$user = $this->getRequest()->getAttribute('identity');
-// pr($agendamentotcc);
 ?>
 
 <?php echo $this->element('menu_monografias') ?>
@@ -45,7 +43,7 @@ $user = $this->getRequest()->getAttribute('identity');
     <table class="table table-striped table-hover table-responsive">
         <tr>
             <th><?= __('Estudante') ?></th>
-            <td><?= $agendamentotcc->has('estudante') ? $this->Html->link($agendamentotcc->estudante->nome, ['controller' => 'Estudantes', 'action' => 'view', $agendamentotcc->estudante->id]) : '' ?>
+            <td><?= $agendamentotcc->hasValue('estudante') ? $this->Html->link($agendamentotcc->estudante->nome, ['controller' => 'Estudantes', 'action' => 'view', $agendamentotcc->estudante->id]) : '' ?>
             </td>
         </tr>
         <tr>
@@ -55,12 +53,12 @@ $user = $this->getRequest()->getAttribute('identity');
         </tr>
         <tr>
             <th><?= __('Banca1') ?></th>
-            <td><?= $agendamentotcc->has('banca1') ? $this->Html->link($agendamentotcc->banca1->nome, ['controller' => 'Docentes', 'action' => 'view', $agendamentotcc->banca1->id]) : '' ?>
+            <td><?= $agendamentotcc->hasValue('docentebanca1') ? $this->Html->link($agendamentotcc->docentebanca1->nome, ['controller' => 'Docentes', 'action' => 'view', $agendamentotcc->docentebanca1->id]) : '' ?>
             </td>
         </tr>
         <tr>
             <th><?= __('Banca2') ?></th>
-            <td><?= $agendamentotcc->has('banca2') ? $this->Html->link($agendamentotcc->banca2->nome, ['controller' => 'Docentes', 'action' => 'view', $agendamentotcc->banca2->id]) : '' ?>
+            <td><?= $agendamentotcc->hasValue('docentebanca2') ? $this->Html->link($agendamentotcc->docentebanca2->nome, ['controller' => 'Docentes', 'action' => 'view', $agendamentotcc->docentebanca2->id]) : '' ?>
             </td>
         </tr>
         <tr>

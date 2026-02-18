@@ -52,15 +52,14 @@ class AgendamentotccPolicy
     /**
      * Check if $user can view Agendamentotcc
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user (can be null for unauthenticated access).
      * @param \App\Model\Entity\Agendamentotcc $agendamentotcc
      * @return bool
      */
-    public function canView(IdentityInterface $user, Agendamentotcc $agendamentotcc)
+    public function canView(?IdentityInterface $user, Agendamentotcc $agendamentotcc)
     {
-        if (isset($user->categoria) && $user->categoria == '1') {
-            return true;
-        }
+        // Allow public/unauthenticated access to view
+        // The controller already configured this as unauthenticated action
         return true;
     }
 
