@@ -24,7 +24,7 @@ use Cake\ORM\Entity;
  * @property int|null $banca3
  * @property string|null $convidado
  * @property string|null $url
- * @property \Cake\I18n\FrozenTime|null $timestamp
+ * @property \Cake\I18n\DateTime|null $timestamp
  *
  * @property \App\Model\Entity\Docente[] $docentes
  * @property \App\Model\Entity\Areamonografia[] $areamonografias

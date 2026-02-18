@@ -86,7 +86,7 @@ class EstagiariosTable extends Table
         $this->belongsTo("Tccestudantes", [
             "className" => "Tccestudantes",
             "foreignKey" => false,
-            "conditions" => "Estagiarios.registro = Tccestudantes.registro",
+            "conditions" => ["Estagiarios.registro = Tccestudantes.registro"],
             "joinType" => "LEFT",
         ]);
     }

@@ -6,7 +6,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Event\EventInterface;
 use Cake\ORM\TableRegistry;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\I18n\I18n;
 
 /**

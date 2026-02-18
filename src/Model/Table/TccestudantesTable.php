@@ -53,7 +53,7 @@ class TccestudantesTable extends Table
             'className' => 'Estudantes',
             'propertyName' => 'estudantes',
             'foreignKey' => false,
-            'conditions' => 'Tccestudantes.registro = Estudantes.registro',
+            'conditions' => ['Tccestudantes.registro = Estudantes.registro'],
             'joinType' => 'LEFT'
         ]);
     }

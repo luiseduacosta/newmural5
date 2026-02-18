@@ -21,7 +21,7 @@
  * @var \App\Model\Entity\Professor $professor
  * @var \App\Model\Entity\Turmaestagio $turmaestagio
  * @var \App\Model\Entity\User $user
- * @var \Cake\I18n\FrozenTime $now
+ * @var \Cake\I18n\DateTime $now
  * @var \Cake\ORM\Query $query
  */
 $user = $this->getRequest()->getAttribute('identity');

@@ -296,8 +296,8 @@ setlocale(LC_ALL, "pt_BR", "pt_BR.utf-8", "pt_BR.utf-8", "portuguese");
 
 \Cake\I18n\Time::setToStringFormat("HH:mm:ss");
 \Cake\I18n\Date::setToStringFormat("dd/MM/yyyy");
-\Cake\I18n\FrozenTime::setToStringFormat("HH:mm:ss");
-\Cake\I18n\FrozenDate::setToStringFormat("dd/MM/yyyy");
+\Cake\I18n\DateTime::setToStringFormat("HH:mm:ss");
+\Cake\I18n\DateTime::setToStringFormat("dd/MM/yyyy");
 
 /*
  * CakePdf Configuration

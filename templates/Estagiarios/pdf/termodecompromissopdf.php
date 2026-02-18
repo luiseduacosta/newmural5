@@ -1,13 +1,13 @@
 <?php
 /*
- * @var \Cake\I18n\FrozenTime $hoje
+ * @var \Cake\I18n\DateTime $hoje
  * 
  */
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\I18n\I18n;
 
 I18n::setLocale('pt-BR');
-$hoje = FrozenTime::now('America/Sao_Paulo', 'pt-BR');
+$hoje = DateTime::now('America/Sao_Paulo', 'pt-BR');
 ?>
 
 <style>

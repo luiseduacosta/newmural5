@@ -55,6 +55,6 @@ $user = $this->getRequest()->getAttribute('identity');
         ]);
         ?>
     </fieldset>
-    <?= $this->Form->button(__('Confirma'), ['class' => 'btn btn-primary']) ?>
+    <?= $this->Form->button(__('Confirma'), ['class' => 'btn btn-primary', 'onclick' => 'this.disabled=true;this.form.submit();']) ?>
     <?= $this->Form->end() ?>
 </div>

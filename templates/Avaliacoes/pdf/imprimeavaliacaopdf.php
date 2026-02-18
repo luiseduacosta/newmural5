@@ -1,14 +1,14 @@
 <?php
 use Cake\I18n\I18n;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Avaliacao $avaliacao
- * @var \Cake\I18n\FrozenTime $hoje
+ * @var \Cake\I18n\DateTime $hoje
  */
 
 I18n::setLocale('pt-BR');
-$hoje = FrozenTime::now('America/Sao_Paulo');
+$hoje = DateTime::now('America/Sao_Paulo');
 
 $supervisora = isset($avaliacao->estagiario->supervisor->nome) ? $avaliacao->estagiario->supervisor->nome : "____________________";
 $regiao = isset($avaliacao->estagiario->supervisor->regiao) ? $avaliacao->estagiario->supervisor->regiao : '__';

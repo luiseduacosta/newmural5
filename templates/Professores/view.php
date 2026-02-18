@@ -3,7 +3,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Professor $professor
  */
-use Cake\I18n\FrozenDate;
+use Cake\I18n\Date;
  
 // $user = $this->getRequest()->getAttribute('identity');
 ?>

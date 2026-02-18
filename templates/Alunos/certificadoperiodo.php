@@ -4,10 +4,6 @@
  * @var \App\Model\Entity\Aluno $aluno
  */
 $user = $this->getRequest()->getAttribute('identity');
-pr($aluno);
-// pr($novoperiodo);
-// pr($totalperiodos);
-// die();
 ?>
 
 <script>

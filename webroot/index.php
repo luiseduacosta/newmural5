@@ -16,7 +16,7 @@
  */
 // die('webroot');
 // Check platform requirements
-require dirname(__DIR__) . '/config/requirements.php';
+// require dirname(__DIR__) . '/config/requirements.php';
 
 // For built-in server
 if (PHP_SAPI === 'cli-server') {

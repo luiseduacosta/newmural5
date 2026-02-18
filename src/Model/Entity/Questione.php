@@ -13,8 +13,8 @@ use Cake\ORM\Entity;
  * @property string $text
  * @property string $type
  * @property string|null $options
- * @property \Cake\I18n\FrozenTime|null $created
- * @property \Cake\I18n\FrozenTime|null $modified
+ * @property \Cake\I18n\DateTime|null $created
+ * @property \Cake\I18n\DateTime|null $modified
  * @property int|null $ordem
  *
  * @property \App\Model\Entity\Questionario $questionario

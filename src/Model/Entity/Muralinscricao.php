@@ -12,9 +12,9 @@ use Cake\ORM\Entity;
  * @property int $registro // id_aluno -> registro
  * @property int $aluno_id // alunonovo_id -> aluno_id
  * @property int $muralestagio_id
- * @property \Cake\I18n\FrozenDate $data
+ * @property \Cake\I18n\Date $data
  * @property string $periodo
- * @property \Cake\I18n\FrozenTime $timestamp
+ * @property \Cake\I18n\DateTime $timestamp
  *
  * @property int|null $alunoestagiario_id // estudante_id -> alunoestagiario_id
  * @property \App\Model\Entity\Aluno[] $alunos

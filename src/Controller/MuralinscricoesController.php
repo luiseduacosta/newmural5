@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\I18n\I18n;
 
 /**
@@ -125,7 +125,7 @@ class MuralinscricoesController extends AppController
             }
 
             $user = $this->Authentication->getIdentity();
-            $hoje = FrozenTime::now();
+            $hoje = DateTime::now();
             
             // Date check logic
             $dataInscricao = $muralestagio->dataInscricao ?? $hoje->addDays(1);

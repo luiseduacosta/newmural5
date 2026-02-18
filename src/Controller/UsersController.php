@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Event\EventInterface;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\I18n\I18n;
 
 /**
@@ -27,9 +27,9 @@ class UsersController extends AppController
     {
         $this->Authorization->skipAuthorization();
         $this->request->allowMethod(['get', 'post']);
-        
+
         $result = $this->Authentication->getResult();
-        
+
         if ($result && $result->isValid()) {
             $user = $result->getData();
             $controlador = 'Users';

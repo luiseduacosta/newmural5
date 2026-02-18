@@ -11,7 +11,7 @@ return [
     'Migrations' => [
         'onlyCli' => true,
     ],
-    'Authentication' => [],
-    'Authorization' => [],
-    'CakePdf' => [],
+//    'Authentication' => [],
+//    'Authorization' => [],
+//    'CakePdf' => [],
 ];

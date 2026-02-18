@@ -78,7 +78,7 @@ class UsersTable extends Table {
         $validator
             ->scalar('password')
             ->requirePresence('password', 'create')
-            ->maxLength('password', 50)
+            ->maxLength('password', 255)
             ->notEmptyString('password');
 
         $validator
@@ -117,9 +117,9 @@ class UsersTable extends Table {
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn(['estudante_id'], 'Estudantes'), ['errorField' => 'estudante_id']);
-        $rules->add($rules->existsIn(['supervisor_id'], 'Supervisores'), ['errorField' => 'supervisor_id']);
-        $rules->add($rules->existsIn(['professor_id'], 'Professores'), ['errorField' => 'professor_id']);
+    //  $rules->add($rules->existsIn(['estudante_id'], 'Estudantes'), ['errorField' => 'estudante_id']);
+    //  $rules->add($rules->existsIn(['supervisor_id'], 'Supervisores'), ['errorField' => 'supervisor_id']);
+    //  $rules->add($rules->existsIn(['professor_id'], 'Professores'), ['errorField' => 'professor_id']);
 
         return $rules;
     }

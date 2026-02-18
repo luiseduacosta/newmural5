@@ -18,7 +18,7 @@ use Cake\ORM\Entity;
  * @property int|null $estudante_id
  * @property int|null $supervisor_id
  * @property int|null $professor_id
- * @property \Cake\I18n\FrozenTime $timestamp
+ * @property \Cake\I18n\DateTime $timestamp
  *
  * @property \App\Model\Entity\Aluno[] $alunos
  * @property \App\Model\Entity\Supervisor[] $supervisores

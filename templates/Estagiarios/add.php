@@ -3,10 +3,10 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Estagiario $estagiario
  * @var \App\Model\Entity\Aluno $aluno
- * @var \Cake\I18n\FrozenTime $now
+ * @var \Cake\I18n\DateTime $now
  */
 $user = $this->request->getAttribute('identity');
-$now = new \Cake\I18n\FrozenTime();
+$now = new \Cake\I18n\DateTime();
 ?>
 
 <script type="text/javascript">
@@ -302,9 +302,9 @@ $now = new \Cake\I18n\FrozenTime();
         Alignment
     } from 'ckeditor5';
 
-    let requisitos;
-    if (typeof requisitos !== 'undefined') {
-        requisitos.destroy();
+    let ;
+    if (typeof observacoes !== 'undefined') {
+        observacoes.destroy();
     }
 
     ClassicEditor

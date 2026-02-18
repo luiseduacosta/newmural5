@@ -2,9 +2,9 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Muralestagio $muralestagio
- * @var \Cake\I18n\FrozenTime $now
+ * @var \Cake\I18n\DateTime $now
  */
-$hoje = new \Cake\I18n\FrozenTime();
+$hoje = new \Cake\I18n\DateTime();
 $user = $this->getRequest()->getAttribute('identity');
 
 $this->assign('title', __('Mural de Estágios'));

@@ -26,7 +26,7 @@ use Cake\ORM\Entity;
  * @property string|null $fim_de_semana
  * @property string $localInscricao
  * @property int $convenio
- * @property \Cake\I18n\FrozenDate|null $expira
+ * @property \Cake\I18n\Date|null $expira
  * @property string $seguro
  * @property string $avaliacao
  * @property string|null $observacoes

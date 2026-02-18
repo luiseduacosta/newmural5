@@ -20,15 +20,15 @@ use Cake\ORM\Entity;
  * @property int $turmaestagio_id // id_area -> turmaestagio_id
  * @property string|null $horario
  * @property int $professor_id // id_professor -> professor_id
- * @property \Cake\I18n\FrozenDate|null $dataSelecao
- * @property \Cake\I18n\FrozenDate|null $dataInscricao
+ * @property \Cake\I18n\Date|null $dataSelecao
+ * @property \Cake\I18n\Date|null $dataInscricao
  * @property string|null $horarioSelecao
  * @property string|null $localSelecao
  * @property string|null $formaSelecao
  * @property string|null $contato
  * @property string|null $outras
  * @property string|null $periodo
- * @property \Cake\I18n\FrozenDate|null $datafax
+ * @property \Cake\I18n\Date|null $datafax
  * @property string $localInscricao
  * @property string|null $email
  *

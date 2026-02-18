@@ -247,13 +247,13 @@ $user = $this->getRequest()->getAttribute('identity');
                                 <td><?= h($estagiarios->tc) ?></td>
                                 <td><?= $estagiarios->tc_solicitacao ? $estagiarios->tc_solicitacao->i18nFormat('dd-MM-yyyy') : '' ?>
                                 </td>
-                                <td><?= $estagiarios->has('instituicao') ? $this->Html->link($estagiarios->instituicao['instituicao'], ['controller' => 'Instituicoes', 'action' => 'view', $estagiarios->instituicao_id]) : '' ?>
+                                <td><?= $estagiarios->hasvalue ('instituicao') ? $this->Html->link($estagiarios->instituicao->instituicao, ['controller' => 'Instituicoes', 'action' => 'view', $estagiarios->instituicao_id]) : '' ?>
                                 </td>
-                                <td><?= $estagiarios->has('supervisor') ? $this->Html->link($estagiarios->supervisor['nome'], ['controller' => 'Supervisores', 'action' => 'view', $estagiarios->supervisor_id]) : '' ?>
+                                <td><?= $estagiarios->hasvalue ('supervisor') ? $this->Html->link($estagiarios->supervisor->nome, ['controller' => 'Supervisores', 'action' => 'view', $estagiarios->supervisor_id]) : '' ?>
                                 </td>
-                                <td><?= $estagiarios->has('professor') ? $this->Html->link($estagiarios->professor['nome'], ['controller' => 'Professores', 'action' => 'view', $estagiarios->professor_id]) : '' ?>
+                                <td><?= $estagiarios->hasvalue ('professor') ? $this->Html->link($estagiarios->professor->nome, ['controller' => 'Professores', 'action' => 'view', $estagiarios->professor_id]) : '' ?>
                                 </td>
-                                <td><?= $estagiarios->has('turmaestagio') ? $this->Html->link($estagiarios->turmaestagio->area, ['controller' => 'Turmaestagios', 'action' => 'view', $estagiarios->turmaestagio_id]) : '' ?>
+                                <td><?= $estagiarios->hasvalue ('turmaestagio') ? $this->Html->link($estagiarios->turmaestagio->area, ['controller' => 'Turmaestagios', 'action' => 'view', $estagiarios->turmaestagio_id]) : '' ?>
                                 </td>
                                 <?php if (isset($user->categoria) && $user->categoria == '1'): ?>
                                     <td><?= h($estagiarios->nota) ?></td>
