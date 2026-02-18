@@ -5,10 +5,6 @@
  * @var \App\Model\Entity\Aluno[]|\Cake\Collection\CollectionInterface $periodos
  * @var string $periodoselecionado
  */
-// pr($t_seguro);
-// pr($periodos);
-// pr($periodoselecionado);
-// die();
 ?>
 
 <?= $this->element('menu_mural') ?>
@@ -41,8 +37,8 @@
     <?= $this->Form->end(); ?>
 
     <table class='table table-striped table-hover table-responsive'>
+        <caption style='caption-side: top'>Planilha para seguro de vida dos alunos estagiários</caption>
         <thead class='thead-light'>
-            <caption style='caption-side: top'>Planilha para seguro de vida dos alunos estagiários</caption>
             <tr>
                 <th>Nome</th>
                 <th>CPF</th>
@@ -59,21 +55,23 @@
             </tr>
         </thead>
         <?php foreach ($t_seguro as $cada_aluno): ?>
-            <?php // pr($cada_aluno);  ?>
+            <?php // pr($cada_aluno['nascimento']);  ?>
             <?php // die(); ?>
             <tr>
                 <td>
-                    <?php echo $this->Html->link($cada_aluno['nome'], '/Estagiarios/view/' . $cada_aluno['estagiario_id']); ?>
+                    <?php echo $this->Html->link($cada_aluno['nome'], '/Alunos/view/' . $cada_aluno['id']); ?>
                 </td>
                 <td>
                     <?php echo $cada_aluno['cpf']; ?>
                 </td>
                 <td>
-                    <?php if (empty($cada_aluno['nascimento'])): ?>
-                        <?php echo "s/d"; ?>
-                    <?php else: ?>
-                        <?php echo date('d-m-Y', strtotime($cada_aluno['nascimento'])); ?>
-                    <?php endif; ?>
+                    <?php 
+                    if (empty($cada_aluno['nascimento'])): 
+                        echo "s/d"; 
+                    else: 
+                        echo $cada_aluno['nascimento'];
+                    endif; 
+                    ?>
                 </td>
                 <td>
                     <?php echo $cada_aluno['sexo']; ?>

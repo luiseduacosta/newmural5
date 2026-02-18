@@ -546,11 +546,220 @@ class AlunosController extends AppController
     public function planilhacress($id = null)
     {
         $this->Authorization->skipAuthorization();
-        // Placeholder for report generation
+
+        $periodo = $this->getRequest()->getQuery('periodo');
+
+        $ordem = 'Alunos.nome';
+
+        /* Todos os periódos */
+        $periodototal = $this->Alunos->Estagiarios->find('list', [
+            'keyField' => 'periodo',
+            'valueField' => 'periodo',
+            'order' => 'periodo'
+        ]);
+        $periodos = $periodototal->toArray();
+        /* Se o periodo não veio anexo como parametro então o período é o último da lista dos períodos */
+        if (empty($periodo)) {
+            $periodo = end($periodos);
+        }
+
+        $cress = $this->Alunos->Estagiarios->find()
+                ->contain(['Alunos', 'Instituicoes', 'Supervisores', 'Professores'])
+                ->select(['Estagiarios.periodo', 'Alunos.id', 'Alunos.nome', 'Instituicoes.id', 'Instituicoes.instituicao', 'Instituicoes.cep', 'Instituicoes.endereco', 'Instituicoes.bairro', 'Supervisores.nome', 'Supervisores.cress', 'Professores.nome'])
+                ->where(['Estagiarios.periodo' => $periodo])
+                ->order(['Alunos.nome'])
+                ->all();
+
+        $this->set('cress', $cress);
+        $this->set('periodos', $periodos);
+        $this->set('periodoselecionado', $periodo);
+
     }
+
+
     public function planilhaseguro($id = null)
     {
         $this->Authorization->skipAuthorization();
-        // Placeholder for report generation
+
+        $periodo = $this->getRequest()->getQuery('periodo');
+
+        $ordem = 'nome';
+
+        $periodototal = $this->Alunos->Estagiarios->find('list', [
+            'keyField' => 'periodo',
+            'valueField' => 'periodo',
+            'order' => 'periodo'
+        ]);
+        $periodos = $periodototal->toArray();
+
+        if (empty($periodo)) {
+            $periodo = end($periodos);
+        }
+
+        $seguro = $this->Alunos->Estagiarios->find()
+                ->contain(['Alunos', 'Instituicoes'])
+                ->where(['Estagiarios.periodo' => $periodo])
+                ->select([
+                    'Alunos.id',
+                    'Alunos.nome',
+                    'Alunos.cpf',
+                    'Alunos.nascimento',
+                    'Alunos.registro',
+                    'Estagiarios.nivel',
+                    'Estagiarios.periodo',
+                    'Instituicoes.instituicao',
+                    'Estagiarios.ajuste2020'
+                ])
+                ->order(['Estagiarios.nivel'])
+                ->all();
+
+        $i = 0;
+        // Calcula o inicio e o final do estagio para 4 periodos de 6 meses a partir do periodo selecionado
+        /*
+        One strategy is to calculate the start and them the end dates of the internship for 4 periods of 6 months or 3 periods of 6 months from the selected period.
+        If the semestre of the inicial period (nivel 1) is 1, then when ajuste 2020 is 0 then the end period is (ano + 1 e semestre = 2 or when ajuste2020 is 1 then the end period is ano + 1 e semestre = 1).
+        If the semestre of the inicial period (nivel 1) is 2, then when ajuste2020 is 0 then the end period is (ano + 2 e semestre = 1 or when ajuste2020 is 1 then the end period is ano + 1 e semestre = 2).
+        */
+        $t_seguro = [];
+        $criterio = [];
+        $inicio = null;
+        $final = null;
+        foreach ($seguro as $c_seguro) {
+            $ajuste2020 = $c_seguro->ajuste2020;
+            // Calcula o inicio do estágio
+            $periodo_parts = explode('-', $c_seguro->periodo);
+            $ano = (int)$periodo_parts[0];
+            $semestre_num = (int)$periodo_parts[1];
+            switch ($c_seguro->nivel) {
+                case 1:
+                    $inicio_ano = $ano;
+                    $inicio_semestre = $semestre_num;
+                    break;
+                case 2: // retrocede 1 semestre
+                    // Ex. 2024-1 -> 2023-2
+                    if ($semestre_num == 1) {
+                        $inicio_ano = $ano - 1;
+                        $inicio_semestre = 2;
+                        // Ex. 2024-2 -> 2024-1
+                    } else { // $semestre_num == 2
+                        $inicio_ano = $ano;
+                        $inicio_semestre = 1;
+                    }
+                    break;
+                case 3: // retrocede 2 semestres
+                    // Ex. 2024-1 -> 2023-1
+                    if ($semestre_num == 1) {
+                        $inicio_ano = $ano - 1;
+                        $inicio_semestre = 1;
+                        // Ex. 2024-2 -> 2023-2
+                    } else { // $semestre_num == 2
+                        $inicio_ano = $ano - 1;
+                        $inicio_semestre = 2;
+                    }
+                    break;
+                case 4: // retrocede 3 semestres
+                    // Ex. 2010-1 -> 2008-2
+                    if ($semestre_num == 1) {
+                        $inicio_ano = $ano - 2;
+                        $inicio_semestre = 2;
+                        // Ex. 2010-2 -> 2009-1
+                    } else { // $semestre_num == 2
+                        $inicio_ano = $ano - 1;
+                        $inicio_semestre = 1;
+                    }
+                    break;
+                case 9: // retrocede 4 ou 5 semestres em função do ajuste2020
+                    if ($ajuste2020 == 1) { // retrocede 4 semestres
+                        if ($semestre_num == 1) { // Ex. 2024-1 -> 2022-2
+                            $inicio_ano = $ano - 2;
+                            $inicio_semestre = 2;
+                        } else { // $semestre_num == 2, Ex. 2024-2 -> 2023-1
+                            $inicio_ano = $ano - 1;
+                            $inicio_semestre = 1;
+                        } 
+                    } else { // $ajuste2020 == 0, retrocede 5 semestres
+                        if ($semestre_num == 1) { // Ex. 2024-1 -> 2022-1
+                            $inicio_ano = $ano - 2;
+                            $inicio_semestre = 1;
+                        } else { // $semestre_num == 2, Ex. 2024-2 -> 2022-2
+                            $inicio_ano = $ano - 2;
+                            $inicio_semestre = 2;
+                        }
+                    }
+                    break;
+                default:
+                    $inicio_ano = $ano;
+                    $inicio_semestre = $semestre_num;
+                    break;
+            }
+            $inicio = $inicio_ano . "-" . $inicio_semestre;
+            
+            // Calcula o final do estágio: $inicio + 2 ou 3 semestres dependendo do ajuste2020
+            // Números $inicio_ano e $inicio_semestre são os valores do inicio do estágio
+            switch ($ajuste2020) {
+                case 0: // 4 semestres
+                    // Ex. 2024-1 -> 2025-2
+                    if ($inicio_semestre == 1) {
+                        $final = ($inicio_ano + 1) . "-" . 2;
+                        // Ex. 2024-2 -> 2026-1
+                    } else { // $inicio_semestre == 2
+                        $final = ($inicio_ano + 2) . "-" . 1;
+                    }
+                    break;
+                case 1: // 3 semestres
+                    // Ex. 2024-1 -> 2025-1
+                    if ($inicio_semestre == 1) {
+                        $final = ($inicio_ano + 1) . "-" . 1;
+                        // Ex. 2024-2 -> 2025-2
+                    } else { // $inicio_semestre == 2
+                        $final = ($inicio_ano + 1) . "-" . 2;
+                    }
+                    break;
+                default:
+                    $final = $inicio;
+                    break;
+            }
+
+            if ($c_seguro->hasValue('aluno')) {
+                $t_seguro[$i]['id'] = $c_seguro->aluno->id;
+                $t_seguro[$i]['nome'] = $c_seguro->aluno->nome ?: 's/d';
+                $t_seguro[$i]['cpf'] = $c_seguro->aluno->cpf ?: 's/d';
+                $t_seguro[$i]['nascimento'] = $c_seguro->aluno->nascimento ? $c_seguro->aluno->nascimento->format('d/m/Y') : 's/d';
+                $t_seguro[$i]['sexo'] = "";
+                $t_seguro[$i]['registro'] = $c_seguro->aluno->registro ?: 's/d';
+            } else {
+                $t_seguro[$i]['id'] = null;
+                $t_seguro[$i]['nome'] = null;
+                $t_seguro[$i]['cpf'] = null;
+                $t_seguro[$i]['nascimento'] = null;
+                $t_seguro[$i]['sexo'] = "";
+                $t_seguro[$i]['registro'] = null;
+            }
+            $t_seguro[$i]['curso'] = "UFRJ/Serviço Social";
+            if ($c_seguro->nivel == 9):
+                $t_seguro[$i]['nivel'] = "Não obrigatório";
+            else:
+                $t_seguro[$i]['nivel'] = $c_seguro->nivel;
+            endif;
+            $t_seguro[$i]['periodo'] = $c_seguro->periodo;
+            $t_seguro[$i]['inicio'] = $inicio;
+            $t_seguro[$i]['final'] = $final;
+            if ($c_seguro->hasValue('instituicao')) {
+                $t_seguro[$i]['instituicao'] = $c_seguro->instituicao->instituicao;
+            } else {
+                $t_seguro[$i]['instituicao'] = null;
+            }
+            $t_seguro[$i]['ajuste2020'] = $c_seguro->ajuste2020;
+            $criterio[$i] = isset($t_seguro[$i][$ordem]) ? $t_seguro[$i][$ordem] : null;
+
+            $i++;
+        }
+
+        if (!empty($t_seguro) && !empty($criterio)) {
+            array_multisort($criterio, SORT_ASC, $t_seguro);
+        }
+        $this->set('t_seguro', $t_seguro);
+        $this->set('periodos', $periodos);
+        $this->set('periodoselecionado', $periodo);
     }
 }
