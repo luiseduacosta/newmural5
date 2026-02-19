@@ -29,7 +29,13 @@ class EstagiariomonografiasController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Estagiariomonografias);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $this->viewBuilder()->setTemplate("index");
 
         $periodo = $this->request->getQuery("periodo");
@@ -62,15 +68,8 @@ class EstagiariomonografiasController extends AppController
         if ($this->request->getQuery("sort") === null) {
             $estagiariomonografias->order(["Estudantes.nome" => "ASC"]);
         }
-        
-        // Paginate manually if needed explicitly as per original logic which seemed to fetchAll then loop?
-        // Original code used ->find('all') but didn't paginate $estagiariomonografias variable usage in view?
-        // Ah, original used find('all') and set it. No paginate() call in Index.
-        // So we keep it as standard result set.
-        
-        // Original fields selection was manual. Cake 5 contain generally handles this well, but let's stick to simple contain unless performance issue.
-        
-        $this->set("estagiariomonografias", $estagiariomonografias->all());
+               
+        $this->set("estagiariomonografias", $this->paginate($estagiariomonografias));
         $this->set(compact("periodo", "periodos"));
     }
 
@@ -86,7 +85,12 @@ class EstagiariomonografiasController extends AppController
         $estagiariomonografia = $this->Estagiariomonografias->get($id, [
             "contain" => ["Estudantes", "Docentes"],
         ]);
-        $this->Authorization->authorize($estagiariomonografia);
+        try {
+            $this->Authorization->authorize($estagiariomonografia);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $this->set("estagiariomonografia", $estagiariomonografia);
     }
 
@@ -98,7 +102,12 @@ class EstagiariomonografiasController extends AppController
     public function add()
     {
         $estagiariomonografia = $this->Estagiariomonografias->newEmptyEntity();
-        $this->Authorization->authorize($estagiariomonografia);
+        try {
+            $this->Authorization->authorize($estagiariomonografia);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         if ($this->request->is("post")) {
             $estagiariomonografia = $this->Estagiariomonografias->patchEntity(
                 $estagiariomonografia,
@@ -141,7 +150,12 @@ class EstagiariomonografiasController extends AppController
         $estagiariomonografia = $this->Estagiariomonografias->get($id, [
             "contain" => [],
         ]);
-        $this->Authorization->authorize($estagiariomonografia);
+        try {
+            $this->Authorization->authorize($estagiariomonografia);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is(["patch", "post", "put"])) {
             $estagiariomonografia = $this->Estagiariomonografias->patchEntity(
@@ -197,7 +211,13 @@ class EstagiariomonografiasController extends AppController
              $this->Flash->error(__("Registro não encontrado."));
              return $this->redirect(["action" => "index"]);
         }
-        $this->Authorization->authorize($estagiariomonografia);
+
+        try {
+            $this->Authorization->authorize($estagiariomonografia);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->Estagiariomonografias->delete($estagiariomonografia)) {
             $this->Flash->success(__("Registro estagiário excluído."));

@@ -3,8 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Docente[]|\Cake\Collection\CollectionInterface $Docentes
  */
-$user = $this->getRequest()->getAttribute('identity');
-// pr($docentes);
 ?>
 
 <?= $this->element('menu_monografias') ?>
@@ -200,9 +198,9 @@ $user = $this->getRequest()->getAttribute('identity');
                             <td><?= '(' . h($docente->ddd_telefone) . ')' . h($docente->telefone) ?></td>
                             <td><?= '(' . h($docente->ddd_celular) . ')' . h($docente->celular) ?></td>
                             <td><?= $docente->email ? $this->Html->link($docente->email, 'mailto:' . $docente->email) : 's/d' ?></td>
-                            <td><?= $docente->has('homepage') ? $this->Html->link($docente->homepage, $docente->homepage) : '' ?>
+                            <td><?= $docente->hasValue('homepage') ? $this->Html->link($docente->homepage, $docente->homepage) : '' ?>
                             </td>
-                            <td><?= $docente->has('redesocial') ? $this->Html->link($docente->redesocial, $docente->redesocial) : '' ?>
+                            <td><?= $docente->hasValue('redesocial') ? $this->Html->link($docente->redesocial, $docente->redesocial) : '' ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

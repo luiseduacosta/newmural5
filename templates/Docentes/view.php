@@ -3,8 +3,6 @@
  * @var \App\View\AppView $this 
  * @var \App\Model\Entity\Docente $docente 
  */
-$user = $this->getRequest()->getAttribute('identity');
-// pr($docente);
 ?>
 
 <?= $this->element('menu_monografias') ?>

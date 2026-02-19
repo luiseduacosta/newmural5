@@ -20,7 +20,13 @@ class SupervisoresController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Supervisores);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $query = $this->Supervisores->find();
         
         if ($query->count() === 0) {
@@ -46,23 +52,11 @@ class SupervisoresController extends AppController
      */
     public function view($id = null)
     {
-        $this->Authorization->skipAuthorization();
         
         if ($id === null) {
-            $cress = $this->getRequest()->getQuery('cress');
-            if (!$cress) {
-                $this->Flash->error(__('Cress inválido.'));
-                return $this->redirect(['action' => 'index']);
-            }
-            $supervisor = $this->Supervisores->find()
-                ->where(['cress' => $cress])
-                ->first();
-            if (!$supervisor) {
                 $this->Flash->error(__('Supervisora não encontrada.'));
                 return $this->redirect(['action' => 'index']);
-            }
-            $id = $supervisor->id;
-        }
+        }        
         
         try {
             $supervisor = $this->Supervisores->get($id, [
@@ -73,6 +67,13 @@ class SupervisoresController extends AppController
             return $this->redirect(['action' => 'index']);
         }
         
+        try {
+            $this->Authorization->authorize($supervisor);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $this->set(compact('supervisor'));
     }
 
@@ -84,7 +85,12 @@ class SupervisoresController extends AppController
     public function add()
     {
         $supervisor = $this->Supervisores->newEmptyEntity();
-        $this->Authorization->authorize($supervisor);
+        try {
+            $this->Authorization->authorize($supervisor);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is('post')) {
             $supervisor = $this->Supervisores->patchEntity($supervisor, $this->request->getData());
@@ -117,7 +123,12 @@ class SupervisoresController extends AppController
             return $this->redirect(['action' => 'index']);
         }
         
-        $this->Authorization->authorize($supervisor);
+        try {
+            $this->Authorization->authorize($supervisor);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $supervisor = $this->Supervisores->patchEntity($supervisor, $this->request->getData());
@@ -147,8 +158,13 @@ class SupervisoresController extends AppController
             $this->Flash->error(__('Supervisora não encontrada.'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->authorize($supervisor);
+
+        try {
+            $this->Authorization->authorize($supervisor);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->Supervisores->delete($supervisor)) {
             $this->Flash->success(__('Registro de supervisora excluído com sucesso.'));

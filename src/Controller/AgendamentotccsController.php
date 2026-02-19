@@ -29,7 +29,12 @@ class AgendamentotccsController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try{
+            $this->Authorization->authorize($this->Agendamentotccs);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para visualizar os agendamentos de TCC."));
+            return $this->redirect(["controller" => "Muralestagios", "action" => "index"]);
+        }
 
         $query = $this->Agendamentotccs
             ->find()
@@ -70,6 +75,7 @@ class AgendamentotccsController extends AppController
      */
     public function view($id = null)
     {
+
         try {
             $agendamentotcc = $this->Agendamentotccs->get($id, [
                 "contain" => [
@@ -83,7 +89,13 @@ class AgendamentotccsController extends AppController
             $this->Flash->error(__("Agendamento TCC não encontrado."));
             return $this->redirect(["action" => "index"]);
         }
-        $this->Authorization->authorize($agendamentotcc);
+
+        try {
+            $this->Authorization->authorize($agendamentotcc);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para visualizar os detalhes do agendamento de TCC."));
+            return $this->redirect(["controller" => "Muralestagios", "action" => "index"]);
+        }
         $this->set("agendamentotcc", $agendamentotcc);
     }
 
@@ -95,7 +107,13 @@ class AgendamentotccsController extends AppController
     public function add()
     {
         $agendamentotcc = $this->Agendamentotccs->newEmptyEntity();
-        $this->Authorization->authorize($agendamentotcc);
+
+        try {
+            $this->Authorization->authorize($agendamentotcc);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para inserir agendamentos de TCC."));
+            return $this->redirect(["controller" => "Muralestagios", "action" => "index"]);
+        }
 
         if ($this->request->is(["post", "put", "patch"])) {
             $dados = $this->request->getData();
@@ -162,7 +180,14 @@ class AgendamentotccsController extends AppController
             $this->Flash->error(__("Agendamento TCC não encontrado."));
             return $this->redirect(["action" => "index"]);
         }
-        $this->Authorization->authorize($agendamentotcc);
+
+        try {
+            $this->Authorization->authorize($agendamentotcc);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para editar agendamentos de TCC."));
+            return $this->redirect(["controller" => "Muralestagios", "action" => "index"]);
+        }
+
         if ($this->request->is(["patch", "post", "put"])) {
             /* Ajusta o horário */
             $dados = $this->request->getData();
@@ -173,11 +198,11 @@ class AgendamentotccsController extends AppController
                 }
             }
             /* Finaliza ajuste de horario */
-
             $agendamentotcc = $this->Agendamentotccs->patchEntity(
                 $agendamentotcc,
                 $dados,
             );
+
             if ($this->Agendamentotccs->save($agendamentotcc)) {
                 $this->Flash->success(__("Agendamento TCC atualizado."));
                 return $this->redirect([
@@ -219,7 +244,13 @@ class AgendamentotccsController extends AppController
             $this->Flash->error(__("Agendamento TCC não encontrado."));
             return $this->redirect(["action" => "index"]);
         }
-        $this->Authorization->authorize($agendamentotcc);
+
+        try {
+            $this->Authorization->authorize($agendamentotcc);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para excluir agendamentos de TCC."));
+            return $this->redirect(["controller" => "Muralestagios", "action" => "index"]);
+        }
         
         if ($this->Agendamentotccs->delete($agendamentotcc)) {
             $this->Flash->success(__("Agendamento TCC foi excluído."));

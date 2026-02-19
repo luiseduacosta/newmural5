@@ -20,14 +20,15 @@ class VisitasController extends AppController
      */
     public function index()
     {
-        // $this->Authorization->authorize($this->Visitas); // Check policy on table/query or skip
-        // Original: $this->Authorization->authorize($this->Visitas); which is unusual but maybe Policy on Table?
-        // Assuming skipAuthorization for index for now to ensure access, can be refined.
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Visitas);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         $query = $this->Visitas->find()->contain(['Instituicoes']);
         $visitas = $this->paginate($query);
-
         $this->set(compact('visitas'));
     }
 
@@ -40,7 +41,6 @@ class VisitasController extends AppController
      */
     public function view($id = null)
     {
-        $this->Authorization->skipAuthorization();
         try {
             $visita = $this->Visitas->get($id, [
                 'contain' => ['Instituicoes'],
@@ -49,7 +49,14 @@ class VisitasController extends AppController
             $this->Flash->error(__('Nao ha registros de visitas para esse numero!'));
             return $this->redirect(['action' => 'index']);
         }
-        // $this->Authorization->authorize($visita); // Skipped to match my flow, but original had authorize after get.
+
+        try {
+            $this->Authorization->authorize($visita);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $this->set(compact('visita'));
     }
 
@@ -61,7 +68,12 @@ class VisitasController extends AppController
     public function add()
     {
         $visita = $this->Visitas->newEmptyEntity();
-        $this->Authorization->authorize($visita);
+        try {
+            $this->Authorization->authorize($visita);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is('post')) {
             $visita = $this->Visitas->patchEntity($visita, $this->request->getData());
@@ -92,8 +104,13 @@ class VisitasController extends AppController
              $this->Flash->error(__('Nao ha registros de visitas para esse numero!'));
              return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->authorize($visita);
+
+        try {
+            $this->Authorization->authorize($visita);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $visita = $this->Visitas->patchEntity($visita, $this->request->getData());
@@ -123,8 +140,13 @@ class VisitasController extends AppController
             $this->Flash->error(__('Nao ha registros de visitas para esse numero!'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->authorize($visita);
+
+        try {
+            $this->Authorization->authorize($visita);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->Visitas->delete($visita)) {
             $this->Flash->success(__('Visita excluída.'));

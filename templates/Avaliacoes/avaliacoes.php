@@ -3,9 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Avaliacao[]|\Cake\Collection\CollectionInterface $avaliacaoes
  */
-$user = $this->getRequest()->getAttribute('identity');
-// pr($estagiario);
-// die();
 ?>
 
 <?php echo $this->element('menu_mural') ?>
@@ -46,8 +43,6 @@ $user = $this->getRequest()->getAttribute('identity');
         </thead>
         <tbody>
             <?php foreach ($estagiario as $c_estagiario): ?>
-                <?php // pr($c_estagiario); ?>
-                <?php // die(); ?>
                 <tr>
                     <?php if (isset($user) && $user->categoria == '1'): ?>
                         <td><?= isset($c_estagiario->id) ? $this->Html->link($c_estagiario->id, ['controller' => 'estagiarios', 'action' => 'view', $c_estagiario->id]) : '' ?></td>
@@ -62,9 +57,9 @@ $user = $this->getRequest()->getAttribute('identity');
                     <?php endif; ?>
 
                     <?php if (isset($user) && $user->categoria == '1'): ?>
-                        <td><?= $c_estagiario->has('estudante') ? $this->Html->link($c_estagiario->estudante->nome, ['controller' => 'estudantes', 'action' => 'view', $c_estagiario->estudante->id]) : '' ?></td>
+                        <td><?= $c_estagiario->hasValue('estudante') ? $this->Html->link($c_estagiario->estudante->nome, ['controller' => 'estudantes', 'action' => 'view', $c_estagiario->estudante->id]) : '' ?></td>
                     <?php else: ?>
-                        <td><?= $c_estagiario->has('estudante') ? $c_estagiario->estudante->nome : '' ?></td>
+                        <td><?= $c_estagiario->hasValue('estudante') ? $c_estagiario->estudante->nome : '' ?></td>
                     <?php endif; ?>
 
                     <td><?= $c_estagiario->periodo ?></td>

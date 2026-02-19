@@ -17,7 +17,14 @@ class InstituicaoestagiosController extends AppController {
      * @return \Cake\Http\Response|null|void Renders view
      */
     public function index() {
-        $this->Authorization->skipAuthorization();
+
+        try {
+            $this->Authorization->authorize($this->Instituicaoestagios);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $query = $this->Instituicaoestagios->find()->contain(['Areainstituicoes', 'Areaestagios']);
         $instituicaoestagios = $this->paginate($query);
         $this->set(compact('instituicaoestagios'));
@@ -31,13 +38,20 @@ class InstituicaoestagiosController extends AppController {
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null) {
-        $this->Authorization->skipAuthorization(); // View generally public or auth logic handled elsewhere, legacy skipped
+
         try {
             $instituicaoestagio = $this->Instituicaoestagios->get($id, [
                 'contain' => ['Areainstituicoes', 'Supervisores', 'Estagiarios' => ['Estudantes', 'Instituicaoestagios', 'Docentes', 'Supervisores', 'Areaestagios'], 'Muralestagios', 'Visitas'],
             ]);
         } catch (\Exception $e) {
             $this->Flash->error(__('Instituicao de estagio nao foi encontrado. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        try {
+            $this->Authorization->authorize($instituicaoestagio);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
             return $this->redirect(['action' => 'index']);
         }
         // $this->Authorization->authorize($instituicaoestagio); // Skipped to match legacy logic if needed, or re-enable
@@ -50,8 +64,15 @@ class InstituicaoestagiosController extends AppController {
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
     public function add() {
+
         $instituicaoestagio = $this->Instituicaoestagios->newEmptyEntity();
-        $this->Authorization->authorize($instituicaoestagio);
+
+        try {
+            $this->Authorization->authorize($instituicaoestagio);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->request->is('post')) {
             $instituicaoestagio = $this->Instituicaoestagios->patchEntity($instituicaoestagio, $this->request->getData());
@@ -82,7 +103,13 @@ class InstituicaoestagiosController extends AppController {
             $this->Flash->error(__('Instituicao de estagio nao foi encontrado. Tente novamente.'));
             return $this->redirect(['action' => 'index']);
         }
-        $this->Authorization->authorize($instituicaoestagio);
+
+        try {
+            $this->Authorization->authorize($instituicaoestagio);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             $instituicaoestagio = $this->Instituicaoestagios->patchEntity($instituicaoestagio, $this->request->getData());
@@ -112,7 +139,13 @@ class InstituicaoestagiosController extends AppController {
             $this->Flash->error(__('Instituicao de estagio nao foi encontrado. Tente novamente.'));
             return $this->redirect(['action' => 'index']);
         }
-        $this->Authorization->authorize($instituicaoestagio);
+
+        try {
+            $this->Authorization->authorize($instituicaoestagio);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         /** Se tem ofertas de vagas de estagio nao pode ser excluido. */
         if (!empty($instituicaoestagio->muralestagios)) {

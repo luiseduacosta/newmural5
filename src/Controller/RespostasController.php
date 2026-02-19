@@ -23,7 +23,13 @@ class RespostasController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Respostas);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $query = $this->Respostas->find()
             ->contain(['Estagiarios' => ['Alunos']])
             ->order(['Respostas.id' => 'DESC']);
@@ -49,8 +55,13 @@ class RespostasController extends AppController
             $this->Flash->error(__('Registro não encontrado.'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->skipAuthorization();
+
+        try {
+            $this->Authorization->authorize($resposta);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         $respostasData = json_decode($resposta->response, true) ?? [];
         $avaliacoes = [];
@@ -88,7 +99,6 @@ class RespostasController extends AppController
      */
     public function add()
     {
-        $this->Authorization->skipAuthorization();
         $estagiario_id = $this->request->getQuery('estagiario_id');
         
         if (!$estagiario_id) {
@@ -116,8 +126,15 @@ class RespostasController extends AppController
         }
         
         $this->set('estagiario', $estagiario);
-        $resposta = $this->Respostas->newEmptyEntity();
-        
+
+        $resposta = $this->Respostas->newEmptyEntity();     
+        try {
+            $this->Authorization->authorize($resposta);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             
@@ -159,8 +176,13 @@ class RespostasController extends AppController
             $this->Flash->error(__('Registro não encontrado.'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->skipAuthorization();
+
+        try {
+            $this->Authorization->authorize($resposta);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         $estagiario = $this->fetchTable('Estagiarios')->get($resposta->estagiarios_id, [
             'contain' => ['Alunos']
@@ -228,7 +250,12 @@ class RespostasController extends AppController
             return $this->redirect(['action' => 'index']);
         }
         
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($resposta);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->Respostas->delete($resposta)) {
             $this->Flash->success(__('Resposta excluída.'));

@@ -7,6 +7,7 @@ namespace App\Controller;
  * Docentes Controller
  *
  * @property \App\Model\Table\DocentesTable $Docentes
+ * 
  * @method \App\Model\Entity\Docente[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class DocentesController extends AppController
@@ -18,7 +19,14 @@ class DocentesController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+
+        try {
+            $this->Authorization->authorize($this->Docentes);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para visualizar os registros de docentes.'));
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
+        }
+
         $query = $this->Docentes->find();
         if ($query) {
             if ($this->request->getQuery('sort') === null) {
@@ -43,7 +51,6 @@ class DocentesController extends AppController
      */
     public function view($id = null)
     {
-        $this->Authorization->skipAuthorization();
 
         if (empty($id)) {
             $this->Flash->error(__('Registro ID do docente não encontrado'));
@@ -59,6 +66,13 @@ class DocentesController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
+        try {
+            $this->Authorization->authorize($docente);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para visualizar o registro de docente.'));
+            return $this->redirect(['controller' => 'Docentes', 'action' => 'index']);
+        }
+
         $this->set('docente', $docente);
     }
 
@@ -70,7 +84,13 @@ class DocentesController extends AppController
     public function add()
     {
         $docente = $this->Docentes->newEmptyEntity();
-        $this->Authorization->authorize($docente);
+        
+        try {
+            $this->Authorization->authorize($docente);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para inserir registros de docentes.'));
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
+        }
 
         if ($this->request->is('post')) {
             $siape = $this->request->getData('siape');
@@ -124,7 +144,13 @@ class DocentesController extends AppController
             $this->Flash->error(__('Registro docente não encontrado'));
             return $this->redirect(['action' => 'index']);
         }
-        $this->Authorization->authorize($docente);
+
+        try {
+            $this->Authorization->authorize($docente);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para editar o registro de docente.'));
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
+        }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $docente = $this->Docentes->patchEntity($docente, $this->request->getData());
@@ -154,8 +180,14 @@ class DocentesController extends AppController
             $this->Flash->error(__('Registro docente não encontrado'));
             return $this->redirect(['action' => 'index']);
         }
-        $this->Authorization->authorize($docente);
-        
+
+        try {
+            $this->Authorization->authorize($docente);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para excluir o registro de docente.'));
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
+        }
+
         if ($this->Docentes->delete($docente)) {
             $this->Flash->success(__('Registro docente excluído.'));
         } else {

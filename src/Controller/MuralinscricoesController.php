@@ -24,7 +24,13 @@ class MuralinscricoesController extends AppController
      */
     public function index($periodo = NULL)
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->skipAuthorization();
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         if (empty($periodo)) {
             $configuracaotable = $this->fetchTable('Configuracoes');
             $periodoconfiguracao = $configuracaotable->get(1);
@@ -63,8 +69,6 @@ class MuralinscricoesController extends AppController
      */
     public function view($id = null)
     {
-        $this->Authorization->skipAuthorization(); // Allow view initially, then check auth logic if needed? 
-        // Original skipped then authorized.
         
         try {
             $muralinscricao = $this->Muralinscricoes->get($id, [
@@ -74,8 +78,14 @@ class MuralinscricoesController extends AppController
             $this->Flash->error(__('Nao ha registros de inscrições para esse número!'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        // $this->Authorization->authorize($muralinscricao); // Use policy if available
+
+        try {
+            $this->Authorization->authorize($muralinscricao);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $this->set(compact('muralinscricao'));
     }
 
@@ -89,7 +99,12 @@ class MuralinscricoesController extends AppController
     public function add($id = NULL, $registro = NULL)
     {
         $muralinscricao = $this->Muralinscricoes->newEmptyEntity();
-        $this->Authorization->authorize($muralinscricao);
+        try {
+            $this->Authorization->authorize($muralinscricao);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         $muralestagios = []; // Init variables
         $alunos = [];
@@ -236,8 +251,13 @@ class MuralinscricoesController extends AppController
             $this->Flash->error(__('Registro de inscrição não foi encontrado. Tente novamente.'));
             return $this->redirect(['controller' => 'Muralinscricoes', 'action' => 'index']);
         }
-        
-        $this->Authorization->authorize($muralinscricao);
+
+        try {
+            $this->Authorization->authorize($muralinscricao);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['controller' => 'Muralinscricoes', 'action' => 'index']);
+        }
         
         if ($this->request->is(['patch', 'post', 'put'])) {
 
@@ -324,8 +344,13 @@ class MuralinscricoesController extends AppController
             $this->Flash->error(__('Registro de inscrição não foi encontrado. Tente novamente.'));
             return $this->redirect(['controller' => 'Muralinscricoes', 'action' => 'index']);
         }
-        
-        $this->Authorization->authorize($muralinscricao);
+
+        try {
+            $this->Authorization->authorize($muralinscricao);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['controller' => 'Muralinscricoes', 'action' => 'index']);
+        }
         
         if ($this->Muralinscricoes->delete($muralinscricao)) {
             $this->Flash->success(__('Inscrição excluída.'));

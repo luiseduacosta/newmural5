@@ -23,13 +23,20 @@ class EstagiariosController extends AppController
      */
     public function index($id = null)
     {
+        try {
+            $this->Authorization->authorize($this->Estagiarios);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $instituicao = $this->getRequest()->getQuery("instituicao");
         $supervisor = $this->getRequest()->getQuery("supervisor");
         $professor = $this->getRequest()->getQuery("professor");
         $turmaestagio = $this->getRequest()->getQuery("turmaestagio");
         $nivel = $this->getRequest()->getQuery("nivel");
         $periodo = $this->getRequest()->getQuery("periodo");
-        $this->Authorization->skipAuthorization();
+
         if ($periodo === null) {
             $configuracao = $this->fetchTable("Configuracoes");
             $periodo_atual = $configuracao
@@ -167,7 +174,6 @@ class EstagiariosController extends AppController
      */
     public function view($id = null)
     {
-        $this->Authorization->skipAuthorization();
         try {
             $estagiario = $this->Estagiarios->get($id, [
                 "contain" => [
@@ -185,6 +191,13 @@ class EstagiariosController extends AppController
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__("Estagiário não encontrado."));
             return $this->redirect(["action" => "index"]);
+        }
+
+        try {
+            $this->Authorization->authorize($estagiario);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
         }
 
         $resposta = $this->fetchTable("Respostas")->find()
@@ -228,7 +241,12 @@ class EstagiariosController extends AppController
     public function add($id = null)
     {
         $estagiario = $this->Estagiarios->newEmptyEntity();
-        $this->Authorization->skipAuthorization(); // Authorize later or manually? Original skipped.
+        try {
+            $this->Authorization->authorize($estagiario);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->request->is(["patch", "post", "put"])) {
             $estagiario = $this->Estagiarios->patchEntity(
@@ -339,6 +357,7 @@ class EstagiariosController extends AppController
     
     public function novotermocompromisso($id = null)
     {
+
         $this->Authorization->skipAuthorization();
         $aluno_id = $this->getRequest()->getQuery("aluno_id");
         
@@ -359,6 +378,13 @@ class EstagiariosController extends AppController
             ->where(["aluno_id" => $aluno_id])
             ->order(["nivel" => "desc"])
             ->first();
+        
+        try {
+            $this->Authorization->authorize($estagiario);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
             
         if ($estagiario) {
             $config = $this->fetchTable("Configuracoes")
@@ -424,6 +450,13 @@ class EstagiariosController extends AppController
         } catch (\Exception $e) {
             $this->Flash->error(__("Sem estagio cadastrado."));
             return $this->redirect(["action" => "index"]);
+        }
+
+        try {
+            $this->Authorization->authorize($estagiario);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
         }
 
         // Validations
@@ -560,8 +593,13 @@ class EstagiariosController extends AppController
             $this->Flash->error(__("Estagiário não encontrado."));
             return $this->redirect(["action" => "index"]);
         }
-        
-        $this->Authorization->authorize($estagiario);
+
+        try {
+            $this->Authorization->authorize($estagiario);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is(["patch", "post", "put"])) {
             $estagiario = $this->Estagiarios->patchEntity(
@@ -627,8 +665,13 @@ class EstagiariosController extends AppController
              $this->Flash->error(__("Registro não encontrado."));
              return $this->redirect(["action" => "index"]);
         }
-        
-        $this->Authorization->authorize($estagiario);
+
+        try {
+            $this->Authorization->authorize($estagiario);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->Estagiarios->delete($estagiario)) {
             $this->Flash->success(__("Registro de estagiário excluído."));

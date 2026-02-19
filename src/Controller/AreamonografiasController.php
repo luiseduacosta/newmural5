@@ -18,7 +18,13 @@ class AreamonografiasController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Areamonografias);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para visualizar as áreas de monografia."));
+            return $this->redirect(["controller" => "Monografias", "action" => "index"]);
+        }
+
         $query = $this->Areamonografias->find()->contain(["Monografias"]);
         if ($this->request->getQuery("sort") === null) {
             $query->order(["area" => "ASC"]);
@@ -42,7 +48,13 @@ class AreamonografiasController extends AppController
                 "Monografias" => ["Tccestudantes", "Docentes"],
             ],
         ]);
-        $this->Authorization->authorize($areamonografia);
+
+        try {
+            $this->Authorization->authorize($areamonografia);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para visualizar a área de monografia."));
+            return $this->redirect(["controller" => "Monografias", "action" => "index"]);
+        }
 
         $this->set("areamonografia", $areamonografia);
     }
@@ -55,7 +67,12 @@ class AreamonografiasController extends AppController
     public function add()
     {
         $areamonografia = $this->Areamonografias->newEmptyEntity();
-        $this->Authorization->authorize($areamonografia);
+        try {
+            $this->Authorization->authorize($areamonografia);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para inserir áreas de monografia."));
+            return $this->redirect(["controller" => "Monografias", "action" => "index"]);
+        }
 
         if ($this->request->is("post")) {
             $areamonografia = $this->Areamonografias->patchEntity(
@@ -85,7 +102,13 @@ class AreamonografiasController extends AppController
         $areamonografia = $this->Areamonografias->get($id, [
             "contain" => ["Docentes"],
         ]);
-        $this->Authorization->authorize($areamonografia);
+
+        try {
+            $this->Authorization->authorize($areamonografia);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para editar a área de monografia."));
+            return $this->redirect(["controller" => "Monografias", "action" => "index"]);
+        }
 
         if ($this->request->is(["patch", "post", "put"])) {
             $areamonografia = $this->Areamonografias->patchEntity(
@@ -113,12 +136,19 @@ class AreamonografiasController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(["post", "delete"]);
-        $areamonografia = $this->Areamonografias->get($id);
-        $this->Authorization->authorize($areamonografia);
 
         $areamonografias = $this->Areamonografias->get($id, [
             'contain' => ['Monografias']
         ]);
+
+        try {
+            $areamonografia = $this->Areamonografias->get($id);
+            $this->Authorization->authorize($areamonografia);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para excluir a área de monografia."));
+            return $this->redirect(["controller" => "Monografias", "action" => "index"]);
+        }
+
         if (!empty($areamonografias->monografias)) {
             $this->Flash->error(__('Há monografias assoaciadas a esta área. Desfazer as associações primeiro.'));
             return $this->redirect(['action' => 'view', $id]);

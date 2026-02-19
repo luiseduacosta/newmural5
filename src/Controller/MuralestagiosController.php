@@ -130,7 +130,13 @@ class MuralestagiosController extends AppController
         }
 
         $muralestagio = $this->Muralestagios->newEmptyEntity();
-        $this->Authorization->authorize($muralestagio);
+
+        try {
+            $this->Authorization->authorize($muralestagio);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is('post')) {
             $dados = $this->request->getData();
@@ -180,8 +186,13 @@ class MuralestagiosController extends AppController
             $this->Flash->error(__('Nao ha registros de estagios para esse numero!'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->authorize($muralestagio);
+
+        try {
+            $this->Authorization->authorize($muralestagio);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             $muralestagio = $this->Muralestagios->patchEntity($muralestagio, $this->request->getData());
@@ -222,8 +233,13 @@ class MuralestagiosController extends AppController
             $this->Flash->error(__('Nao ha registros de estagios para esse numero!'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->authorize($muralestagio);
+ 
+        try {
+            $this->Authorization->authorize($muralestagio);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->Muralestagios->delete($muralestagio)) {
             $this->Flash->success(__('Mural de estágio excluído.'));

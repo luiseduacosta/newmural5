@@ -45,8 +45,6 @@ class AlunosController extends AppController
     public function index()
     {
 
-        $query = $this->Alunos->find();
-
         try {
             $this->Authorization->authorize($this->Alunos);
         } catch (\Authorization\Exception\ForbiddenException $e) {
@@ -54,6 +52,7 @@ class AlunosController extends AppController
             return $this->redirect(['controller' => 'Muralestagios', "action" => "index"]);
         }
 
+        $query = $this->Alunos->find();
         if ($query->count() === 0) {
             $this->Flash->error(__("Nenhum aluno encontrado."));
             return $this->redirect([
@@ -270,7 +269,7 @@ class AlunosController extends AppController
      */
     public function cargahoraria($ordem = null)
     {
-        $this->Authorization->skipAuthorization();
+
         ini_set("memory_limit", "2048M");
         $ordem = $this->request->getQuery("ordem");
 
@@ -481,8 +480,8 @@ class AlunosController extends AppController
     // Ajax methods
     public function buscaestagiario($id = null)
     {
-        $this->viewBuilder()->disableAutoLayout();
         $this->Authorization->skipAuthorization();
+        $this->viewBuilder()->disableAutoLayout();
         $this->request->allowMethod(["ajax", "post"]); // Added post as typical for ajax
 
         $id = $this->request->getData("id");

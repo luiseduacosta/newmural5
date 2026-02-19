@@ -23,7 +23,12 @@ class FolhadeatividadesController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Folhadeatividades);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $estagiario_id = $this->getRequest()->getQuery('estagiario_id');
         if ($estagiario_id === null) {
             $this->Flash->error(__('Selecione o estagiário e o período da folha de atividades'));
@@ -69,6 +74,13 @@ class FolhadeatividadesController extends AppController
             return $this->redirect(['action' => 'index']);    
         }
 
+        try {
+            $this->Authorization->authorize($folhadeatividade);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         if (isset($user) && $user->categoria == '2') {
              // Student check
              if ($user->estudante_id != $folhadeatividade->estagiario->aluno_id) {
@@ -100,7 +112,7 @@ class FolhadeatividadesController extends AppController
                 $activity = $this->Folhadeatividades->get($id, ['contain' => 'Estagiarios']);
                 $estagiario_id = $activity->estagiario_id;
              } catch(\Exception $e) {
-                 // ignore
+                $this->Flash->error(__('Atividade não encontrada.'));
              }
         }
         
@@ -164,7 +176,13 @@ class FolhadeatividadesController extends AppController
         }
 
         $folhadeatividade = $this->Folhadeatividades->newEmptyEntity();
-        // $this->Authorization->authorize($folhadeatividade); // Skip auth for now per legacy behavior
+
+        try {
+            $this->Authorization->authorize($folhadeatividade);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->request->is('post')) {
             $folhadeatividade = $this->Folhadeatividades->patchEntity($folhadeatividade, $this->request->getData());
@@ -195,7 +213,13 @@ class FolhadeatividadesController extends AppController
             $this->Flash->error(__('Registro não encontrado.'));
             return $this->redirect(['action' => 'index']);
         }
-        $this->Authorization->authorize($folhadeatividade);
+
+        try {
+            $this->Authorization->authorize($folhadeatividade);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $folhadeatividade = $this->Folhadeatividades->patchEntity($folhadeatividade, $this->request->getData());
@@ -231,7 +255,13 @@ class FolhadeatividadesController extends AppController
             $this->Flash->error(__('Registro não encontrado.'));
             return $this->redirect(['action' => 'index']);
         }
-        $this->Authorization->authorize($folhadeatividade);
+
+        try {
+            $this->Authorization->authorize($folhadeatividade);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->Folhadeatividades->delete($folhadeatividade)) {
             $this->Flash->success(__('Folha de atividade excluída.'));

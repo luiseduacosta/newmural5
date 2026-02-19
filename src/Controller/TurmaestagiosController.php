@@ -20,7 +20,13 @@ class TurmaestagiosController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Turmaestagios);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $turmaestagios = $this->paginate($this->Turmaestagios);
         $this->set(compact('turmaestagios'));
     }
@@ -46,6 +52,13 @@ class TurmaestagiosController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
+        try {
+            $this->Authorization->authorize($turmaestagio);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $this->set(compact('turmaestagio'));
     }
 
@@ -57,7 +70,12 @@ class TurmaestagiosController extends AppController
     public function add()
     {
         $turmaestagio = $this->Turmaestagios->newEmptyEntity();
-        $this->Authorization->authorize($turmaestagio);
+        try {
+            $this->Authorization->authorize($turmaestagio);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->request->is('post')) {
             $turmaestagio = $this->Turmaestagios->patchEntity($turmaestagio, $this->request->getData());
@@ -88,8 +106,13 @@ class TurmaestagiosController extends AppController
             $this->Flash->error(__('Nao ha registros de turmas de estagio para esse numero!'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->authorize($turmaestagio);
+
+        try {
+            $this->Authorization->authorize($turmaestagio);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             $turmaestagio = $this->Turmaestagios->patchEntity($turmaestagio, $this->request->getData());
@@ -121,8 +144,13 @@ class TurmaestagiosController extends AppController
             $this->Flash->error(__('Nao ha registros de turmas de estagio para esse numero!'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->authorize($turmaestagio);
+
+        try {
+            $this->Authorization->authorize($turmaestagio);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if (count($turmaestagio->estagiarios) > 0) {
             $this->Flash->error(__("Não pode ser excluida porque têm estagiários associados."));

@@ -24,12 +24,15 @@ class AvaliacoesController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
-        $user = $this->request->getAttribute("identity");
+        try {
+            $this->Authorization->authorize($this->Avaliacoes);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para visualizar as avaliações."));
+            return $this->redirect(["controller" => "Instituicoes", "action" => "index"]);
+        }
         $avaliacoes = $this->Avaliacoes->find()->contain([
             "Estagiarios" => ["Alunos", "Supervisores", "Instituicoes"],
         ]);
-        $this->set("user", $user);
         $this->set("estagiarios", $this->paginate($avaliacoes));
     }
 
@@ -42,42 +45,34 @@ class AvaliacoesController extends AppController
      */
     public function avaliacoes($id = null)
     {
+        try {
+            $this->Authorization->authorize($this->Avaliacoes);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para visualizar as avaliações."));
+            return $this->redirect(["controller" => "Instituicoes", "action" => "index"]);
+        }
+
+
         /** O id enviado pelo submenu_navegacao corresponde ao estagiario_id */
-        $this->Authorization->skipAuthorization();
         $estagiario_id = $this->request->getQuery("estagiario_id");
         if ($estagiario_id === null) {
             $this->Flash->error(__("Selecionar estagiário"));
-            $user = $this->request->getAttribute("identity");
-            if ($user->categoria == "2"):
-                return $this->redirect([
-                    "controller" => "alunos",
-                    "action" => "view",
-                    $user->estudante_id,
-                ]);
-            else:
-                return $this->redirect([
-                    "controller" => "alunos",
-                    "action" => "index",
-                ]);
-            endif;
-        } else {
-            /** Captura o aluno_id do estagiário a partir do estagiario_id */
-            $registro = $this->Avaliacoes->Estagiarios->find()
-                ->where(["Estagiarios.id" => $estagiario_id])
-                ->first();
-            /**  Captura os estágios do aluno */
-            $estagios = $this->Avaliacoes->Estagiarios->find()
-                ->contain([
-                    "Estudantes",
-                    "Instituicoes",
-                    "Supervisores",
-                    "Avaliacoes",
-                ])
-                ->where(["Estagiarios.aluno_id" => $registro->aluno_id]);
+            return $this->redirect(["controller" => "estagiarios", "action" => "index"]);
+        } 
 
-            $this->set("id", $estagiario_id);
-            $this->set("estagios", $estagios);
-        }
+        /**  Captura os estágios do aluno */
+        $estagios = $this->fetchTable('Estagiarios')->find()
+            ->contain([
+                "Estudantes",
+                "Instituicoes",
+                "Supervisores",
+                "Avaliacoes",
+                ])
+            ->where(["Estagiarios.id" => $estagiario_id])
+            ->first();
+
+        $this->set("estagiario", $estagios);
+        $this->set("id", $estagiario_id);
     }
 
     /**
@@ -90,27 +85,7 @@ class AvaliacoesController extends AppController
     {
         /* O submenu_navegacao envia o cress */
         $this->Authorization->skipAuthorization();
-        $user = $this->request->getAttribute("identity");
-        if ($user->categoria == "4") {
-            $cress = $user->numero;
-        } elseif ($user->categoria == "2") {
-            $dre = $user->numero;
-        }
-        
-        if (isset($cress) && empty($cress)) { // Check if cress is set/empty logic needs validation. Original code: if ($user->categoria == '4') $cress = ...; if (empty($cress)) ...
-             // If user is cat 2, cress is undefined.
-             // Original logic seems to imply cress is required.
-             // If user is cat 2, $dre is set, but $cress is undefined.
-             // Then `if (empty($cress))` is true.
-             // Then `if ($dre)` redirects to Alunos view.
-             // This logic seems specific to roles.
-        }
-
-        if (empty($cress) && !isset($dre)) { // Logic adaptation
-             // If neither cress nor dre set (or cress empty)
-             // But original checked empty($cress) primarily.
-        }
-        
+                
         $cress = $cress ?? null;
         $dre = $dre ?? null;
 
@@ -129,7 +104,7 @@ class AvaliacoesController extends AppController
                 ]);
             endif;
         } else {
-            $estagiario = $this->Avaliacoes->Estagiarios->find()
+            $estagiario = $this->fetchTable('Estagiarios')->find()
                 ->contain([
                     "Supervisores",
                     "Alunos",
@@ -167,7 +142,15 @@ class AvaliacoesController extends AppController
             $this->Flash->error(__("Registro não encontrado."));
             return $this->redirect(["action" => "index"]);
         }
-        $this->Authorization->authorize($avaliacao);
+
+        try {
+            $this->Authorization->authorize($avaliacao);
+        }
+        catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para visualizar esta avaliação."));
+            return $this->redirect(["controller" => "avaliacoes", "action" => "index"]);
+        }
+
         $this->set(compact("avaliacao"));
     }
 
@@ -180,39 +163,35 @@ class AvaliacoesController extends AppController
      */
     public function add($id = null)
     {
+
         $this->Authorization->skipAuthorization();
         $estagiario_id = $this->request->getQuery("estagiario_id");
         if ($estagiario_id == null) {
             $this->Flash->error(__("Selecionar estagiário."));
-            $user = $this->request->getAttribute("identity");
-            if ($user->categoria == "2"):
-                return $this->redirect([
-                    "controller" => "alunos",
-                    "action" => "view",
-                    $user->numero,
-                ]);
-            else:
-                return $this->redirect([
-                    "controller" => "alunos",
-                    "action" => "index",
-                ]);
-            endif;
-        } else {
-            $avaliacaoestagiario = $this->Avaliacoes->find()
+            return $this->redirect(["controller" => "estagiarios", "action" => "index"]);
+        }
+        $avaliacaoestagiario = $this->Avaliacoes->find()
                 ->where(["estagiario_id" => $estagiario_id])
                 ->first();
-            if (isset($avaliacaoestagiario) && !is_null($avaliacaoestagiario)) {
-                $this->Flash->error(__("Estagiário já foi avaliado"));
-                return $this->redirect([
-                    "controller" => "avaliacoes",
-                    "action" => "view",
-                    $avaliacaoestagiario->id,
-                ]);
-            }
+
+        if (isset($avaliacaoestagiario) && !is_null($avaliacaoestagiario)) {
+            $this->Flash->error(__("Estagiário já foi avaliado"));
+            return $this->redirect([
+                "controller" => "avaliacoes",
+                "action" => "view",
+                $avaliacaoestagiario->id,
+            ]);
+        }
+    
+        $avaliacao = $this->Avaliacoes->newEmptyEntity();
+
+        try {
+            $this->Authorization->authorize($avaliacao);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para adicionar esta avaliação."));
+            return $this->redirect(["controller" => "avaliacoes", "action" => "index"]);
         }
 
-        $avaliacao = $this->Avaliacoes->newEmptyEntity();
-        $this->Authorization->authorize($avaliacao);
         if ($this->request->is("post")) {
             $avaliacao = $this->Avaliacoes->patchEntity(
                 $avaliacao,
@@ -234,6 +213,7 @@ class AvaliacoesController extends AppController
             ->contain(["Alunos"])
             ->where(["Estagiarios.id" => $estagiario_id])
             ->first();
+
         $this->set(compact("avaliacao", "estagiario"));
     }
 
@@ -261,7 +241,14 @@ class AvaliacoesController extends AppController
             $this->Flash->error(__("Registro não encontrado."));
             return $this->redirect(["action" => "index"]);
         }
-        $this->Authorization->authorize($avaliacao);
+
+        try {
+            $this->Authorization->authorize($avaliacao);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para editar esta avaliação."));
+            return $this->redirect(["controller" => "avaliacoes", "action" => "index"]);
+        }
+
         if ($this->request->is(["patch", "post", "put"])) {
             $avaliacao = $this->Avaliacoes->patchEntity(
                 $avaliacao,
@@ -278,6 +265,7 @@ class AvaliacoesController extends AppController
                 __("Avaliação não atualizada. Tente novamente."),
             );
         }
+
         $this->set(compact("avaliacao"));
     }
 
@@ -290,14 +278,20 @@ class AvaliacoesController extends AppController
      */
     public function delete($id = null)
     {
-        $this->Authorization->skipAuthorization();
         try {
             $avaliacao = $this->Avaliacoes->get($id);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__("Registro não encontrado."));
             return $this->redirect(["action" => "index"]);
         }
-        $this->Authorization->authorize($avaliacao);
+
+        try {
+            $this->Authorization->authorize($avaliacao);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para excluir esta avaliação."));
+            return $this->redirect(["controller" => "avaliacoes", "action" => "index"]);
+        }
+
         if ($this->request->is(["post", "delete"])) {
             if ($this->Avaliacoes->delete($avaliacao)) {
                 $this->Flash->success(__("Avaliação excluída."));
@@ -318,38 +312,22 @@ class AvaliacoesController extends AppController
     public function selecionaavaliacao($id = null)
     {
         $this->Authorization->skipAuthorization();
-        $user = $this->request->getAttribute("identity");
-        if ($id == null) {
-            if ($user->categoria == "2") {
-                $dre = $user->numero;
-                $estagiario = $this->Avaliacoes->Estagiarios->find()
-                    ->contain(["Estudantes", "Supervisores", "instituicoes"])
-                    ->where(["Estagiarios.registro" => $dre])
-                    ->first();
 
-                if ($estagiario) {
-                    $id = $estagiario->id;
-                } else {
-                    $this->Flash->error(__("Selecionar o estudante estagiário"));
-                    return $this->redirect([
-                        "controller" => "estudantes",
-                        "action" => "index",
-                    ]);
-                }
-            } else {
-                $this->Flash->error(__("Selecionar o estudante estagiário"));
+        if ($id == null) {
+            $this->Flash->error(__("Selecionar o estudante estagiário"));
                 return $this->redirect([
                     "controller" => "estudantes",
                     "action" => "index",
-                ]);
-            }
-        } else {
-            $estagiario = $this->Avaliacoes->Estagiarios->find()
-                ->contain(["Estudantes", "Supervisores", "instituicoes"])
-                ->where(["Estagiarios.id" => $id])
-                ->first();
+            ]);
         }
+            
+        $estagiario = $this->Avaliacoes->Estagiarios->find()
+            ->contain(["Estudantes", "Supervisores", "instituicoes"])
+            ->where(["Estagiarios.id" => $id])
+            ->first();
+        
         $this->set("estagiario", $estagiario);
+
     }
 
     /**
@@ -362,35 +340,37 @@ class AvaliacoesController extends AppController
     public function imprimeavaliacaopdf($id = null)
     {
         $estagiario_id = $this->request->getQuery("estagiario_id");
+
         $this->Authorization->skipAuthorization();
+
         if ($estagiario_id === null) {
             $this->Flash->error(__("Selecionar estagiário."));
             return $this->redirect([
                 "controller" => "estagiarios",
                 "action" => "index",
             ]);
-        } else {
-            $avaliacao = $this->Avaliacoes->find()
-                ->contain([
-                    "Estagiarios" => [
+        }
+        
+        $avaliacao = $this->Avaliacoes->find()
+            ->contain([
+                "Estagiarios" => [
                         "Alunos",
                         "Supervisores",
                         "Professores",
                         "Instituicoes",
                     ],
                 ])
-                ->where(["Estagiarios.id" => $estagiario_id])
-                ->first();
-            if ($avaliacao === null) {
-                $this->Flash->error(__("Avaliação não foi encontrada."));
-                return $this->redirect([
-                    "controller" => "estagiarios",
-                    "action" => "view",
-                    $estagiario_id,
-                ]);
-            }
-        }
+            ->where(["Estagiarios.id" => $estagiario_id])
+            ->first();
 
+        if ($avaliacao === null) {
+            $this->Flash->error(__("Avaliação não foi encontrada."));
+            return $this->redirect([
+                "controller" => "estagiarios",
+                "action" => "view",
+                $estagiario_id,
+            ]);
+        
         $this->viewBuilder()->enableAutoLayout(false);
         $this->viewBuilder()->setClassName("CakePdf.Pdf");
         $this->viewBuilder()->setOption("pdfConfig", [
@@ -399,5 +379,6 @@ class AvaliacoesController extends AppController
             "filename" => "avaliacao_discente_" . $id . ".pdf",
         ]);
         $this->set("avaliacao", $avaliacao);
+        }
     }
 }

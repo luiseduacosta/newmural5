@@ -33,7 +33,13 @@ class MonografiasController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Monografias);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $query = $this->Monografias->find()
             ->contain(['Docentes', 'Areamonografias', 'Tccestudantes']);
 
@@ -68,7 +74,6 @@ class MonografiasController extends AppController
      */
     public function view($id = null)
     {
-        $this->Authorization->skipAuthorization();
         try  {
             $monografia = $this->Monografias->get($id, [
                 'contain' => ['Docentes', 'Docentes1', 'Docentes2', 'Docentes3', 'Areamonografias', 'Tccestudantes'],
@@ -77,7 +82,14 @@ class MonografiasController extends AppController
             $this->Flash->error(__('Monografia não encontrada.'));
             return $this->redirect(['action' => 'index']);
         }
-        
+
+        try {
+            $this->Authorization->authorize($monografia);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         // $this->Authorization->authorize($monografia); // Skipped to match legacy logic
         $baseUrl = Router::url('/', true);
         $this->set(compact('monografia', 'baseUrl'));
@@ -91,7 +103,13 @@ class MonografiasController extends AppController
     public function add()
     {
         $monografia = $this->Monografias->newEmptyEntity();
-        $this->Authorization->authorize($monografia);
+
+        try {
+            $this->Authorization->authorize($monografia);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is('post')) {
             $dados = $this->request->getData();
@@ -166,10 +184,13 @@ class MonografiasController extends AppController
      */
     private function saveTccEstudantes($monografiaId, $estudantesIds)
     {
+        try {
+            $this->Authorization->authorize($this->Monografias->Tccestudantes);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $estudantesTable = $this->fetchTable('Alunos'); // Was Estudantes, but likely Alunos in my context? Or TCC4 had Estudantes table?
-        // Checking TCC4 AlunosController used Alunos table. TCC4 Monografias used 'Estudantes' in saveTccEstudantes?
-        // Wait, TCC4 MonografiasController: $estudantetable = $this->fetchTable('Alunos'); in estudantes() method.
-        // So it uses Alunos table but aliases variables as estudantes.
         
         foreach ($estudantesIds as $registro) {
             if (empty($registro)) continue;
@@ -210,8 +231,13 @@ class MonografiasController extends AppController
             $this->Flash->error(__('Monografia não encontrada.'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->authorize($monografia);
+
+        try {
+            $this->Authorization->authorize($monografia);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $dados = $this->request->getData();
@@ -257,6 +283,7 @@ class MonografiasController extends AppController
 
     private function syncTccEstudantes($monografiaId, $estudantesIds)
     {
+        $this->Authorization->skipAuthorization();
          $currentTccs = $this->Monografias->Tccestudantes->find()
             ->where(['monografia_id' => $monografiaId])
             ->all();
@@ -281,7 +308,14 @@ class MonografiasController extends AppController
 
         try {
             $monografia = $this->Monografias->get($id);
-            $this->Authorization->authorize($monografia);
+
+            try {
+                $this->Authorization->authorize($monografia);
+            } catch (\AuthorizationException $e) {
+                $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+                return $this->redirect(['action' => 'index']);
+            }
+
             if ($this->Monografias->delete($monografia)) {
                 $this->Flash->success(__('Monografia excluída.'));
             } else {
@@ -312,6 +346,7 @@ class MonografiasController extends AppController
 
     private function estudantes()
     {
+        $this->Authorization->skipAuthorization();
         /* Capturar o registro do estudante */
         $estudantetable = $this->fetchTable('Alunos');
         $estudantes = $estudantetable->find(); // all

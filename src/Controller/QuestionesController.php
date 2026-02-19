@@ -23,7 +23,13 @@ class QuestionesController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Questiones);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $query = $this->Questiones->find()->contain(["Questionarios"]);
         
         $questiones = $this->paginate($query, [
@@ -51,7 +57,6 @@ class QuestionesController extends AppController
      */
     public function view($id = null)
     {
-        $this->Authorization->skipAuthorization();
         try {
             $questione = $this->Questiones->get($id, [
                 "contain" => ["Questionarios"],
@@ -60,6 +65,14 @@ class QuestionesController extends AppController
             $this->Flash->error(__("Registro não encontrado."));
             return $this->redirect(["action" => "index"]);
         }
+
+        try {
+            $this->Authorization->authorize($questione);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $this->set(compact("questione"));
     }
 
@@ -71,7 +84,14 @@ class QuestionesController extends AppController
     public function add()
     {
         $questione = $this->Questiones->newEmptyEntity();
-        
+
+        try {
+            $this->Authorization->authorize($questione);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         // Find last order
         $ultimaPergunta = $this->Questiones
             ->find()
@@ -119,9 +139,14 @@ class QuestionesController extends AppController
             $this->Flash->error(__("Registro não encontrado."));
             return $this->redirect(["action" => "index"]);
         }
-        
-        $this->Authorization->skipAuthorization();
-        
+
+        try {
+            $this->Authorization->authorize($questione);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+                
         if ($this->request->is(["patch", "post", "put"])) {
             $questione = $this->Questiones->patchEntity(
                 $questione,
@@ -158,7 +183,12 @@ class QuestionesController extends AppController
             return $this->redirect(["action" => "index"]);
         }
         
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($questione);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->Questiones->delete($questione)) {
             $this->Flash->success(__("Pergunta excluída."));

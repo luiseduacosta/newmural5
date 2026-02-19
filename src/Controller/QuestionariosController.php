@@ -20,7 +20,12 @@ class QuestionariosController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Questionarios);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $questionarios = $this->paginate($this->Questionarios);
         $this->set(compact('questionarios'));
     }
@@ -43,6 +48,13 @@ class QuestionariosController extends AppController
             $this->Flash->error(__('Registro não encontrado.'));
             return $this->redirect(['action' => 'index']);
         }
+
+        try {
+            $this->Authorization->authorize($questionario);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $this->set(compact('questionario'));
     }
 
@@ -54,7 +66,13 @@ class QuestionariosController extends AppController
     public function add()
     {
         $questionario = $this->Questionarios->newEmptyEntity();
-        $this->Authorization->skipAuthorization(); // Admin only? 
+
+        try {
+            $this->Authorization->authorize($questionario);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->request->is('post')) {
             $questionario = $this->Questionarios->patchEntity($questionario, $this->request->getData());
@@ -86,7 +104,12 @@ class QuestionariosController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
-        $this->Authorization->skipAuthorization(); // Admin only?
+        try {
+            $this->Authorization->authorize($questionario);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             $questionario = $this->Questionarios->patchEntity($questionario, $this->request->getData());
@@ -115,8 +138,13 @@ class QuestionariosController extends AppController
             $this->Flash->error(__('Registro não encontrado.'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->skipAuthorization();
+
+        try {
+            $this->Authorization->authorize($questionario);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->Questionarios->delete($questionario)) {
             $this->Flash->success(__('Questionário excluído.'));

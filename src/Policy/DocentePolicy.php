@@ -19,7 +19,7 @@ class DocentePolicy {
      * @param \App\Model\Entity\Docente $docente
      * @return bool
      */
-    public function canw+(?IdentityInterface $user, Docente $docente) {
+    public function canAdd(?IdentityInterface $user, Docente $docente) {
         return isset($user) && $user->categoria == '1';
     }
 
@@ -30,7 +30,7 @@ class DocentePolicy {
      * @param \App\Model\Entity\Docente $docente
      * @return bool
      */
-    public function canw+(?IdentityInterface $user, Docente $docente) {
+    public function canEdit(?IdentityInterface $user, Docente $docente) {
         return isset($user) && $user->categoria == '1';
     }
 
@@ -41,7 +41,7 @@ class DocentePolicy {
      * @param \App\Model\Entity\Docente $docente
      * @return bool
      */
-    public function canw+(?IdentityInterface $user, Docente $docente) {
+    public function canDelete(?IdentityInterface $user, Docente $docente) {
         return isset($user) && $user->categoria == '1';
     }
 
@@ -52,7 +52,7 @@ class DocentePolicy {
      * @param \App\Model\Entity\Docente $docente
      * @return bool
      */
-    public function canw+(?IdentityInterface $user, Docente $docente) {
+    public function canView(?IdentityInterface $user, Docente $docente) {
         if (!isset($user)) {
             return false;
         }

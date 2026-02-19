@@ -19,7 +19,13 @@ class InstituicoesController extends AppController
      */
     public function index($instituicao = null)
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Instituicoes);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $query = $this->Instituicoes->find()->contain(['Areainstituicoes']);
         
         $query->order(['Instituicoes.instituicao' => 'ASC']);
@@ -39,13 +45,20 @@ class InstituicoesController extends AppController
     {
         // Aumentar a memória
         ini_set('memory_limit', '512M');
-        $this->Authorization->skipAuthorization();
+ 
         try {
             $instituicao = $this->Instituicoes->get($id, [
                 'contain' => ['Areainstituicoes', 'Supervisores', 'Estagiarios' => ['Alunos', 'Instituicoes', 'Professores', 'Supervisores', 'Turmaestagios'], 'Muralestagios', 'Visitas']
             ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('Instituição não encontrada.'));
+            return $this->redirect(['action' => 'index']);
+        }
+ 
+        try {
+            $this->Authorization->authorize($instituicao);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -60,7 +73,12 @@ class InstituicoesController extends AppController
     public function add()
     {
         $instituicao = $this->Instituicoes->newEmptyEntity();
-        $this->Authorization->authorize($instituicao);
+        try {
+            $this->Authorization->authorize($instituicao);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is('post')) {
             $instituicao = $this->Instituicoes->patchEntity($instituicao, $this->request->getData());
@@ -92,8 +110,13 @@ class InstituicoesController extends AppController
             $this->Flash->error(__('Instituição não encontrada.'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->authorize($instituicao);
+
+        try {
+            $this->Authorization->authorize($instituicao);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $instituicao = $this->Instituicoes->patchEntity($instituicao, $this->request->getData());
@@ -124,8 +147,13 @@ class InstituicoesController extends AppController
             $this->Flash->error(__('Instituição não encontrada.'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->authorize($instituicao);
+
+        try {
+            $this->Authorization->authorize($instituicao);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->Instituicoes->delete($instituicao)) {
             $this->Flash->success(__('Instituição de estágio excluída.'));

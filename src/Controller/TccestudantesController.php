@@ -20,7 +20,12 @@ class TccestudantesController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Tccestudantes);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         $query = $this->Tccestudantes->find()
             ->contain(['Monografias']);
@@ -63,7 +68,6 @@ class TccestudantesController extends AppController
      */
     public function view($id = null)
     {
-        $this->Authorization->skipAuthorization();
         try {
             $tccestudante = $this->Tccestudantes->get($id, [
                 'contain' => ['Monografias'],
@@ -72,6 +76,14 @@ class TccestudantesController extends AppController
             $this->Flash->error(__('Registro não encontrado.'));
             return $this->redirect(['action' => 'index']);
         }
+
+        try {
+            $this->Authorization->authorize($tccestudante);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $this->set('tccestudante', $tccestudante);
     }
 
@@ -104,7 +116,12 @@ class TccestudantesController extends AppController
         }
 
         $tccestudante = $this->Tccestudantes->newEmptyEntity();
-        $this->Authorization->authorize($tccestudante);
+        try {
+            $this->Authorization->authorize($tccestudante);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is('post')) {
             $tccestudante = $this->Tccestudantes->patchEntity($tccestudante, $this->request->getData());
@@ -155,7 +172,12 @@ class TccestudantesController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
-        $this->Authorization->authorize($tccestudante);
+        try {
+            $this->Authorization->authorize($tccestudante);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $tccestudante = $this->Tccestudantes->patchEntity($tccestudante, $this->request->getData());
@@ -191,8 +213,13 @@ class TccestudantesController extends AppController
              $this->Flash->error(__('Registro não encontrado'));
              return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->authorize($tccestudante);
+
+        try {
+            $this->Authorization->authorize($tccestudante);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if ($this->Tccestudantes->delete($tccestudante)) {
             $this->Flash->success(__('Estudante autor de TCC excluído.'));

@@ -17,7 +17,13 @@ class ConfiguracoesController extends AppController {
      * @return \Cake\Http\Response|null|void Renders view
      */
     public function index() {
-        $this->Authorization->skipAuthorization();
+
+        try {
+            $this->Authorization->authorize($this->Configuracoes);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar as configurações. Tente novamente.'));
+            return $this->redirect(['Controller' => 'Configuracoes', 'action' => 'index']);
+        }
         $configuracao = $this->paginate($this->Configuracoes);
         $this->set(compact('configuracao'));
     }
@@ -30,7 +36,7 @@ class ConfiguracoesController extends AppController {
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null) {
-        $this->Authorization->skipAuthorization();
+
         try {
             $configuracao = $this->Configuracoes->get($id, [
                 'contain' => [],
@@ -38,6 +44,13 @@ class ConfiguracoesController extends AppController {
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('Configuracao nao foi encontrado. Tente novamente.'));
             return $this->redirect(['action' => 'index']);
+        }
+
+        try {
+            $this->Authorization->authorize($configuracao);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar as configurações. Tente novamente.'));
+            return $this->redirect(['Controller' => 'Configuracoes', 'action' => 'index']);
         }
         $this->set(compact('configuracao'));
     }
@@ -48,8 +61,16 @@ class ConfiguracoesController extends AppController {
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
     public function add() {
+
         $configuracao = $this->Configuracoes->newEmptyEntity();
-        $this->Authorization->authorize($configuracao);
+
+        try {
+            $this->Authorization->authorize($configuracao);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar as configurações. Tente novamente.'));
+            return $this->redirect(['Controller' => 'Configuracoes', 'action' => 'index']);
+        }
+
         if ($this->request->is('post')) {
             $configuracao = $this->Configuracoes->patchEntity($configuracao, $this->request->getData());
             if ($this->Configuracoes->save($configuracao)) {
@@ -69,6 +90,7 @@ class ConfiguracoesController extends AppController {
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function edit($id = null) {
+
         try {
             $configuracao = $this->Configuracoes->get($id, [
                 'contain' => [],
@@ -77,7 +99,13 @@ class ConfiguracoesController extends AppController {
             $this->Flash->error(__('Configuracao nao foi encontrado. Tente novamente.'));
             return $this->redirect(['action' => 'index']);
         }
-        $this->Authorization->authorize($configuracao);
+
+        try {
+            $this->Authorization->authorize($configuracao);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar as configurações. Tente novamente.'));
+            return $this->redirect(['Controller' => 'Configuracoes', 'action' => 'index']);
+        }
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             $configuracao = $this->Configuracoes->patchEntity($configuracao, $this->request->getData());
@@ -105,7 +133,13 @@ class ConfiguracoesController extends AppController {
             $this->Flash->error(__('Configuracao nao foi encontrado. Tente novamente.'));
             return $this->redirect(['action' => 'index']);
         }
-        $this->Authorization->authorize($configuracao);
+
+        try {
+            $this->Authorization->authorize($configuracao);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar as configurações. Tente novamente.'));
+            return $this->redirect(['Controller' => 'Configuracoes', 'action' => 'index']);
+        }
         
         if ($this->Configuracoes->delete($configuracao)) {
             $this->Flash->success(__('Dados de configuração excluídos.'));

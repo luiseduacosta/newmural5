@@ -19,7 +19,12 @@ class AreainstituicoesController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Areainstituicoes);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para visualizar as áreas de instituição."));
+            return $this->redirect(["controller" => "Instituicoes", "action" => "index"]);
+        }
         $areainstituicoes = $this->paginate($this->Areainstituicoes);
         $this->set(compact('areainstituicoes'));
     }
@@ -33,7 +38,6 @@ class AreainstituicoesController extends AppController
      */
     public function view($id = null)
     {
-        $this->Authorization->skipAuthorization();
         try {
             $areainstituicao = $this->Areainstituicoes->get($id, [
                 'contain' => ['Instituicoes' => ['sort' => ['instituicao' => 'ASC']]],
@@ -41,6 +45,13 @@ class AreainstituicoesController extends AppController
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('Área de instituição não encontrada.'));
             return $this->redirect(['action' => 'index']);
+        }
+
+        try {
+            $this->Authorization->authorize($areainstituicao);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para visualizar a área de instituição."));
+            return $this->redirect(["controller" => "Instituicoes", "action" => "index"]);
         }
         $this->set(compact('areainstituicao'));
     }
@@ -53,7 +64,13 @@ class AreainstituicoesController extends AppController
     public function add()
     {
         $areainstituicao = $this->Areainstituicoes->newEmptyEntity();
-        $this->Authorization->authorize($areainstituicao);
+        try {
+            $this->Authorization->authorize($areainstituicao);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para inserir áreas de instituição."));
+            return $this->redirect(["controller" => "Instituicoes", "action" => "index"]);
+        }
+
         if ($this->request->is('post')) {
             $areainstituicao = $this->Areainstituicoes->patchEntity($areainstituicao, $this->request->getData());
             if ($this->Areainstituicoes->save($areainstituicao)) {
@@ -75,7 +92,6 @@ class AreainstituicoesController extends AppController
      */
     public function edit($id = null)
     {
-        $this->Authorization->skipAuthorization();
         try {
             $areainstituicao = $this->Areainstituicoes->get($id, [
                 'contain' => [],
@@ -84,7 +100,13 @@ class AreainstituicoesController extends AppController
             $this->Flash->error(__('Área de instituição não encontrada.'));
             return $this->redirect(['action' => 'index']);
         }
-        $this->Authorization->authorize($areainstituicao);
+
+        try {
+            $this->Authorization->authorize($areainstituicao);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para editar a área de instituição."));
+            return $this->redirect(["controller" => "Instituicoes", "action" => "index"]);
+        }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $areainstituicao = $this->Areainstituicoes->patchEntity($areainstituicao, $this->request->getData());
@@ -108,7 +130,6 @@ class AreainstituicoesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $this->Authorization->skipAuthorization();
         try {
             $areainstituicao = $this->Areainstituicoes->get($id, [
                 'contain' => [],
@@ -117,8 +138,14 @@ class AreainstituicoesController extends AppController
             $this->Flash->error(__('Área de instituição não encontrada.'));
             return $this->redirect(['action' => 'index']);
         }
+        
+        try {
+            $this->Authorization->authorize($areainstituicao);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__("Acesso negado. Você não tem permissão para excluir a área de instituição."));
+            return $this->redirect(["controller" => "Instituicoes", "action" => "index"]);
+        }
 
-        $this->Authorization->authorize($areainstituicao);
         if ($this->Areainstituicoes->delete($areainstituicao)) {
             $this->Flash->success(__('Área da instituição excluída.'));
         } else {

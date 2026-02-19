@@ -33,7 +33,13 @@ class ProfessoresController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Professores);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $query = $this->Professores->find();
         
         // Sorting managed by paginate defaults or query params
@@ -60,41 +66,15 @@ class ProfessoresController extends AppController
      */
     public function view($id = null)
     {
-        $this->Authorization->skipAuthorization();
-        $user = $this->Authentication->getIdentity();
-        
-        if (isset($user) && ($user->categoria == '1' || $user->categoria == '3')) {
-            if ($id === null) {
-                $siape = $this->getRequest()->getQuery('siape');
-                if ($siape) {
-                    $query = $this->Professores->find()
-                        ->where(['siape' => $siape])
-                        ->first();
-                    if ($query) $id = $query->id;
-                } else {
-                    if ($user->categoria == '3') { // Professor
-                        $siape = $user->numero;
-                        if ($siape) {
-                            $query = $this->Professores->find()
-                                ->where(['siape' => $siape])
-                                ->first();
-                            if ($query) $id = $query->id;
-                        }
-                    }
-                }
-            }
-        } else {
-            $this->Flash->error(__('Acesso não autorizado para este recurso.'));
-            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
-        }
-        
-        if ($id === null) {
-             $this->Flash->error(__('Professor não identificado.'));
+         
+        if ($id == null) {
+             $this->Flash->error(__('Professor(a) não identificado(a).'));
              return $this->redirect(['action' => 'index']);
         }
 
         /** Têm Professores com muitos estagiários: aumentar a memória */
         ini_set('memory_limit', '2048M');
+
         try {
             $professor = $this->Professores->get(
                 $id,
@@ -104,6 +84,13 @@ class ProfessoresController extends AppController
             );
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('Nao ha registros de professor para esse numero!'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        try {
+            $this->Authorization->authorize($professor);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -147,7 +134,13 @@ class ProfessoresController extends AppController
         }
 
         $professor = $this->Professores->newEmptyEntity();
-        $this->Authorization->authorize($professor);
+ 
+        try {
+            $this->Authorization->authorize($professor);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
@@ -191,8 +184,13 @@ class ProfessoresController extends AppController
             $this->Flash->error(__('Professor incorreto.'));
             return $this->redirect(['action' => 'index']);
         }
-        
-        $this->Authorization->authorize($professor);
+ 
+        try {
+            $this->Authorization->authorize($professor);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $professor = $this->Professores->patchEntity($professor, $this->request->getData());
@@ -225,7 +223,12 @@ class ProfessoresController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
-        $this->Authorization->authorize($professor);
+        try {
+            $this->Authorization->authorize($professor);
+        } catch (\AuthorizationException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            return $this->redirect(['action' => 'index']);
+        }
         
         if (count($professor->estagiarios) > 0) {
             $this->Flash->error(__('Professor(a) tem estagiários associados'));
