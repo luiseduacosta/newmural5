@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\Questionario> $questionarios
+ * @var iterable<\App\Model\Entity\Questionario $questionarios
  */
 ?>
 <?php echo $this->element('menu_mural') ?>

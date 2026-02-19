@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\Questione $questione
+ * @var \App\Model\Entity\Questao $questao
  */
 ?>
 
@@ -12,16 +12,12 @@
 <div class="container mt-1">
 
     <nav class="nav navbar-expand-lg navbar-light bg-light">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <ul class="navbar-nav collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav collapse navbar-collapse">
             <li class="nav-item">
-                <?= $this->Html->link(__('Editar'), ['action' => 'edit', $questione->id], ['class' => 'btn btn-primary me-1']) ?>
+                <?= $this->Html->link(__('Editar'), ['action' => 'edit', $questao->id], ['class' => 'btn btn-primary me-1']) ?>
             </li>
             <li class="nav-item">
-                <?= $this->Form->postLink(__('Excluir'), ['action' => 'delete', $questione->id], ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $questione->id), 'class' => 'btn btn-danger me-1']) ?>
+                <?= $this->Form->postLink(__('Excluir'), ['action' => 'delete', $questao->id], ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $questao->id), 'class' => 'btn btn-danger me-1']) ?>
             </li>
             <li class="nav-item">
                 <?= $this->Html->link(__('Listar'), ['action' => 'index'], ['class' => 'btn btn-primary me-1']) ?>
@@ -33,32 +29,32 @@
     </nav>
 
     <div class="container mt-1">
-        <h3><?= h($questione->text) ?></h3>
+        <h3><?= h($questao->text) ?></h3>
         <table class="table table-striped table-hover table-responsive">
             <tr>
                 <th><?= __('Questionario') ?></th>
-                <td><?= $questione->hasValue('questionario') ? $this->Html->link($questione->questionario->title, ['controller' => 'Questionarios', 'action' => 'view', $questione->questionario->id]) : '' ?>
+                <td><?= $questao->hasValue('questionario') ? $this->Html->link($questao->questionario->title, ['controller' => 'Questionarios', 'action' => 'view', $questao->questionario->id]) : '' ?>
                 </td>
             </tr>
             <tr>
                 <th><?= __('Id') ?></th>
-                <td><?= $this->Number->format($questione->id) ?></td>
+                <td><?= $this->Number->format($questao->id) ?></td>
             </tr>
             <tr>
                 <th><?= __('Text') ?></th>
-                <td><?= h($questione->text) ?></td>
+                <td><?= h($questao->text) ?></td>
             </tr>
             <tr>
                 <th><?= __('Tipo') ?></th>
-                <td><?= h($questione->type) ?></td>
+                <td><?= h($questao->type) ?></td>
             </tr>
             <tr>
                 <th><?= __('Opções') ?></th>
                 <td>
                     <?php
-                    if (!empty($questione->options)) {
+                    if (!empty($questao->options)) {
                         $i = 0;
-                        $opcoes = json_decode($questione->options, true);
+                        $opcoes = json_decode($questao->options, true);
                         // pr($opcoes);
                         for ($i = 0; $i <= array_key_last($opcoes); $i++):
                             if ($i === array_key_last($opcoes)):
@@ -73,15 +69,15 @@
             </tr>
             <tr>
                 <th><?= __('Ordem') ?></th>
-                <td><?= $questione->ordem === null ? '' : $this->Number->format($questione->ordem) ?></td>
+                <td><?= $questao->ordem === null ? '' : $this->Number->format($questao->ordem) ?></td>
             </tr>
             <tr>
                 <th><?= __('Criado') ?></th>
-                <td><?= $this->Time->format($questione->created, 'd-MM-Y HH:mm:ss') ?></td>
+                <td><?= $this->Time->format($questao->created, 'd-MM-Y HH:mm:ss') ?></td>
             </tr>
             <tr>
                 <th><?= __('Modificado') ?></th>
-                <td><?= $this->Time->format($questione->modified, 'd-MM-Y HH:mm:ss') ?></td>
+                <td><?= $this->Time->format($questao->modified, 'd-MM-Y HH:mm:ss') ?></td>
             </tr>
         </table>
     </div>

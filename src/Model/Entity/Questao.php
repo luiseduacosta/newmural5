@@ -6,7 +6,7 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Questione Entity
+ * Questao Entity
  *
  * @property int $id
  * @property int $questionario_id
@@ -19,7 +19,7 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\Questionario $questionario
  */
-class Questione extends Entity
+class Questao extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

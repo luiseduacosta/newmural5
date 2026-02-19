@@ -15,11 +15,11 @@ class SupervisoresTablePolicy {
     /**
      * Check if $user can index Supervisores
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Table\SupervisoresTable $supervisores
      * @return bool
      */
-    public function canw+(?IdentityInterface $user, SupervisoresTable $supervisores) {
+    public function canIndex(?IdentityInterface $user, SupervisoresTable $supervisores) {
         return isset($user->categoria) && $user->categoria == '1' || $user->categoria == '4';
     }
 

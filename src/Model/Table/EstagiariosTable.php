@@ -74,7 +74,7 @@ class EstagiariosTable extends Table
         ]);
 
         $this->hasOne("Respostas", [
-            "foreignKey" => "estagiarios_id",
+            "foreignKey" => "estagiario_id",
             "joinType" => "LEFT",
         ]);
 

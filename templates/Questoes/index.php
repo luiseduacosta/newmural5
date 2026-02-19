@@ -1,9 +1,8 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\Questione> $questiones
+ * @var iterable<\App\Model\Entity\Questao $questoes 
  */
-// pr($questiones);
 ?>
 
 <?php echo $this->element("menu_mural"); ?>
@@ -42,24 +41,24 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($questiones as $questione): ?>
+                <?php foreach ($questoes as $questao): ?>
                     <tr>
-                        <td><?= $this->Number->format($questione->id) ?></td>
-                        <td><?= $questione->has("questionario")
+                        <td><?= $this->Number->format($questao->id) ?></td>
+                        <td><?= $questao->has("questionario")
                             ? $this->Html->link(
-                                $questione->questionario->title,
+                                $questao->questionario->title,
                                 [
                                     "controller" => "Questionarios",
                                     "action" => "view",
-                                    $questione->questionario->id,
+                                    $questao->questionario->id,
                                 ],
                             )
                             : "" ?>
                         </td>
-                        <td><?= h($questione->text) ?></td>
-                        <td><?= h($questione->type) ?></td>
+                        <td><?= h($questao->text) ?></td>
+                        <td><?= h($questao->type) ?></td>
                         <td>
-                            <?php if ($questione->options) {
+                            <?php if ($questao->options) {
                                 $opcoes = json_decode(
                                     $questione->options,
                                     true,
@@ -77,29 +76,29 @@
                                 endfor;
                             } ?>
                         </td>
-                        <td><?= $questione->ordem === null
+                        <td><?= $questao->ordem === null
                             ? ""
-                            : $this->Number->format($questione->ordem) ?></td>
+                            : $this->Number->format($questao->ordem) ?></td>
                         <td class="d-grid">
                             <?= $this->Html->link(__("Ver"), [
                                 "action" => "view",
-                                $questione->id,
+                                $questao->id,
                             ], [
                                 "class" => "btn btn-primary btn-sm btn-block p-1 mb-1",
                             ]) ?>
                             <?= $this->Html->link(__("Editar"), [
                                 "action" => "edit",
-                                $questione->id,
+                                $questao->id,
                             ], [
                                 "class" => "btn btn-primary btn-sm btn-block p-1 mb-1",
                             ]) ?>
                             <?= $this->Form->postLink(
                                 __("Excluir"),
-                                ["action" => "delete", $questione->id],
+                                ["action" => "delete", $questao->id],
                                 [
                                     "confirm" => __(
                                         "Tem certeza que deseja excluir este registro # {0}?",
-                                        $questione->id,
+                                        $questao->id,
                                     ),
                                     'class' => 'btn btn-danger btn-sm btn-block p-1 mb-1',
                                 ],

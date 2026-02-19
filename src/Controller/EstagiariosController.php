@@ -201,7 +201,7 @@ class EstagiariosController extends AppController
         }
 
         $resposta = $this->fetchTable("Respostas")->find()
-            ->where(['Respostas.estagiarios_id' => $estagiario->id])
+            ->where(['Respostas.estagiario_id' => $estagiario->id])
             ->first();
 
         $avaliacoes = [];

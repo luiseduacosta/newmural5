@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\Questione $questione
+ * @var \App\Model\Entity\Questao $questao
  * @var string[]|\Cake\Collection\CollectionInterface $questionarios
  */
 ?>
@@ -16,8 +16,8 @@
             <li class="nav-item">
                 <?= $this->Form->postLink(
                     __('Excluir'),
-                    ['action' => 'delete', $questione->id],
-                    ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $questione->id), 'class' => 'btn btn-danger me-1']
+                    ['action' => 'delete', $questao->id],
+                    ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $questao->id), 'class' => 'btn btn-danger me-1']
                 ) ?>
             </li>
             <li class="nav-item">
@@ -27,7 +27,7 @@
     </nav>
 
     <div class="container mt-1">
-        <?= $this->Form->create($questione) ?>
+        <?= $this->Form->create($questao) ?>
         <fieldset>
             <legend><?= __('Editar') ?></legend>
             <?php

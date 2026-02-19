@@ -17,7 +17,7 @@ use Cake\ORM\Entity;
  * @property string|null $category
  * @property string|null $target_user_type
  *
- * @property \App\Model\Entity\Questione[] $questiones
+ * @property \App\Model\Entity\Questoes[] $questoes
  */
 class Questionario extends Entity
 {
@@ -38,6 +38,6 @@ class Questionario extends Entity
         'is_active' => true,
         'category' => true,
         'target_user_type' => true,
-        'questiones' => true,
+        'questoes' => true,
     ];
 }

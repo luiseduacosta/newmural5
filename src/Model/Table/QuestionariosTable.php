@@ -47,7 +47,7 @@ class QuestionariosTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->hasMany('Questiones', [
+        $this->hasMany('Questoes', [
             'foreignKey' => 'questionario_id',
         ]);
     }

@@ -37,7 +37,7 @@
         <table class="table table-striped table-hover table-responsive">
             <tr>
                 <th><?= __('Titulo') ?></th>
-                <td><?= $this->Html->link($questionario->title, ['controller' => 'Questiones', 'action' => 'index']) ?></td>
+                <td><?= $this->Html->link($questionario->title, ['controller' => 'Questoes', 'action' => 'index']) ?></td>
             </tr>
             <tr>
                 <th><?= __('Categoria') ?></th>
@@ -72,7 +72,7 @@
         </div>
         <div class="container mt-1">
             <h4><?= __('Questões') ?></h4>
-            <?php if (!empty($questionario->questiones)): ?>
+            <?php if (!empty($questionario->questoes)): ?>
                 <div class="container mr-1">
                     <table class="table table-striped table-hover table-responsive">
                         <tr>
@@ -84,18 +84,18 @@
                             <th><?= __('Ordem') ?></th>
                             <th><?= __('Ações') ?></th>
                         </tr>
-                        <?php foreach ($questionario->questiones as $questiones): ?>
+                        <?php foreach ($questionario->questoes as $questoes): ?>
                             <tr>
-                                <td><?= h($questiones->id) ?></td>
-                                <td><?= h($questiones->questionario_id) ?></td>
-                                <td><?= h($questiones->text) ?></td>
-                                <td><?= h($questiones->type) ?></td>
-                                <td><?= h($questiones->options) ?></td>
-                                <td><?= h($questiones->ordem) ?></td>
+                                <td><?= h($questoes->id) ?></td>
+                                <td><?= h($questoes->questionario_id) ?></td>
+                                <td><?= h($questoes->text) ?></td>
+                                <td><?= h($questoes->type) ?></td>
+                                <td><?= h($questoes->options) ?></td>
+                                <td><?= h($questoes->ordem) ?></td>
                                 <td class="d-grid">
-                                    <?= $this->Html->link(__('Ver'), ['controller' => 'Questiones', 'action' => 'view', $questiones->id], ['class' => 'btn btn-primary btn-sm btn-block p-1 mb-1']) ?>
-                                    <?= $this->Html->link(__('Editar'), ['controller' => 'Questiones', 'action' => 'edit', $questiones->id], ['class' => 'btn btn-primary btn-sm btn-block p-1 mb-1']) ?>
-                                    <?= $this->Form->postLink(__('Excluir'), ['controller' => 'Questiones', 'action' => 'delete', $questiones->id], ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $questiones->id), 'class' => 'btn btn-danger btn-sm btn-block p-1 mb-1']) ?>
+                                    <?= $this->Html->link(__('Ver'), ['controller' => 'Questoes', 'action' => 'view', $questoes->id], ['class' => 'btn btn-primary btn-sm btn-block p-1 mb-1']) ?>
+                                    <?= $this->Html->link(__('Editar'), ['controller' => 'Questoes', 'action' => 'edit', $questoes->id], ['class' => 'btn btn-primary btn-sm btn-block p-1 mb-1']) ?>
+                                    <?= $this->Form->postLink(__('Excluir'), ['controller' => 'Questoes', 'action' => 'delete', $questoes->id], ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $questoes->id), 'class' => 'btn btn-danger btn-sm btn-block p-1 mb-1']) ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

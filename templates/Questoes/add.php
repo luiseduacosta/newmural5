@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\Questione $questione
+ * @var \App\Model\Entity\Questao $questao
  * @var \Cake\Collection\CollectionInterface|string[] $questionarios
  */
 ?>
@@ -20,7 +20,7 @@
     </nav>
 
     <div class="container mt-1">
-        <?= $this->Form->create($questione) ?>
+        <?= $this->Form->create($questao) ?>
         <fieldset>
             <legend><?= __('Nova questão') ?></legend>
             <div class="mb-3 row">

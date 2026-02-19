@@ -4,18 +4,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 /**
- * Questiones Controller
+ * Questoes Controller
  *
- * @property \App\Model\Table\QuestionesTable $Questiones
+ * @property \App\Model\Table\QuestoesTable $Questoes
  * @property \Authorization\Controller\Component\AuthorizationComponent $Authorization
- * @property \Authentication\Controller\Component\AuthenticationComponent $Authentication
- * @method \App\Model\Entity\Questione[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
-class QuestionesController extends AppController
+class QuestoesController extends AppController
 {
-    // Pagination defaults usually in property but method arg overrides.
-    // Keeping logic inside index method for clarity in 5.
-    
     /**
      * Index method
      *
@@ -24,15 +19,15 @@ class QuestionesController extends AppController
     public function index()
     {
         try {
-            $this->Authorization->authorize($this->Questiones);
+            $this->Authorization->authorize($this->Questoes);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
-        $query = $this->Questiones->find()->contain(["Questionarios"]);
+        $query = $this->Questoes->find()->contain(["Questionarios"]);
         
-        $questiones = $this->paginate($query, [
+        $questoes = $this->paginate($query, [
             "sortableFields" => [
                 "id",
                 "type",
@@ -45,20 +40,20 @@ class QuestionesController extends AppController
             "limit" => 20,
         ]);
 
-        $this->set(compact("questiones"));
+        $this->set(compact("questoes"));
     }
 
     /**
      * View method
      *
-     * @param string|null $id Questione id.
+     * @param string|null $id Questao id.
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
         try {
-            $questione = $this->Questiones->get($id, [
+            $questao = $this->Questoes->get($id, [
                 "contain" => ["Questionarios"],
             ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
@@ -67,13 +62,13 @@ class QuestionesController extends AppController
         }
 
         try {
-            $this->Authorization->authorize($questione);
+            $this->Authorization->authorize($questao);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
-        $this->set(compact("questione"));
+        $this->set(compact("questao"));
     }
 
     /**
@@ -83,17 +78,17 @@ class QuestionesController extends AppController
      */
     public function add()
     {
-        $questione = $this->Questiones->newEmptyEntity();
+        $questao = $this->Questoes->newEmptyEntity();
 
         try {
-            $this->Authorization->authorize($questione);
+            $this->Authorization->authorize($questao);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
         // Find last order
-        $ultimaPergunta = $this->Questiones
+        $ultimaPergunta = $this->Questoes
             ->find()
             ->order(["ordem" => "DESC"])
             ->first();
@@ -103,34 +98,34 @@ class QuestionesController extends AppController
         }
         
         if ($this->request->is("post")) {
-            $questione = $this->Questiones->patchEntity(
-                $questione,
+            $questao = $this->Questoes->patchEntity(
+                $questao,
                 $this->request->getData(),
             );
-            if ($this->Questiones->save($questione)) {
+            if ($this->Questoes->save($questao)) {
                 $this->Flash->success(__("Pergunta inserida."));
-                return $this->redirect(["action" => "view", $questione->id]);
+                return $this->redirect(["action" => "view", $questao->id]);
             }
             $this->Flash->error(__("Pergunta não inserida. Tente novamente."));
         }
         
-        $questionarios = $this->Questiones->Questionarios
+        $questionarios = $this->Questoes->Questionarios
             ->find("list", ["limit" => 200])
             ->all();
-        $this->set(compact("questione", "questionarios"));
+        $this->set(compact("questao", "questionarios"));
     }
 
     /**
      * Edit method
      *
-     * @param string|null $id Questione id.
+     * @param string|null $id Questao id.
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function edit($id = null)
     {
         try {
-            $questione = $this->Questiones->get($id, [
+            $questao = $this->Questoes->get($id, [
                 "contain" => [],
             ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
@@ -139,35 +134,35 @@ class QuestionesController extends AppController
         }
 
         try {
-            $this->Authorization->authorize($questione);
+            $this->Authorization->authorize($questao);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
                 
         if ($this->request->is(["patch", "post", "put"])) {
-            $questione = $this->Questiones->patchEntity(
-                $questione,
+            $questao = $this->Questoes->patchEntity(
+                $questao,
                 $this->request->getData(),
             );
-            if ($this->Questiones->save($questione)) {
+            if ($this->Questoes->save($questao)) {
                 $this->Flash->success(__("Pergunta atualizada."));
-                return $this->redirect(["action" => "view", $questione->id]);
+                return $this->redirect(["action" => "view", $questao->id]);
             }
             $this->Flash->error(__("Pergunta não atualizada. Tente novamente."));
         }
         
-        $questionarios = $this->Questiones->Questionarios
+        $questionarios = $this->Questoes->Questionarios
             ->find("list", ["limit" => 200])
             ->all();
             
-        $this->set(compact("questione", "questionarios"));
+        $this->set(compact("questao", "questionarios"));
     }
 
     /**
      * Delete method
      *
-     * @param string|null $id Questione id.
+     * @param string|null $id Questao id.
      * @return \Cake\Http\Response|null|void Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
@@ -175,24 +170,23 @@ class QuestionesController extends AppController
     {
         $this->request->allowMethod(["post", "delete"]);
         try {
-            $questione = $this->Questiones->get($id);
+            $questao = $this->Questoes->get($id);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__("Registro não encontrado."));
             return $this->redirect(["action" => "index"]);
         }
         
         try {
-            $this->Authorization->authorize($questione);
+            $this->Authorization->authorize($questao);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
         
-        if ($this->Questiones->delete($questione)) {
+        if ($this->Questoes->delete($questao)) {
             $this->Flash->success(__("Pergunta excluída."));
         } else {
             $this->Flash->error(__("Pergunta não excluída. Tente novamente."));
-            return $this->redirect(["action" => "view", $questione->id]);
         }
         
         return $this->redirect(["action" => "index"]);

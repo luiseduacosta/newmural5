@@ -13,13 +13,13 @@ use Authorization\IdentityInterface;
 class TccestudantesTablePolicy {
 
     /**
-     * Check if $user can index Areamonografias
+     * Check if $user can index Tccestudantes
      *
      * @param \Authorization\IdentityInterface|null $user The user.
-     * @param \App\Model\Entity\Monografia $monografia
+     * @param \App\Model\Table\TccestudantesTable $tccestudantes
      * @return bool
      */
-    public function canwIndex(?IdentityInterface $user, TccestudantesTable $tccestudantes) {
+    public function canIndex(?IdentityInterface $user, TccestudantesTable $tccestudantes) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 

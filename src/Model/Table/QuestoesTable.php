@@ -9,27 +9,27 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Questiones Model
+ * Questoes Table
  *
  * @property \App\Model\Table\QuestionariosTable&\Cake\ORM\Association\BelongsTo $Questionarios
  *
- * @method \App\Model\Entity\Questione newEmptyEntity()
- * @method \App\Model\Entity\Questione newEntity(array $data, array $options = [])
- * @method \App\Model\Entity\Questione[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Questione get($primaryKey, $options = [])
- * @method \App\Model\Entity\Questione findOrCreate($search, ?callable $callback = null, $options = [])
- * @method \App\Model\Entity\Questione patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Questione[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\Questione|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Questione saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Questione[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\Questione[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \App\Model\Entity\Questione[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\Questione[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Questao newEmptyEntity()
+ * @method \App\Model\Entity\Questao newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Questao[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Questao get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Questao findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Questao patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Questao[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Questao|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Questao saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Questao[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Questao[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Questao[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Model\Entity\Questao[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class QuestionesTable extends Table
+class QuestoesTable extends Table
 {
     /**
      * Initialize method
@@ -41,7 +41,8 @@ class QuestionesTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('questiones');
+        $this->setTable('questoes');
+        $this->setAlias('Questoes');
         $this->setDisplayField('type');
         $this->setPrimaryKey('id');
 

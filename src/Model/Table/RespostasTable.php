@@ -67,8 +67,8 @@ class RespostasTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->integer('question_id')
-            ->notEmptyString('question_id');
+            ->integer('questao_id')
+            ->notEmptyString('questao_id');
 
         $validator
             ->integer('estagiarios_id')
@@ -90,7 +90,7 @@ class RespostasTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn('question_id', 'Questiones'), ['errorField' => 'question_id']);
+        $rules->add($rules->existsIn('questao_id', 'Questoes'), ['errorField' => 'questao_id']);
         $rules->add($rules->existsIn('estagiarios_id', 'Estagiarios'), ['errorField' => 'estagiarios_id']);
 
         return $rules;

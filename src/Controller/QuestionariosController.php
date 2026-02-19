@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Authorization\Controller\Component\AuthorizationComponent;
+use Authentication\Controller\Component\AuthenticationComponent;
+
 /**
  * Questionarios Controller
  *
@@ -13,6 +16,13 @@ namespace App\Controller;
  */
 class QuestionariosController extends AppController
 {
+    public function initialize(): void
+    {
+        parent::initialize();
+
+        $this->loadComponent('Authorization.Authorization');
+        $this->loadComponent('Authentication.Authentication');
+    }
     /**
      * Index method
      *
@@ -22,8 +32,8 @@ class QuestionariosController extends AppController
     {
         try {
             $this->Authorization->authorize($this->Questionarios);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
         $questionarios = $this->paginate($this->Questionarios);
@@ -39,10 +49,9 @@ class QuestionariosController extends AppController
      */
     public function view($id = null)
     {
-        $this->Authorization->skipAuthorization();
         try {
             $questionario = $this->Questionarios->get($id, [
-                'contain' => ['Questiones'],
+                'contain' => ['Questoes'],
             ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('Registro não encontrado.'));
@@ -81,7 +90,6 @@ class QuestionariosController extends AppController
                 return $this->redirect(['action' => 'view', $questionario->id]);
             }
             $this->Flash->error(__('Questionário não inserido. Tente novamente.'));
-            // return $this->redirect(['action' => 'index']);
         }
         $this->set(compact('questionario'));
     }
@@ -150,7 +158,6 @@ class QuestionariosController extends AppController
             $this->Flash->success(__('Questionário excluído.'));
         } else {
             $this->Flash->error(__('Questionário não excluído. Tente novamente.'));
-            return $this->redirect(['action' => 'view', $questionario->id]);
         }
         
         return $this->redirect(['action' => 'index']);
