@@ -26,7 +26,6 @@ class QuestoesController extends AppController
         }
 
         $query = $this->Questoes->find()->contain(["Questionarios"]);
-        
         $questoes = $this->paginate($query, [
             "sortableFields" => [
                 "id",
@@ -39,7 +38,6 @@ class QuestoesController extends AppController
             "order" => ["ordem" => "ASC"],
             "limit" => 20,
         ]);
-
         $this->set(compact("questoes"));
     }
 
@@ -65,7 +63,7 @@ class QuestoesController extends AppController
             $this->Authorization->authorize($questao);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
 
         $this->set(compact("questao"));

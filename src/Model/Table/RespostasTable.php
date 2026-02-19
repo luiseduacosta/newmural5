@@ -11,7 +11,7 @@ use Cake\Validation\Validator;
 /**
  * Respostas Model
  *
- * @property \App\Model\Table\QuestionesTable&\Cake\ORM\Association\BelongsTo $Questiones
+ * @property \App\Model\Table\QuestionariosTable&\Cake\ORM\Association\BelongsTo $Questionarios
  * @property \App\Model\Table\EstagiariosTable&\Cake\ORM\Association\BelongsTo $Estagiarios
  *
  * @method \App\Model\Entity\Resposta newEmptyEntity()
@@ -48,12 +48,12 @@ class RespostasTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Questiones', [
-            'foreignKey' => 'question_id',
+        $this->belongsTo('Questionarios', [
+            'foreignKey' => 'questionario_id',
             'joinType' => 'INNER',
         ]);
         $this->belongsTo('Estagiarios', [
-            'foreignKey' => 'estagiarios_id',
+            'foreignKey' => 'estagiario_id',
             'joinType' => 'INNER',
         ]);
     }
@@ -67,12 +67,12 @@ class RespostasTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->integer('questao_id')
-            ->notEmptyString('questao_id');
+            ->integer('questionario_id')
+            ->notEmptyString('questionario_id');
 
         $validator
-            ->integer('estagiarios_id')
-            ->notEmptyString('estagiarios_id');
+            ->integer('estagiario_id')
+            ->notEmptyString('estagiario_id');
 
         $validator
             ->scalar('response')
@@ -90,8 +90,8 @@ class RespostasTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn('questao_id', 'Questoes'), ['errorField' => 'questao_id']);
-        $rules->add($rules->existsIn('estagiarios_id', 'Estagiarios'), ['errorField' => 'estagiarios_id']);
+        $rules->add($rules->existsIn('questionario_id', 'Questionarios'), ['errorField' => 'questionario_id']);
+        $rules->add($rules->existsIn('estagiario_id', 'Estagiarios'), ['errorField' => 'estagiario_id']);
 
         return $rules;
     }

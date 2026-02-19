@@ -26,7 +26,7 @@ use Cake\I18n\Time;
                 <tr>
                     <th><?= $this->Paginator->sort('id') ?></th>
                     <th><?= $this->Paginator->sort('estagiario.aluno.nome', 'Aluno') ?></th>
-                    <th><?= $this->Paginator->sort('estagiarios_id', 'Nível de estágio') ?></th>
+                    <th><?= $this->Paginator->sort('estagiario_id', 'Nível de estágio') ?></th>
                     <th><?= $this->Paginator->sort('created') ?></th>
                     <th><?= $this->Paginator->sort('modified') ?></th>
                     <th><?= __('Ações') ?></th>
@@ -38,7 +38,7 @@ use Cake\I18n\Time;
                         <td><?= $this->Number->format($resposta->id) ?></td>
                         <td><?= $this->Html->link($resposta->estagiario->aluno->nome, ['controller' => 'Respostas', 'action' => 'view', $resposta->id]) ?>
                         </td>
-                        <td><?= $resposta->has('estagiario') ? $this->Html->link($resposta->estagiario->nivel, ['controller' => 'Estagiarios', 'action' => 'view', $resposta->estagiario->id]) : '' ?>
+                        <td><?= $resposta->hasValue('estagiario') ? $this->Html->link($resposta->estagiario->nivel, ['controller' => 'Estagiarios', 'action' => 'view', $resposta->estagiario->id]) : '' ?>
                         </td>
                         <td><?= $this->Time->format($resposta->created, 'd-MM-Y HH:mm:ss') ?></td>
                         <td><?= $this->Time->format($resposta->modified, 'd-MM-Y HH:mm:ss') ?></td>

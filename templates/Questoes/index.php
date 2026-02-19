@@ -6,12 +6,14 @@
 ?>
 
 <?php echo $this->element("menu_mural"); ?>
+
 <?php $this->element("templates"); ?>
 
 <div class="container">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <ul class="navbar-nav collapse navbar-collapse">
+            <?php if (isset($user) && $user->categoria == '1'): ?>
             <li class="nav-item">
                 <?= $this->Html->link(
                     __("Nova questão"),
@@ -21,6 +23,7 @@
                     ],
                 ) ?>
             </li>
+            <?php endif; ?>
         </ul>
     </nav>
 
@@ -60,7 +63,7 @@
                         <td>
                             <?php if ($questao->options) {
                                 $opcoes = json_decode(
-                                    $questione->options,
+                                    $questao->options,
                                     true,
                                 );
                                 for (

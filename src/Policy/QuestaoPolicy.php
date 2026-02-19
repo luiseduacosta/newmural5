@@ -20,7 +20,7 @@ class questaoPolicy
      */
     public function canAdd(?IdentityInterface $user, questao $questao)
     {
-        if (isset($user) && $user->categoria_id === '1') {
+        if (isset($user) && $user->categoria === '1') {
             return true;
         }
         return false;
@@ -35,7 +35,7 @@ class questaoPolicy
      */
     public function canEdit(?IdentityInterface $user, questao $questao)
     {
-        if (isset($user) && $user->categoria_id === '1') {
+        if (isset($user) && $user->categoria === '1') {
             return true;
         }
         return false;
@@ -50,7 +50,7 @@ class questaoPolicy
      */
     public function canDelete(?IdentityInterface $user, questao $questao)
     {
-        if (isset($user) && $user->categoria_id === '1') {
+        if (isset($user) && $user->categoria === '1') {
             return true;
         }
         return false;

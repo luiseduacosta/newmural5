@@ -4,17 +4,16 @@
  * @var \App\Model\Entity\Estagiario $estagiarios
  * @var \App\Model\Entity\Aluno $alunos
  */
-// pr($estagiario);
-$user = $this->getRequest()->getAttribute("identity"); ?>
+?>
 
-<?php echo $this->element("menu_mural"); ?>
+<?= $this->element("menu_mural"); ?>
 
 <nav class="navbar navbar-expand-lg py-2 navbar-light bg-light" id="actions-sidebar">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerMural"
-        aria-controls="navbarTogglerMural" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerEstagiarios"
+        aria-controls="navbarTogglerEstagiarios" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <ul class="navbar-nav collapse navbar-collapse" id="navbarTogglerMural">
+    <ul class="navbar-nav collapse navbar-collapse" id="navbarTogglerEstagiarios">
         <?php if (isset($user) && $user->categoria == "1"): ?>
             <li class="nav-item">
                 <?= $this->Form->postLink(
@@ -400,7 +399,7 @@ $user = $this->getRequest()->getAttribute("identity"); ?>
                             <?= $this->Html->link(
                                 "Preencher Atividades",
                                 ['controller' => 'folhadeatividades', 'action' => 'atividade', '?' => ['estagiario_id' => $estagiario->id]],
-                                ['class' => 'btn btn-primary me-1']
+                                ['class' => 'btn btn-sm btn-primary me-1']
                             ) ?>
                             para adicionar
                             atividades.
@@ -467,7 +466,7 @@ $user = $this->getRequest()->getAttribute("identity"); ?>
                             <?= $this->Html->link(
                                 "Preencher Avaliação",
                                 ['controller' => 'respostas', 'action' => 'add', '?' => ['estagiario_id' => $estagiario->id]],
-                                ['class' => 'btn btn-primary me-1']
+                                ['class' => 'btn btn-info me-1 btn-sm']
                             ) ?>
                             para adicionar uma
                             avaliação.
@@ -495,7 +494,7 @@ $user = $this->getRequest()->getAttribute("identity"); ?>
                         </tr>
                         <tr>
                             <th><?= __("Modificado") ?></th>
-                            <td><?= $this->time->format(
+                            <td><?= $this->Time->format(
                                 $estagiario->resposta->modified,
                                 "d-MM-Y HH:mm:ss",
                             ) ?></td>

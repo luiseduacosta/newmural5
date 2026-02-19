@@ -117,7 +117,7 @@ class RespostasController extends AppController
         }
 
         $respostaExistente = $this->Respostas->find()
-            ->where(['Respostas.estagiarios_id' => $estagiario_id])
+            ->where(['Respostas.estagiario_id' => $estagiario_id])
             ->first();
             
         if ($respostaExistente) {
@@ -138,15 +138,10 @@ class RespostasController extends AppController
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             
-            // Re-map fields as per original logic?
-            // Original logic: json_encode entire data into response field.
-            // Also explicitly set question_id (default 1?), estagiarios_id.
-            
             $saveData = [];
-            $saveData['question_id'] = $data['question_id'] ?? 1;
-            $saveData['estagiarios_id'] = $estagiario_id;
+            $saveData['questionario_id'] = $data['questionario_id'] ?? 1;
+            $saveData['estagiario_id'] = $estagiario_id;
             $saveData['response'] = json_encode($data, JSON_PRETTY_PRINT);
-            // Created/Modified managed by timestamp behavior usually, but explicitly setting if needed
             
             $resposta = $this->Respostas->patchEntity($resposta, $saveData);
             
@@ -157,8 +152,8 @@ class RespostasController extends AppController
             $this->Flash->error(__('Respuesta não inserida. Tente novamente.'));
         }
         
-        $questiones = $this->Respostas->Questiones->find()->all();
-        $this->set(compact('resposta', 'questiones', 'estagiario_id'));
+        $questoes = $this->fetchTable('Questoes')->find()->all();
+        $this->set(compact('resposta', 'questoes', 'estagiario_id'));
     }
 
     /**
@@ -184,7 +179,7 @@ class RespostasController extends AppController
             return $this->redirect(['action' => 'index']);
         }
         
-        $estagiario = $this->fetchTable('Estagiarios')->get($resposta->estagiarios_id, [
+        $estagiario = $this->fetchTable('Estagiarios')->get($resposta->estagiario_id, [
             'contain' => ['Alunos']
         ]);
         
@@ -197,14 +192,16 @@ class RespostasController extends AppController
                 if (str_starts_with($key, 'avaliacao')) {
                     $pergunta_id = (int) substr($key, 9);
                     try {
-                        $pergunta = $this->fetchTable('Questiones')->get($pergunta_id);
-                        $avaliacoes[$i]['pergunta_id'] = $pergunta_id;
-                        $avaliacoes[$i]['pergunta'] = $pergunta->text;
+                        $pergunta = $this->fetchTable('Questoes')->get($pergunta_id);
+                        $avaliacoes[$i]['id'] = $pergunta->id;
+                        $avaliacoes[$i]['questionario_id'] = $pergunta->questionario_id;
+                        $avaliacoes[$i]['text'] = $pergunta->text;
                         $avaliacoes[$i]['type'] = $pergunta->type;
-                        $avaliacoes[$i]['value'] = $value;
+                        $avaliacoes[$i]['options'] = $pergunta->options;
+                        $avaliacoes[$i]['ordem'] = $pergunta->ordem;
                         
                         if (in_array($pergunta->type, ['select', 'radio', 'checkbox', 'boolean'])) {
-                            $avaliacoes[$i]['opcoes'] = json_decode($pergunta->options, true);
+                            $avaliacoes[$i]['options'] = json_decode($pergunta->options, true);
                         } else {
                             $avaliacoes[$i]['opcoes'] = null;
                         }
@@ -214,20 +211,18 @@ class RespostasController extends AppController
                     }
                 }
             }
+            
         }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
              $data = $this->request->getData();
-             // Original logic implies re-encoding the posted data into response
              $resposta->response = json_encode($data, JSON_PRETTY_PRINT);
-             // Patch other fields if any? usually strictly response content updates
              
              if ($this->Respostas->save($resposta)) {
                  $this->Flash->success(__('Resposta atualizada.'));
                  return $this->redirect(['action' => 'view', $resposta->id]);
              }
              $this->Flash->error(__('Resposta não atualizada. Tente novamente.'));
-             // return $this->redirect(['action' => 'index']);
         }
         
         $this->set(compact('resposta', 'avaliacoes', 'estagiario'));
@@ -261,7 +256,6 @@ class RespostasController extends AppController
             $this->Flash->success(__('Resposta excluída.'));
         } else {
             $this->Flash->error(__('Resposta não excluída. Tente novamente.'));
-            return $this->redirect(['action' => 'view', $resposta->id]);
         }
         
         return $this->redirect(['action' => 'index']);
