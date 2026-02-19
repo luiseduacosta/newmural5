@@ -20,8 +20,8 @@ class InstituicaoestagiosController extends AppController {
 
         try {
             $this->Authorization->authorize($this->Instituicaoestagios);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -50,8 +50,8 @@ class InstituicaoestagiosController extends AppController {
 
         try {
             $this->Authorization->authorize($instituicaoestagio);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Não autorizado a visualizar esta instituição de estágio.'));
             return $this->redirect(['action' => 'index']);
         }
         // $this->Authorization->authorize($instituicaoestagio); // Skipped to match legacy logic if needed, or re-enable
@@ -69,8 +69,8 @@ class InstituicaoestagiosController extends AppController {
 
         try {
             $this->Authorization->authorize($instituicaoestagio);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Não autorizado a adicionar instituição de estágio.'));
             return $this->redirect(['action' => 'index']);
         }
         
@@ -106,8 +106,8 @@ class InstituicaoestagiosController extends AppController {
 
         try {
             $this->Authorization->authorize($instituicaoestagio);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Não autorizado a editar instituição de estágio.'));
             return $this->redirect(['action' => 'index']);
         }
         
@@ -142,8 +142,8 @@ class InstituicaoestagiosController extends AppController {
 
         try {
             $this->Authorization->authorize($instituicaoestagio);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Não autorizado a excluir instituição de estágio.'));
             return $this->redirect(['action' => 'index']);
         }
         

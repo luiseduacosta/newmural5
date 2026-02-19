@@ -35,8 +35,8 @@ class MonografiasController extends AppController
     {
         try {
             $this->Authorization->authorize($this->Monografias);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -85,8 +85,8 @@ class MonografiasController extends AppController
 
         try {
             $this->Authorization->authorize($monografia);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -106,8 +106,8 @@ class MonografiasController extends AppController
 
         try {
             $this->Authorization->authorize($monografia);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -186,8 +186,8 @@ class MonografiasController extends AppController
     {
         try {
             $this->Authorization->authorize($this->Monografias->Tccestudantes);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
         $estudantesTable = $this->fetchTable('Alunos'); // Was Estudantes, but likely Alunos in my context? Or TCC4 had Estudantes table?
@@ -234,8 +234,8 @@ class MonografiasController extends AppController
 
         try {
             $this->Authorization->authorize($monografia);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -311,8 +311,8 @@ class MonografiasController extends AppController
 
             try {
                 $this->Authorization->authorize($monografia);
-            } catch (\AuthorizationException $e) {
-                $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            } catch (\Authorization\Exception\ForbiddenException $e) {
+                $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
                 return $this->redirect(['action' => 'index']);
             }
 

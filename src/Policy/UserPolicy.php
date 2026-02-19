@@ -33,7 +33,7 @@ class UserPolicy
      */
     public function canEdit(?IdentityInterface $user, User $resource)
     {
-        return isset($user) && $user->categoria == '1';
+        return isset($user) && $user->getOriginalData()->isAdmin();
     }
 
     /**
@@ -45,7 +45,7 @@ class UserPolicy
      */
     public function canDelete(?IdentityInterface $user, User $resource)
     {
-        return isset($user) && ($user->categoria == '1');
+        return isset($user) && $user->getOriginalData()->isAdmin();
     }
 
     /**
@@ -57,7 +57,7 @@ class UserPolicy
      */
     public function canView(?IdentityInterface $user, User $resource)
     {
-        return isset($user) && $user->categoria == '1';
+        return isset($user) && $user->getOriginalData()->isAdmin();
     }
 
 }

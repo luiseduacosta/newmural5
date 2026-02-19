@@ -18,7 +18,12 @@ class ComplementosController extends AppController
      */
     public function index()
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Complementos);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $complementos = $this->paginate($this->Complementos);
         $this->set(compact('complementos'));
     }
@@ -32,7 +37,6 @@ class ComplementosController extends AppController
      */
     public function view($id = null)
     {
-        $this->Authorization->skipAuthorization();  
         try {
             $complemento = $this->Complementos->get($id, [
                 'contain' => ['Estagiarios'],
@@ -41,6 +45,14 @@ class ComplementosController extends AppController
             $this->Flash->error(__('Complemento nao foi encontrado. Tente novamente.'));
             return $this->redirect(['action' => 'index']);
         }
+
+        try {
+            $this->Authorization->authorize($complemento);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         $this->set(compact('complemento'));
     }
 
@@ -52,7 +64,12 @@ class ComplementosController extends AppController
     public function add()
     {
         $complemento = $this->Complementos->newEmptyEntity();
-        $this->Authorization->authorize($complemento);
+        try {
+            $this->Authorization->authorize($complemento);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+            return $this->redirect(['action' => 'index']);
+        }
         if ($this->request->is('post')) {
             $complemento = $this->Complementos->patchEntity($complemento, $this->request->getData());
             if ($this->Complementos->save($complemento)) {
@@ -81,7 +98,13 @@ class ComplementosController extends AppController
             $this->Flash->error(__('Complemento nao foi encontrado. Tente novamente.'));
             return $this->redirect(['action' => 'index']);
         }
-        $this->Authorization->authorize($complemento);
+        try {
+            $this->Authorization->authorize($complemento);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $complemento = $this->Complementos->patchEntity($complemento, $this->request->getData());
             if ($this->Complementos->save($complemento)) {
@@ -109,7 +132,13 @@ class ComplementosController extends AppController
             $this->Flash->error(__('Complemento nao foi encontrado. Tente novamente.'));
             return $this->redirect(['action' => 'index']);
         }
-        $this->Authorization->authorize($complemento);
+
+        try {
+            $this->Authorization->authorize($complemento);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->Complementos->delete($complemento)) {
             $this->Flash->success(__('Complemento excluído.'));

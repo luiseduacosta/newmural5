@@ -21,8 +21,8 @@ class InstituicoesController extends AppController
     {
         try {
             $this->Authorization->authorize($this->Instituicoes);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -57,8 +57,8 @@ class InstituicoesController extends AppController
  
         try {
             $this->Authorization->authorize($instituicao);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -75,8 +75,8 @@ class InstituicoesController extends AppController
         $instituicao = $this->Instituicoes->newEmptyEntity();
         try {
             $this->Authorization->authorize($instituicao);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -113,8 +113,8 @@ class InstituicoesController extends AppController
 
         try {
             $this->Authorization->authorize($instituicao);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -147,11 +147,11 @@ class InstituicoesController extends AppController
             $this->Flash->error(__('Instituição não encontrada.'));
             return $this->redirect(['action' => 'index']);
         }
-
+        
         try {
             $this->Authorization->authorize($instituicao);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
         

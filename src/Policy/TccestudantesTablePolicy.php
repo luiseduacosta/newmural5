@@ -15,7 +15,7 @@ class TccestudantesTablePolicy {
     /**
      * Check if $user can index Areamonografias
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Monografia $monografia
      * @return bool
      */

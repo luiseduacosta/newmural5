@@ -25,8 +25,8 @@ class FolhadeatividadesController extends AppController
     {
         try {
             $this->Authorization->authorize($this->Folhadeatividades);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
         $estagiario_id = $this->getRequest()->getQuery('estagiario_id');
@@ -76,8 +76,8 @@ class FolhadeatividadesController extends AppController
 
         try {
             $this->Authorization->authorize($folhadeatividade);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -179,8 +179,8 @@ class FolhadeatividadesController extends AppController
 
         try {
             $this->Authorization->authorize($folhadeatividade);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
         
@@ -216,8 +216,8 @@ class FolhadeatividadesController extends AppController
 
         try {
             $this->Authorization->authorize($folhadeatividade);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -258,8 +258,8 @@ class FolhadeatividadesController extends AppController
 
         try {
             $this->Authorization->authorize($folhadeatividade);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 

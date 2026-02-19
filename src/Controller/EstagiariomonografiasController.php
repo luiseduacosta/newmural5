@@ -31,8 +31,8 @@ class EstagiariomonografiasController extends AppController
     {
         try {
             $this->Authorization->authorize($this->Estagiariomonografias);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -87,8 +87,8 @@ class EstagiariomonografiasController extends AppController
         ]);
         try {
             $this->Authorization->authorize($estagiariomonografia);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
         $this->set("estagiariomonografia", $estagiariomonografia);
@@ -104,8 +104,8 @@ class EstagiariomonografiasController extends AppController
         $estagiariomonografia = $this->Estagiariomonografias->newEmptyEntity();
         try {
             $this->Authorization->authorize($estagiariomonografia);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
         if ($this->request->is("post")) {
@@ -152,8 +152,8 @@ class EstagiariomonografiasController extends AppController
         ]);
         try {
             $this->Authorization->authorize($estagiariomonografia);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -214,8 +214,8 @@ class EstagiariomonografiasController extends AppController
 
         try {
             $this->Authorization->authorize($estagiariomonografia);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 

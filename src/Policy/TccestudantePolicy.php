@@ -15,7 +15,7 @@ class TccestudantePolicy {
     /**
      * Check if $user can create Tccestudante
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Tccestudante $tccestudante
      * @return bool
      */
@@ -26,7 +26,7 @@ class TccestudantePolicy {
     /**
      * Check if $user can update Tccestudante
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Tccestudante $tccestudante
      * @return bool
      */
@@ -37,7 +37,7 @@ class TccestudantePolicy {
     /**
      * Check if $user can delete Tccestudante
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Tccestudante $tccestudante
      * @return bool
      */
@@ -48,7 +48,7 @@ class TccestudantePolicy {
     /**
      * Check if $user can view Tccestudante
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Tccestudante $tccestudante
      * @return bool
      */

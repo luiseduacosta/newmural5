@@ -22,9 +22,9 @@ class TccestudantesController extends AppController
     {
         try {
             $this->Authorization->authorize($this->Tccestudantes);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
-            return $this->redirect(['action' => 'index']);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Erro ao carregar os dados. Você não tem permissão.'));
+            return $this->redirect(['controller' => 'Monografias', 'action' => 'index']);
         }
         
         $query = $this->Tccestudantes->find()
@@ -72,16 +72,15 @@ class TccestudantesController extends AppController
             $tccestudante = $this->Tccestudantes->get($id, [
                 'contain' => ['Monografias'],
             ]);
+            try {
+                $this->Authorization->authorize($tccestudante);
+            } catch (\Authorization\Exception\ForbiddenException $e) {
+                $this->Flash->error(__('Acesso negado. Você não tem permissão para visualizar o TCC.'));
+                return $this->redirect(['controller' => 'Monografias', 'action' => 'index']);
+            }
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('Registro não encontrado.'));
-            return $this->redirect(['action' => 'index']);
-        }
-
-        try {
-            $this->Authorization->authorize($tccestudante);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Monografias', 'action' => 'index']);
         }
 
         $this->set('tccestudante', $tccestudante);
@@ -118,9 +117,9 @@ class TccestudantesController extends AppController
         $tccestudante = $this->Tccestudantes->newEmptyEntity();
         try {
             $this->Authorization->authorize($tccestudante);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
-            return $this->redirect(['action' => 'index']);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para adicionar o TCC.'));
+            return $this->redirect(['controller' => 'Monografias', 'action' => 'index']);
         }
 
         if ($this->request->is('post')) {
@@ -174,9 +173,9 @@ class TccestudantesController extends AppController
 
         try {
             $this->Authorization->authorize($tccestudante);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
-            return $this->redirect(['action' => 'index']);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para editar o TCC.'));
+            return $this->redirect(['controller' => 'Monografias', 'action' => 'index']);
         }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -216,9 +215,9 @@ class TccestudantesController extends AppController
 
         try {
             $this->Authorization->authorize($tccestudante);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
-            return $this->redirect(['action' => 'index']);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para excluir o TCC.'));
+            return $this->redirect(['controller' => 'Monografias', 'action' => 'index']);
         }
         
         if ($this->Tccestudantes->delete($tccestudante)) {

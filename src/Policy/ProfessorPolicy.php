@@ -20,7 +20,7 @@ class ProfessorPolicy
      */
     public function canAdd(?IdentityInterface $user, Professor $professor)
     {
-        return isset($user->categoria) && ($user->categoria == '1' && $user->categoria == '3');
+        return isset($user) && $user->getOriginalData()->isAdmin();
     }
 
     /**
@@ -32,10 +32,13 @@ class ProfessorPolicy
      */
     public function canEdit(?IdentityInterface $user, Professor $professor)
     {
-        if ($user->categoria == '3') {
+        if (!isset($user)) {
+            return false;
+        }
+        if ($user->getOriginalData()->isProfessor()) {
             return $professor->id === $user->professor_id;
         }
-        return isset($user->categoria) && $user->categoria == '1';
+        return $user->getOriginalData()->isAdmin();
     }
 
     /**
@@ -47,7 +50,7 @@ class ProfessorPolicy
      */
     public function canDelete(?IdentityInterface $user, Professor $professor)
     {
-        return isset($user->categoria) && $user->categoria == '1';
+        return isset($user) && $user->getOriginalData()->isAdmin();
     }
 
     /**
@@ -59,9 +62,12 @@ class ProfessorPolicy
      */
     public function canView(?IdentityInterface $user, Professor $professor)
     {
-        if (isset($user->categoria) && $user->categoria == '1') {
+        if (!isset($user)) {
+            return false;
+        }
+        if ($user->getOriginalData()->isAdmin()) {
             return true;
-        } else if (isset($user->categoria) && $user->categoria == '3') {
+        } else if ($user->getOriginalData()->isProfessor()) {
             return $professor->id === $user->professor_id;
         }        
         return true;

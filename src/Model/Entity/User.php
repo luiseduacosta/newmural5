@@ -58,6 +58,26 @@ class User extends Entity {
         return null; // Should return null if no password
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->categoria == 1;
+    }
+
+    public function isAluno(): bool
+    {
+        return $this->categoria == 2;
+    }
+
+    public function isProfessor(): bool
+    {
+        return $this->categoria == 3;
+    }
+
+    public function isSupervisor(): bool
+    {
+        return $this->categoria == 4;
+    }
+
     /**
      * Fields that are excluded from JSON versions of the entity.
      *

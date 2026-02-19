@@ -25,7 +25,7 @@ class SupervisorPolicy
         if (!$user) {
             return false;
         }
-        return isset($user) && ($user->categoria == '1' || $user->categoria == '4');
+        return $user->getOriginalData()->isAdmin() || $user->getOriginalData()->isSupervisor();
     }
 
     /**
@@ -38,9 +38,9 @@ class SupervisorPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->categoria == '1') {
+        } elseif ($user->getOriginalData()->isAdmin()) {
             return true;
-        } elseif ($user->categoria == '4') {
+        } elseif ($user->getOriginalData()->isSupervisor()) {
             return $this->isAuthor($user, $supervisor);
         } else {
             return false;
@@ -59,7 +59,7 @@ class SupervisorPolicy
         if (!$user) {
             return false;
         }
-        return isset($user) && $user->categoria == '1';
+        return $user->getOriginalData()->isAdmin();
     }
 
     /**
@@ -73,9 +73,9 @@ class SupervisorPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->categoria == '1') {
+        } elseif ($user->getOriginalData()->isAdmin()) {
             return true;
-        } elseif ($user->categoria == '4') {
+        } elseif ($user->getOriginalData()->isSupervisor()) {
             return $this->isAuthor($user, $supervisor);
         } else {
             return false;

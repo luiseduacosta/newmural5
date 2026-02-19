@@ -25,8 +25,8 @@ class QuestionesController extends AppController
     {
         try {
             $this->Authorization->authorize($this->Questiones);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -68,8 +68,8 @@ class QuestionesController extends AppController
 
         try {
             $this->Authorization->authorize($questione);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -87,8 +87,8 @@ class QuestionesController extends AppController
 
         try {
             $this->Authorization->authorize($questione);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -101,8 +101,6 @@ class QuestionesController extends AppController
         if ($ultimaPergunta && $ultimaPergunta->ordem) {
             $this->set("ordem", $ultimaPergunta->ordem + 1);
         }
-        
-        $this->Authorization->skipAuthorization();
         
         if ($this->request->is("post")) {
             $questione = $this->Questiones->patchEntity(
@@ -142,8 +140,8 @@ class QuestionesController extends AppController
 
         try {
             $this->Authorization->authorize($questione);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
                 
@@ -185,8 +183,8 @@ class QuestionesController extends AppController
         
         try {
             $this->Authorization->authorize($questione);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
         

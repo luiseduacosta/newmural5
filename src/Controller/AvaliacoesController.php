@@ -164,7 +164,6 @@ class AvaliacoesController extends AppController
     public function add($id = null)
     {
 
-        $this->Authorization->skipAuthorization();
         $estagiario_id = $this->request->getQuery("estagiario_id");
         if ($estagiario_id == null) {
             $this->Flash->error(__("Selecionar estagiário."));
@@ -184,7 +183,6 @@ class AvaliacoesController extends AppController
         }
     
         $avaliacao = $this->Avaliacoes->newEmptyEntity();
-
         try {
             $this->Authorization->authorize($avaliacao);
         } catch (\Authorization\Exception\ForbiddenException $e) {

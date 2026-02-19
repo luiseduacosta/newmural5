@@ -27,9 +27,9 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->categoria == '1') {
+        } elseif ($user->getOriginalData()->isAdmin()) {
             return true;
-        } elseif ($user->categoria == '2') {
+        } elseif ($user->getOriginalData()->isAluno()) {
             return true;
         } else {
             return false;
@@ -47,9 +47,9 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->categoria == '1') {
+        } elseif ($user->getOriginalData()->isAdmin()) {
             return true;
-        } elseif ($user->categoria == '2') {
+        } elseif ($user->getOriginalData()->isAluno()) {
             return $this->isAuthor($user, $aluno);
         } else {
             return false;
@@ -67,9 +67,9 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->categoria == '1') {
+        } elseif ($user->getOriginalData()->isAdmin()) {
             return true;
-        } elseif ($user->categoria == '2') {
+        } elseif ($user->getOriginalData()->isAluno()) {
             return $this->isAuthor($user, $aluno);
         } else {
             return false;
@@ -85,14 +85,14 @@ class AlunoPolicy
      */
     public function canDelete(?IdentityInterface $user, Aluno $aluno)
     {
-        return isset($user->categoria) && $user->categoria == '1';
+        return isset($user) && $user->getOriginalData()->isAdmin();
     }
 
     public function isCargaHoraria(?IdentityInterface $user, Aluno $aluno)
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->categoria == '1') {
+        } elseif ($user->getOriginalData()->isAdmin()) {
             return true;
         }
     }
@@ -101,9 +101,9 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->categoria == '1') {
+        } elseif ($user->getOriginalData()->isAdmin()) {
             return true;
-        } elseif ($user->categoria == '2') {
+        } elseif ($user->getOriginalData()->isAluno()) {
             return $this->isAuthor($user, $aluno);
         } else {
             return false;
@@ -114,9 +114,9 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->categoria == '1') {
+        } elseif ($user->getOriginalData()->isAdmin()) {
             return true;
-        } elseif ($user->categoria == '2') {
+        } elseif ($user->getOriginalData()->isAluno()) {
             return $this->isAuthor($user, $aluno);
         } else {
             return false;
@@ -127,9 +127,9 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->categoria == '1') {
+        } elseif ($user->getOriginalData()->isAdmin()) {
             return true;
-        } elseif ($user->categoria == '2') {
+        } elseif ($user->getOriginalData()->isAluno()) {
             return $this->isAuthor($user, $aluno);
         } else {
             return false;
@@ -140,7 +140,7 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->categoria == '1') {
+        } elseif ($user->getOriginalData()->isAdmin()) {
             return true;
         } 
     }

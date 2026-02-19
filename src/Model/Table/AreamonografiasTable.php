@@ -52,12 +52,10 @@ class AreamonografiasTable extends Table
         ]);
 
         $this->belongsToMany('Docentes', [
-            'targetForeignKey' => 'docente_id',
+            'className' => 'Docentes',
             'foreignKey' => 'areamonografia_id',
-            'joinTable' => 'areamonografias_docentes',
-            // 'trough' => 'AreamonografiasDocentes' // 'trough' is typo in original, should be 'through'. But if it works in 4.x... Cake 5 still uses 'through'.
-            // I will correct typo 'trough' to 'through'.
-            'through' => 'AreamonografiasDocentes' 
+            'targetForeignKey' => 'docente_id',
+            'joinTable' => 'areamonografias_docentes'
         ]);
     }
 
@@ -79,5 +77,4 @@ class AreamonografiasTable extends Table
 
         return $validator;
     }
-
 }

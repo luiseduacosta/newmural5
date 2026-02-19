@@ -25,9 +25,9 @@ class MuralinscricoesController extends AppController
     public function index($periodo = NULL)
     {
         try {
-            $this->Authorization->skipAuthorization();
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+            $this->Authorization->authorize($this->Muralinscricoes);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -81,8 +81,8 @@ class MuralinscricoesController extends AppController
 
         try {
             $this->Authorization->authorize($muralinscricao);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -101,8 +101,8 @@ class MuralinscricoesController extends AppController
         $muralinscricao = $this->Muralinscricoes->newEmptyEntity();
         try {
             $this->Authorization->authorize($muralinscricao);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -254,8 +254,8 @@ class MuralinscricoesController extends AppController
 
         try {
             $this->Authorization->authorize($muralinscricao);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['controller' => 'Muralinscricoes', 'action' => 'index']);
         }
         
@@ -347,8 +347,8 @@ class MuralinscricoesController extends AppController
 
         try {
             $this->Authorization->authorize($muralinscricao);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['controller' => 'Muralinscricoes', 'action' => 'index']);
         }
         

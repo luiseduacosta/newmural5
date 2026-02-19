@@ -36,7 +36,12 @@ class MuralestagiosController extends AppController
      */
     public function index($id = NULL)
     {
-        $this->Authorization->skipAuthorization();
+        try {
+            $this->Authorization->authorize($this->Muralestagios);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $periodo = $this->request->getQuery('periodo');
         
         if (($periodo == null) || empty($periodo)) {
@@ -90,7 +95,6 @@ class MuralestagiosController extends AppController
      */
     public function view($id = null)
     {
-        $this->Authorization->skipAuthorization();
         try {
             $muralestagio = $this->Muralestagios->get($id, [
                 'contain' => ['Instituicoes', 'Turmaestagios', 'Professores', 'Muralinscricoes' => ['Alunos', 'Muralestagios']]
@@ -100,6 +104,13 @@ class MuralestagiosController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
+        try {
+            $this->Authorization->authorize($muralestagio);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+            return $this->redirect(['action' => 'index']);
+        }
+        
         /** Para o administrador selecionar o aluno */
         $alunotable = $this->fetchTable('Alunos');
         $alunos = $alunotable->find('list', [
@@ -133,8 +144,8 @@ class MuralestagiosController extends AppController
 
         try {
             $this->Authorization->authorize($muralestagio);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 
@@ -189,8 +200,8 @@ class MuralestagiosController extends AppController
 
         try {
             $this->Authorization->authorize($muralestagio);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
         
@@ -236,8 +247,8 @@ class MuralestagiosController extends AppController
  
         try {
             $this->Authorization->authorize($muralestagio);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
 

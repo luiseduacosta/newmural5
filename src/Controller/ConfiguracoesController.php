@@ -20,9 +20,9 @@ class ConfiguracoesController extends AppController {
 
         try {
             $this->Authorization->authorize($this->Configuracoes);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar as configurações. Tente novamente.'));
-            return $this->redirect(['Controller' => 'Configuracoes', 'action' => 'index']);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+            return $this->redirect(['action' => 'index']);
         }
         $configuracao = $this->paginate($this->Configuracoes);
         $this->set(compact('configuracao'));
@@ -48,9 +48,9 @@ class ConfiguracoesController extends AppController {
 
         try {
             $this->Authorization->authorize($configuracao);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar as configurações. Tente novamente.'));
-            return $this->redirect(['Controller' => 'Configuracoes', 'action' => 'index']);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+            return $this->redirect(['action' => 'index']);
         }
         $this->set(compact('configuracao'));
     }
@@ -66,9 +66,9 @@ class ConfiguracoesController extends AppController {
 
         try {
             $this->Authorization->authorize($configuracao);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar as configurações. Tente novamente.'));
-            return $this->redirect(['Controller' => 'Configuracoes', 'action' => 'index']);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+            return $this->redirect(['action' => 'index']);
         }
 
         if ($this->request->is('post')) {
@@ -102,11 +102,11 @@ class ConfiguracoesController extends AppController {
 
         try {
             $this->Authorization->authorize($configuracao);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar as configurações. Tente novamente.'));
-            return $this->redirect(['Controller' => 'Configuracoes', 'action' => 'index']);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+            return $this->redirect(['action' => 'index']);
         }
-        
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $configuracao = $this->Configuracoes->patchEntity($configuracao, $this->request->getData());
             if ($this->Configuracoes->save($configuracao)) {
@@ -136,17 +136,17 @@ class ConfiguracoesController extends AppController {
 
         try {
             $this->Authorization->authorize($configuracao);
-        } catch (\AuthorizationException $e) {
-            $this->Flash->error(__('Erro ao carregar as configurações. Tente novamente.'));
-            return $this->redirect(['Controller' => 'Configuracoes', 'action' => 'index']);
+        } catch (\Authorization\Exception\ForbiddenException $e) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+            return $this->redirect(['action' => 'index']);
         }
-        
+
         if ($this->Configuracoes->delete($configuracao)) {
             $this->Flash->success(__('Dados de configuração excluídos.'));
         } else {
             $this->Flash->error(__('Não foi possível excluír os dados de configuração. Tente novamente.'));
         }
-        
+
         return $this->redirect(['action' => 'index']);
     }
 }
