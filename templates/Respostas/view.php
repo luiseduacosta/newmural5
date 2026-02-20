@@ -7,8 +7,8 @@ use Cake\I18n\Time;
  */
 ?>
 
-<?php echo $this->element('menu_mural') ?>
-<?php echo $this->element('templates') ?>
+<?= $this->element('menu_mural') ?>
+<?= $this->element('templates') ?>
 
 <div class="container mt-1">
 
@@ -19,17 +19,19 @@ use Cake\I18n\Time;
         </button>
         <ul class="navbar-nav collapse navbar-collapse" id="resposta">
             <li class="nav-item">
-                <?= $this->Html->link(__('Editar'), ['action' => 'edit', $resposta->id], ['class' => 'btn btn-primary me-1']) ?>
-            </li>
-            <li class="nav-item">
-                <?= $this->Form->postLink(__('Excluir'), ['action' => 'delete', $resposta->id], ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $resposta->id), 'class' => 'btn btn-danger me-1']) ?>
-            </li>
-            <li class="nav-item">
                 <?= $this->Html->link(__('Listar'), ['action' => 'index'], ['class' => 'btn btn-primary me-1']) ?>
             </li>
-            <li class="nav-item">
-                <?= $this->Html->link(__('Nova'), ['action' => 'add'], ['class' => 'btn btn-primary me-1']) ?>
-            </li>
+            <?php if (isset($user->categoria) && $user->categoria == '1'): ?>
+                <li class="nav-item">
+                    <?= $this->Html->link(__('Editar'), ['action' => 'edit', $resposta->id], ['class' => 'btn btn-primary me-1']) ?>
+                </li>
+                <li class="nav-item">
+                    <?= $this->Form->postLink(__('Excluir'), ['action' => 'delete', $resposta->id], ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $resposta->id), 'class' => 'btn btn-danger me-1']) ?>
+                </li>
+                <li class="nav-item">
+                    <?= $this->Html->link(__('Nova'), ['action' => 'add'], ['class' => 'btn btn-primary me-1']) ?>
+                </li>
+            <?php endif ?>
         </ul>
     </nav>
 

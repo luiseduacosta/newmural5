@@ -15,11 +15,11 @@ class EstagiariosTablePolicy {
     /**
      * Check if $user can index Estagiarios
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Table\EstagiariosTable $estagiarios
      * @return bool
      */
-    public function canView(?IdentityInterface $user, EstagiariosTable $estagiarios) {
+    public function canIndex(?IdentityInterface $user, EstagiariosTable $estagiarios) {
         return isset($user);
     }
 

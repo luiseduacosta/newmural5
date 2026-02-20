@@ -24,6 +24,7 @@ $user = $this->getRequest()->getAttribute('identity');
             echo $this->Form->control('termo_compromisso_periodo');
             echo $this->Form->control('termo_compromisso_inicio');
             echo $this->Form->control('termo_compromisso_final');
+            echo $this->Form->control('periodo_calendario_academico');
             echo $this->Form->control('curso_turma_atual');
             echo $this->Form->control('curso_abertura_inscricoes');
             echo $this->Form->control('curso_encerramento_inscricoes');

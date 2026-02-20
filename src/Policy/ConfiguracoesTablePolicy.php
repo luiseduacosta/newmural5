@@ -3,27 +3,26 @@ declare(strict_types=1);
 
 namespace App\Policy;
 
-use App\Model\Table\ConfiguracaoTable;
+use App\Model\Table\ConfiguracoesTable;
 use Authorization\IdentityInterface;
 
 /**
- * Configuracao policy
+ * Configuracoes policy
  */
-class ConfiguracaoTablePolicy {   
+class ConfiguracoesTablePolicy {   
     
     /**
-     * Check if $user can index configuracao
+     * Check if $user can index configuracoes
      *
      * @param \Authorization\IdentityInterface|null $user The user.
-     * @param \App\Model\Table\ConfiguracaoTable $configuracoes
+     * @param \App\Model\Table\ConfiguracoesTable $configuracoes
      * @return bool
      */
-    public function canIndex(?IdentityInterface $user, ConfiguracaoTable $configuracoes) {
+    public function canIndex(?IdentityInterface $user, ConfiguracoesTable $configuracoes) {
         
         if (isset($user->categoria) && $user->categoria == '1') {
             return true;
         }
         return true;
     }
-    
 }

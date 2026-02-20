@@ -3,9 +3,10 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Estagiario $estagiario
  */
-$user = $this->getRequest()->getAttribute('identity');
-// pr($estagiario->supervisor_id);
 ?>
+
+<!-- Get mask -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
 <script type="text/javascript">
     function getaluno(id) {
@@ -72,12 +73,12 @@ $user = $this->getRequest()->getAttribute('identity');
         });
     }
     $(document).ready(function () {
-        $('#nota').mask('00,00');
+        $('#nota').mask('00.0');
         $('#ch').mask('000');
     });
 </script>
 
-<?php echo $this->element('menu_mural'); ?>
+<?= $this->element('menu_mural'); ?>
 
 <?= $this->element('templates') ?>
 
@@ -120,6 +121,7 @@ $niveis = [
         <?php
         echo $this->Form->control('aluno_id', [
             'options' => $alunos,
+            'value' => isset($estagiario) ? $estagiario->aluno_id : '',
             'onchange' => 'getaluno(this.value)',
             'empty' => true,
             'label' => 'Aluno(a)',
@@ -133,6 +135,7 @@ $niveis = [
         echo $this->Form->control('turno', ['label' => 'Turno']);
         echo $this->Form->control('nivel', [
             'options' => $niveis,
+            'value' => isset($estagiario) ? $estagiario->nivel : '',
             'empty' => true,
             'label' => 'Nível',
             'templates' => [
@@ -145,6 +148,7 @@ $niveis = [
         echo $this->Form->control('tc_solicitacao', ['empty' => true, 'label' => 'Solicitação de termo de compromisso']);
         echo $this->Form->control('instituicao_id', [
             'options' => $instituicoes,
+            'value' => isset($estagiario) ? $estagiario->instituicao_id : '',
             'onchange' => 'getsupervisores(this.value)',
             'empty' => true,
             'label' => 'Instituição',
@@ -156,6 +160,7 @@ $niveis = [
         ]);
         echo $this->Form->control('supervisor_id', [
             'options' => $supervisores,
+            'value' => isset($estagiario) ? $estagiario->supervisor_id : '',
             'empty' => true,
             'label' => 'Supervisor(a)',
             'templates' => [
@@ -166,6 +171,7 @@ $niveis = [
         ]);
         echo $this->Form->control('professor_id', [
             'options' => $professores,
+            'value' => isset($estagiario) ? $estagiario->professor_id : '',
             'empty' => true,
             'label' => 'Professor(a)',
             'templates' => [
@@ -178,6 +184,7 @@ $niveis = [
         echo $this->Form->control('turmaestagio_id', [
             'label' => 'Turma',
             'options' => $turmaestagios,
+            'value' => isset($estagiario) ? $estagiario->turmaestagio_id : '',
             'empty' => true,
             'templates' => [
                 'formGroup' => '<div class="form-group row">{{label}}<div class="col-sm-9">{{input}}</div></div>',

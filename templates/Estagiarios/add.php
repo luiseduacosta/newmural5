@@ -5,9 +5,11 @@
  * @var \App\Model\Entity\Aluno $aluno
  * @var \Cake\I18n\DateTime $now
  */
-$user = $this->request->getAttribute('identity');
 $now = new \Cake\I18n\DateTime();
 ?>
+
+<!-- Get mask -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
 <script type="text/javascript">
     function getaluno(id) {
@@ -192,12 +194,13 @@ $now = new \Cake\I18n\DateTime();
                 'select' => '<select class="form-select" name="{{name}}"{{attrs}}>{{content}}</select>'
             ],
             'id' => 'ajuste2020',
-            'value' => isset($aluno) ? $aluno->ajuste2020 : ''
+            'value' => isset($ultimo_estagio) ? $ultimo_estagio->ajuste2020 : ''
         ]);
         echo $this->Form->control('instituicao_id', [
             'label' => 'Instituição',
             'empty' => ['' => 'Selecione uma instituição'],
             'options' => $instituicoes,
+            'value' => isset($ultimo_estagio) ? $ultimo_estagio->instituicao_id : '',
             'onchange' => 'getsupervisores(this.value)',
             'templates' => [
                 'formGroup' => '<div class="form-group row">{{label}}<div class="col-sm-9">{{input}}</div></div>',
@@ -205,7 +208,6 @@ $now = new \Cake\I18n\DateTime();
                 'select' => '<select name="{{name}}"{{attrs}} class="form-select">{{content}}</select>'
             ],
             'id' => 'instituicao-id',
-            'value' => isset($aluno) ? $aluno->instituicao_id : ''
         ]);
         echo $this->Form->control('supervisor_id', [
             'label' => 'Supervisor',
@@ -217,11 +219,12 @@ $now = new \Cake\I18n\DateTime();
                 'select' => '<select name="{{name}}"{{attrs}} class="form-select">{{content}}</select>'
             ],
             'id' => 'supervisor-id',
-            'value' => isset($aluno) ? $aluno->supervisor_id : ''
+            'value' => isset($ultimo_estagio) ? $ultimo_estagio->supervisor_id : ''
         ]);
         echo $this->Form->control('professor_id', [
             'label' => 'Professor',
             'options' => $professores,
+            'value' => isset($ultimo_estagio) ? $ultimo_estagio->professor_id : '',
             'empty' => true,
             'templates' => [
                 'formGroup' => '<div class="form-group row">{{label}}<div class="col-sm-9">{{input}}</div></div>',
@@ -231,7 +234,7 @@ $now = new \Cake\I18n\DateTime();
         ]);
         echo $this->Form->control('periodo', [
             'label' => 'Período',
-            'value' => $periodo->mural_periodo_atual,
+            'value' => $periodo,
             'templates' => [
                 'formGroup' => '<div class="form-group row">{{label}}<div class="col-sm-2">{{input}}</div></div>',
                 'label' => '<label class="col-sm-2 form-label"{{attrs}}>{{text}}</label>',
@@ -242,6 +245,7 @@ $now = new \Cake\I18n\DateTime();
         echo $this->Form->control('turmaestagio_id', [
             'label' => 'Turma de estágio',
             'options' => $turmaestagios,
+            'value' => isset($ultimo_estagio) ? $ultimo_estagio->turmaestagio_id : '',
             'empty' => true,
             'templates' => [
                 'formGroup' => '<div class="form-group row">{{label}}<div class="col-sm-9">{{input}}</div></div>',

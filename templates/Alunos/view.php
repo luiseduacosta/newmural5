@@ -236,7 +236,7 @@
                             <tr>
                                 <?php // pr($estagiarios); ?>
                                 <td><?= h($estagiarios->id) ?></td>
-                                <td><?= $this->Html->link($estagiarios->aluno->nome, ['controller' => 'Alunos', 'action' => 'view', $estagiarios->aluno_id]) ?>
+                                <td><?= $this->Html->link($estagiarios->aluno->nome, ['controller' => 'Estagiarios', 'action' => 'view', $estagiarios->id]) ?>
                                 </td>
                                 <td><?= h($estagiarios->registro) ?></td>
                                 <td><?= h($estagiarios->ajuste2020) ?></td>

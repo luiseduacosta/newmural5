@@ -263,8 +263,6 @@ class MuralinscricoesController extends AppController
 
             /** Ajusto o período conforme o mural de estágio selecionado */
             $muralId = $this->request->getData('muralestagio_id') ?? $this->request->getData('id'); // check field name in form
-            // Original used $this->request->getData('id') which is likely wrong if it meant muralestagio_id, assuming form structure.
-            // Using muralestagio_id from entity or data.
             
             $mural_id_to_check = $this->request->getData('muralestagio_id');
             

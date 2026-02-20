@@ -109,8 +109,8 @@
                 <?= $this->Html->link(
                     __("Imprimir Avaliação"),
                     [
-                        "controller" => "avaliacoes",
-                        "action" => "imprimeavaliacaopdf",
+                        "controller" => "respostas",
+                        "action" => "imprimeresposta",
                         "?" => ["estagiario_id" => $estagiario->id],
                     ],
                     [

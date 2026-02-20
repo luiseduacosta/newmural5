@@ -14,31 +14,31 @@ class EstagiarioPolicy
         /**
          * Check if $user can create Estagiario
          *
-         * @param \Authorization\IdentityInterface $user The user.
+         * @param \Authorization\IdentityInterface|null $user The user.
          * @param \App\Model\Entity\Estagiario $estagiario
          * @return bool
          */
         public function canAdd(?IdentityInterface $user, Estagiario $estagiario)
         {
-        return isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2');
+                return isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2');
         }
 
         /**
          * Check if $user can update Estagiario
          *
-         * @param \Authorization\IdentityInterface $user The user.
+         * @param \Authorization\IdentityInterface|null $user The user.
          * @param \App\Model\Entity\Estagiario $estagiario
          * @return bool
          */
         public function canEdit(?IdentityInterface $user, Estagiario $estagiario)
         {
-                return isset($user->categoria) && $user->categoria == '1';
+                return isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2');
         }
 
         /**
          * Check if $user can delete Estagiario
          *
-         * @param \Authorization\IdentityInterface $user The user.
+         * @param \Authorization\IdentityInterface|null $user The user.
          * @param \App\Model\Entity\Estagiario $estagiario
          * @return bool
          */
@@ -50,7 +50,7 @@ class EstagiarioPolicy
         /**
          * Check if $user can view Estagiario
          *
-         * @param \Authorization\IdentityInterface $user The user.
+         * @param \Authorization\IdentityInterface|null $user The user.
          * @param \App\Model\Entity\Estagiario $estagiario
          * @return bool
          */
@@ -62,11 +62,11 @@ class EstagiarioPolicy
         /**
          * Check if $user can create Novo Termo de Compromisso
          *
-         * @param \Authorization\IdentityInterface $user The user.
+         * @param \Authorization\IdentityInterface|null $user The user.
          * @param \App\Model\Entity\Estagiario $estagiario
          * @return bool
          */
-        public function canNovoTermoDeCompromisso(?IdentityInterface $user, Estagiario $estagiario)
+        public function canNovotermocompromisso(?IdentityInterface $user, Estagiario $estagiario)
         {
                 return isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2');
         }

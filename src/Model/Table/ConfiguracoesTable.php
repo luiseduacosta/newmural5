@@ -9,17 +9,17 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Configuracao Model
+ * Configuracoes Model
  *
- * @method \App\Model\Entity\Configuracao newEmptyEntity()
- * @method \App\Model\Entity\Configuracao newEntity(array $data, array $options = [])
- * @method \App\Model\Entity\Configuracao[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Configuracao get($primaryKey, $options = [])
- * @method \App\Model\Entity\Configuracao findOrCreate($search, ?callable $callback = null, $options = [])
- * @method \App\Model\Entity\Configuracao patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Configuracao[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\Configuracao|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Configuracao saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Configuracoes newEmptyEntity()
+ * @method \App\Model\Entity\Configuracoes newEntity(array $data, array $options = [])
+ * @method \App\Model\Entity\Configuracoes[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Configuracoes get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Configuracoes findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Configuracoes patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Configuracoes[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Configuracoes|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Configuracoes saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Configuracao[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\Configuracao[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\Configuracao[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])

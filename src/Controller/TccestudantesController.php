@@ -136,13 +136,7 @@ class TccestudantesController extends AppController
             'valueField' => 'titulo',
             'order' => ['titulo' => 'asc']
         ]);
-        
-        // List of students who are authors (for selection?) or all students?
-        // Original code joined tccestudantes, likely to show existing authors?
-        // "Estudantes.registro = Tccestudantes.registro".
-        // It seems it wanted to list students that are already TCC authors? Or available students?
-        // Original: "Select Estudantes using Left Join Tccestudantes".
-        
+                
         // I will list all Alunos for simplicity to choose from
         $estudantes = $this->fetchTable('Alunos')->find('list', [
              'keyField' => 'registro',

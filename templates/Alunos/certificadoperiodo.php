@@ -3,10 +3,12 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Aluno $aluno
  */
-$user = $this->getRequest()->getAttribute('identity');
 ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
 <script>
+
     $(document).ready(function() {
         $('#cpf').mask('000.000.000-00');
         if ($('#codigo-telefone').val() == null) {
@@ -50,33 +52,33 @@ $user = $this->getRequest()->getAttribute('identity');
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <?php if (isset($user) && $user->categoria == '1'): ?>
                 <li class="nav-item">
-                    <?= $this->Html->link(__('Listar Alunos'), ['controller' => 'Alunos', 'action' => 'index'], ['class' => 'btn btn-primary']) ?>
+                    <?= $this->Html->link(__('Listar Alunos'), ['controller' => 'Alunos', 'action' => 'index'], ['class' => 'btn btn-primary me-1']) ?>
                 </li>
                 <li class="nav-item">
-                    <?= $this->Html->link(__('Declaração de período'), ['controller' => 'Alunos', 'action' => 'certificadoperiodo', $aluno->id], ['class' => 'btn btn-primary']) ?>
+                    <?= $this->Html->link(__('Declaração de período'), ['controller' => 'Alunos', 'action' => 'certificadoperiodo', $aluno->id], ['class' => 'btn btn-primary me-1']) ?>
                 </li>
                 <li class="nav-item">
-                    <?= $this->Html->link(__('Termo de compromisso'), ['controller' => 'Estagiarios', 'action' => 'novotermocompromisso', '?' => ['aluno_id' => $aluno->id]], ['class' => 'btn btn-primary']) ?>
+                    <?= $this->Html->link(__('Termo de compromisso'), ['controller' => 'Estagiarios', 'action' => 'novotermocompromisso', '?' => ['aluno_id' => $aluno->id]], ['class' => 'btn btn-primary me-1']) ?>
                 </li>
                 <li class="nav-item">
-                    <?= $this->Html->link(__('Novo Aluno'), ['controller' => 'Alunos', 'action' => 'add'], ['class' => 'btn btn-primary']) ?>
+                    <?= $this->Html->link(__('Novo Aluno'), ['controller' => 'Alunos', 'action' => 'add'], ['class' => 'btn btn-primary me-1']) ?>
                 </li>
                 <li class="nav-item">
-                    <?= $this->Html->link(__('Editar Aluno'), ['controller' => 'Alunos', 'action' => 'edit', $aluno->id], ['class' => 'btn btn-primary']) ?>
+                    <?= $this->Html->link(__('Editar Aluno'), ['controller' => 'Alunos', 'action' => 'edit', $aluno->id], ['class' => 'btn btn-primary me-1']) ?>
                 </li>
                 <li class="nav-item">
-                    <?= $this->Form->postLink(__('Excluir Aluno'), ['controller' => 'Alunos', 'action' => 'delete', $aluno->id], ['confirm' => __('Tem certeza que quer excluir o registro # {0}?', $aluno->id), 'class' => 'btn btn-danger float-end']) ?>
+                    <?= $this->Form->postLink(__('Excluir Aluno'), ['controller' => 'Alunos', 'action' => 'delete', $aluno->id], ['confirm' => __('Tem certeza que quer excluir o registro # {0}?', $aluno->id), 'class' => 'btn btn-danger me-1']) ?>
                 </li>
             <?php elseif (isset($user) && $user->categoria == '2'): ?>
                 <?php if ($user->estudante_id == $aluno->id): ?>
                     <li class="nav-item">
-                        <?= $this->Html->link(__('Editar Aluno'), ['controller' => 'Alunos', 'action' => 'edit', $aluno->id], ['class' => 'btn btn-primary']) ?>
+                        <?= $this->Html->link(__('Editar Aluno'), ['controller' => 'Alunos', 'action' => 'edit', $aluno->id], ['class' => 'btn btn-primary me-1']) ?>
                     </li>
                     <li class="nav-item">
-                        <?= $this->Html->link(__('Declaração de período'), ['controller' => 'Alunos', 'action' => 'certificadoperiodo', $aluno->id], ['class' => 'btn btn-primary']) ?>
+                        <?= $this->Html->link(__('Declaração de período'), ['controller' => 'Alunos', 'action' => 'certificadoperiodo', $aluno->id], ['class' => 'btn btn-primary me-1']) ?>
                     </li>
                     <li class="nav-item">
-                        <?= $this->Html->link(__('Termo de compromisso'), ['controller' => 'Estagiarios', 'action' => 'novotermocompromisso', $aluno->id], ['class' => 'btn btn-primary']) ?>
+                        <?= $this->Html->link(__('Termo de compromisso'), ['controller' => 'Estagiarios', 'action' => 'novotermocompromisso', $aluno->id], ['class' => 'btn btn-primary me-1']) ?>
                     </li>
                 <?php endif; ?>
             <?php endif ?>
@@ -100,7 +102,10 @@ $user = $this->getRequest()->getAttribute('identity');
         echo $this->Form->control('nomesocial', ['label' => ['text' => 'Nome social'], 'readonly' => true]);
         echo $this->Form->control('registro', ['label' => 'Registro', 'readonly' => true]);
         echo $this->Form->control('ingresso', ['label' => 'Ingresso', 'readonly' => true]);
-        echo $this->Form->control('turno', ['options' => ['diurno' => 'Diurno', 'noturno' => 'Noturno'], 'readonly' => true]);
+        echo $this->Form->control('turno', ['options' => ['diurno' => 'Diurno', 'noturno' => 'Noturno'], 'readonly' => true, 
+        'templates' => ['inputContainer' => '<div class="row col-md-12 {{type}}{{required}}">{{content}}</div>',
+                        'label' => '<label class="col-sm-3 col-form-label"{{attrs}}>{{text}}</label>',
+                        'select' => '<div class="col-sm-9"><select class="form-select" name="{{name}}"{{attrs}}>{{content}}</select></div>']]);
         echo $this->Form->control('codigo_telefone', ['label' => ['text' => 'DDD'], 'readonly' => true]);
         echo $this->Form->control('telefone', ['label' => ['text' => 'Telefone'], 'readonly' => false]);
         echo $this->Form->control('codigo_celular', ['label' => ['text' => 'DDD'], 'readonly' => true]);
@@ -119,6 +124,7 @@ $user = $this->getRequest()->getAttribute('identity');
     </fieldset>
     
     <?php
+    // This is a template
     $Confirma = [
         "button" => "<div class='d-flex justify-content-center'><button type ='Confirma' class= 'btn btn-danger' {{attrs}}>{{text}}</button></div>"
     ]
@@ -126,7 +132,7 @@ $user = $this->getRequest()->getAttribute('identity');
 
     <div class="d-flex justify-content-center">
         <div class="btn-group" role="group" aria-label="Confirma">
-            <?= $this->Html->link('Imprime PDF', ['action' => 'certificadoperiodopdf', '?' => ['id' => $aluno->id, 'totalperiodos' => $totalperiodos]], ['class' => 'btn btn-lg btn-primary', 'rule' => 'button']); ?>
+            <?= $this->Html->link('Imprime PDF', ['action' => 'certificadoperiodopdf', '?' => ['id' => $aluno->id, 'totalperiodos' => $totalperiodos]], ['class' => 'btn btn-lg btn-primary  me-1', 'rule' => 'button']); ?>
             <?php $this->Form->setTemplates($Confirma); ?>
             <?= $this->Form->button(__('Confirmar período'), ['type' => 'Confirma', 'class' => 'btn btn-lg btn-danger']) ?>
             <?= $this->Form->end() ?>

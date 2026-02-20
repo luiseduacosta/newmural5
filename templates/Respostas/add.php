@@ -2,7 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Resposta $resposta
- * @var \Cake\Collection\CollectionInterface|string[] $questiones
+ * @var \Cake\Collection\CollectionInterface|string[] $questoes
  * @var \Cake\Collection\CollectionInterface|string[] $estagiarios
  */
 ?>

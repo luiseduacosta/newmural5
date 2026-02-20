@@ -320,7 +320,6 @@ class EstagiariosController extends AppController
             $this->set("aluno", $aluno);
             
         } else {
-             $user = $this->getRequest()->getAttribute("identity");
              if (isset($user) && $user->categoria == "2") {
                  $aluno_id = $user->estudante_id;
                  $aluno = $this->fetchTable("Alunos")->get($user->estudante_id);
@@ -337,7 +336,7 @@ class EstagiariosController extends AppController
             ->find()
             ->select(["mural_periodo_atual"])
             ->first();
-        $this->set("periodo", $periodo);
+        $this->set("periodo", $periodo->mural_periodo_atual);
 
         $instituicoes = $this->fetchTable("Instituicoes")->find("list", ['order' => ['instituicao' => 'asc']]);
         $supervisores = $this->fetchTable("Supervisores")->find("list", ['order' => ['nome' => 'asc']]);
@@ -347,6 +346,7 @@ class EstagiariosController extends AppController
         $this->set(
             compact(
                 "estagiario",
+                "ultimo_estagio",
                 "instituicoes",
                 "supervisores",
                 "professores",
@@ -385,7 +385,7 @@ class EstagiariosController extends AppController
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
-            
+
         if ($estagiario) {
             $config = $this->fetchTable("Configuracoes")
                 ->find()

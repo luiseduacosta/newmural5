@@ -29,6 +29,8 @@ $user = $this->getRequest()->getAttribute('identity');
                 </th>
                 <th><?= $this->Paginator->sort('termo_compromisso_final', 'Data de finalização do termo de compromisso') ?>
                 </th>
+                <th><?= $this->Paginator->sort('periodo_calendario_academico', 'Período calendário acadêmico') ?>
+                </th>
                 <th><?= __('Ações') ?></th>
             </tr>
         </thead>
@@ -40,6 +42,7 @@ $user = $this->getRequest()->getAttribute('identity');
                     <td><?= h($configura->termo_compromisso_periodo) ?></td>
                     <td><?= h($configura->termo_compromisso_inicio) ?></td>
                     <td><?= h($configura->termo_compromisso_final) ?></td>
+                    <td><?= h($configura->periodo_calendario_academico) ?></td>
                     <td>
                         <?= $this->Html->link(__('Ver'), ['action' => 'view', $configura->id], ['class' => 'btn btn-primary']) ?>
                         <?= $this->Html->link(__('Editar'), ['action' => 'edit', $configura->id], ['class' => 'btn btn-primary']) ?>

@@ -88,7 +88,7 @@ class AlunoPolicy
         return isset($user) && $user->getOriginalData()->isAdmin();
     }
 
-    public function isCargaHoraria(?IdentityInterface $user, Aluno $aluno)
+    public function canCargaHoraria(?IdentityInterface $user, Aluno $aluno)
     {
         if (!isset($user)) {
             return false;
@@ -97,20 +97,7 @@ class AlunoPolicy
         }
     }
 
-    public function isDeclaracaoperiodo(?IdentityInterface $user, Aluno $aluno)
-    {
-        if (!isset($user)) {
-            return false;
-        } elseif ($user->getOriginalData()->isAdmin()) {
-            return true;
-        } elseif ($user->getOriginalData()->isAluno()) {
-            return $this->isAuthor($user, $aluno);
-        } else {
-            return false;
-        }
-    }
-
-    public function isCertificadoperiodo(?IdentityInterface $user, Aluno $aluno)
+    public function canDeclaracaoperiodo(?IdentityInterface $user, Aluno $aluno)
     {
         if (!isset($user)) {
             return false;
@@ -123,7 +110,7 @@ class AlunoPolicy
         }
     }
 
-    public function isCertificadoperiodopdf(?IdentityInterface $user, Aluno $aluno)
+    public function canCertificadoperiodo(?IdentityInterface $user, Aluno $aluno)
     {
         if (!isset($user)) {
             return false;
@@ -136,7 +123,20 @@ class AlunoPolicy
         }
     }
 
-    public function isPlanilhaCress(?IdentityInterface $user, Aluno $aluno)
+    public function canCertificadoperiodopdf(?IdentityInterface $user, Aluno $aluno)
+    {
+        if (!isset($user)) {
+            return false;
+        } elseif ($user->getOriginalData()->isAdmin()) {
+            return true;
+        } elseif ($user->getOriginalData()->isAluno()) {
+            return $this->isAuthor($user, $aluno);
+        } else {
+            return false;
+        }
+    }
+
+    public function canPlanilhaCress(?IdentityInterface $user, Aluno $aluno)
     {
         if (!isset($user)) {
             return false;

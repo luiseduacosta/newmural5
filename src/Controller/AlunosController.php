@@ -392,7 +392,6 @@ class AlunosController extends AppController
 
     public function certificadoperiodo($id = null)
     {
-        $user = $this->request->getAttribute("identity");
         $totalperiodos = $this->request->getQuery("totalperiodos");
         $novoperiodo = $this->request->getQuery("novoperiodo");
 
@@ -416,22 +415,25 @@ class AlunosController extends AppController
              return $this->redirect(["action" => "view", $id]);
         }
 
-        if ($totalperiodos == null) {
-            $periodoacademicoatual = $this->fetchTable("Configuracoes")->find()->first();
-            $periodo_atual = $periodoacademicoatual->periodo_calendario_academico;
-            $periodo_inicial = $aluno->ingresso;
+        $configuracoes = $this->fetchTable("Configuracoes")->find()->first();
+        $periodo_atual = $configuracoes->periodo_calendario_academico;
 
-            $inicial = explode("-", $periodo_inicial);
-            $atual = explode("-", $periodo_atual);
-            $semestres = ($atual[0] - $inicial[0] + 1) * 2;
-            
-            $totalperiodos = $semestres; // Simplified fallback
-             if ($inicial[1] == 1 && $atual[1] == 2) $totalperiodos = $semestres;
-             if ($inicial[1] == 1 && $atual[1] == 1) $totalperiodos = $semestres - 1;
-             if ($inicial[1] == 2 && $atual[1] == 2) $totalperiodos = $semestres - 1;
-             if ($inicial[1] == 2 && $atual[1] == 1) $totalperiodos = $semestres - 2;
+        if ($novoperiodo) {
+            $periodo_inicial = $novoperiodo;
+        } else {
+            $periodo_inicial = $aluno->ingresso;
         }
 
+        $inicial = explode("-", $periodo_inicial);
+        $atual = explode("-", $periodo_atual);
+        $semestres = ($atual[0] - $inicial[0] + 1) * 2;
+            
+        $totalperiodos = $semestres; // Simplified fallback
+        if ($inicial[1] == 1 && $atual[1] == 2) $totalperiodos = $semestres;
+        if ($inicial[1] == 1 && $atual[1] == 1) $totalperiodos = $semestres - 1;
+        if ($inicial[1] == 2 && $atual[1] == 2) $totalperiodos = $semestres - 1;
+        if ($inicial[1] == 2 && $atual[1] == 1) $totalperiodos = $semestres - 2;
+        
         if ($this->request->is(["post", "put"])) {
             $data = $this->request->getData();
             $novoperiodo = $data["novoperiodo"] ?? $aluno->ingresso;

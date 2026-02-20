@@ -40,6 +40,10 @@ $user = $this->getRequest()->getAttribute('identity');
             <td><?= h($configuracao->termo_compromisso_final) ?></td>
         </tr>
         <tr>
+            <th><?= __('Período calendário acadêmico') ?></th>
+            <td><?= h($configuracao->periodo_calendario_academico) ?></td>
+        </tr>      
+        <tr>
             <th><?= __('Curso Turma Atual') ?></th>
             <td><?= $configuracao->curso_turma_atual ?></td>
         </tr>

@@ -4,7 +4,6 @@
  * @var \App\Model\Entity\User $user
  */
 use Cake\ORM\TableRegistry;
-$user = $this->getRequest()->getAttribute('identity');
 ?>
 
 <nav class="navbar navbar-expand-lg py-2 navbar-light bg-secondary">
@@ -75,7 +74,7 @@ $user = $this->getRequest()->getAttribute('identity');
                         </a>
                         <ul class="dropdown-menu">
                             <li class="nav-item">
-                                <?php echo $this->Html->link('Configuração', '/Configuracao/view/1', ['class' => 'dropdown-item']); ?>
+                                <?php echo $this->Html->link('Configuração', '/Configuracoes/view/1', ['class' => 'dropdown-item']); ?>
                             </li>
                             <li class="nav-item">
                                 <?php echo $this->Html->link('Usuário(a)s', '/Users/index', ['class' => 'dropdown-item']); ?>

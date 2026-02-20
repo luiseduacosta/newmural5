@@ -260,4 +260,69 @@ class RespostasController extends AppController
         
         return $this->redirect(['action' => 'index']);
     }
+
+    /**
+     * Imprimerespostapdf method
+     *
+     * @param string|null $id Resposta id.
+     * @param string|null $estagiario_id Estagiario id.
+     * @return \Cake\Http\Response|null|void Renders view
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function imprimeresposta($id = null)
+    {
+        $estagiario_id = $this->request->getQuery("estagiario_id");
+
+        $this->Authorization->skipAuthorization();
+
+        if ($estagiario_id === null) {
+            $this->Flash->error(__("Selecionar estagiário."));
+            return $this->redirect([
+                "controller" => "estagiarios",
+                "action" => "index",
+            ]);
+        }
+ 
+        try {
+            $resposta = $this->Respostas->find()
+                ->contain([
+                    "Estagiarios" => [
+                        "Alunos",
+                        "Supervisores",
+                        "Professores",
+                        "Instituicoes",
+                        ],
+                    "Questionarios" => [
+                        "Questoes",
+                        ],
+                    ])
+                ->where(["Estagiarios.id" => $estagiario_id])
+                ->first();
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+            $this->Flash->error(__("Resposta não foi encontrada."));
+            return $this->redirect([
+                "controller" => "estagiarios",
+                "action" => "view",
+                $estagiario_id,
+            ]);
+        }
+
+        if ($resposta === null) {
+            $this->Flash->error(__("Resposta não foi encontrada."));
+            return $this->redirect([
+                "controller" => "estagiarios",
+                "action" => "view",
+                $estagiario_id,
+            ]);
+        }
+        
+        $this->viewBuilder()->enableAutoLayout(false);
+        $this->viewBuilder()->setClassName("CakePdf.Pdf");
+        $this->viewBuilder()->setOption("pdfConfig", [
+            "orientation" => "portrait",
+            "download" => true,
+            "filename" => "avaliacao_discente_" . $id . ".pdf",
+        ]);
+        $this->set("resposta", $resposta);
+    }
 }
