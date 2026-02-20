@@ -41,8 +41,6 @@ $professora = isset($avaliacao->estagiario->professor->nome) ? $avaliacao->estag
 
 <div class="container">
     <div class="row">
-        <div class="column-responsive column-80">
-            <div class="avaliacaoes view content">
                 <table>
                     <tr>
                         <th><?= __('1) ASSIDUIDADE: Desenvolveu as atividades propostas com frequência, ausentando-se apenas com conhecimento e acordado com o(a) supervisor(a) de campo e ou acadêmico(a), seja por motivo de saúde, seja por situações estabelecidas na Lei 11788/2008, entre outras:') ?></th>
@@ -330,8 +328,6 @@ $professora = isset($avaliacao->estagiario->professor->nome) ? $avaliacao->estag
                         <td><?= h($avaliacao->observacoes) ?></td>
                     </tr>
                 </table>
-            </div>
-        </div>
     </div>
     
     <p style="text-align:right; line-height:100%;">
