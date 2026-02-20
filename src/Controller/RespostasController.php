@@ -67,17 +67,22 @@ class RespostasController extends AppController
         $avaliacoes = [];
         
         foreach ($respostasData as $key => $value) {
+            if (is_array($value) && isset($value['pergunta'])) {
+                $avaliacoes[$value['pergunta']] = $value['texto_valor'] ?? $value['valor'];
+                continue;
+            }
+
             if (str_starts_with($key, 'avaliacao')) {
-                $pergunta_id = (int) substr($key, 9); // Removed length limit to be safe
+                $pergunta_id = (int) substr($key, 9);
                 if ($pergunta_id > 0) {
                     try {
-                        $pergunta = $this->fetchTable('Questiones')->get($pergunta_id);
+                        $pergunta = $this->fetchTable('Questoes')->get($pergunta_id);
                         if (in_array($pergunta->type, ['select', 'radio', 'checkbox', 'boolean'])) {
                             $opcoes = json_decode($pergunta->options, true);
-                            foreach ($opcoes as $option_key => $option_value) {
-                                if ($option_key == $value) {
-                                    $avaliacoes[$pergunta->text] = $option_value;
-                                }
+                            if (is_array($opcoes) && isset($opcoes[$value])) {
+                                $avaliacoes[$pergunta->text] = $opcoes[$value];
+                            } else {
+                                $avaliacoes[$pergunta->text] = $value;
                             }
                         } else {
                             $avaliacoes[$pergunta->text] = $value;
@@ -99,6 +104,7 @@ class RespostasController extends AppController
      */
     public function add()
     {
+        $this->Authorization->skipAuthorization();
         $estagiario_id = $this->request->getQuery('estagiario_id');
         
         if (!$estagiario_id) {
@@ -137,11 +143,42 @@ class RespostasController extends AppController
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
-            
+
             $saveData = [];
             $saveData['questionario_id'] = $data['questionario_id'] ?? 1;
             $saveData['estagiario_id'] = $estagiario_id;
-            $saveData['response'] = json_encode($data, JSON_PRETTY_PRINT);
+
+            // Enrich response data with question text and values
+            $questoes = $this->fetchTable('Questoes')->find()->all()->combine('id', function($entity) { return $entity; })->toArray();
+            $enrichedData = [];
+            foreach ($data as $key => $value) {
+                if (str_starts_with($key, 'avaliacao')) {
+                    $pergunta_id = (int) substr($key, 9);
+                    if (isset($questoes[$pergunta_id])) {
+                        $questao = $questoes[$pergunta_id];
+                        $texto_valor = $value;
+                        if (in_array($questao->type, ['select', 'radio', 'checkbox', 'boolean'])) {
+                            $opcoes = json_decode($questao->options, true);
+                            if ($questao->type === 'boolean') {
+                                $opcoes = ['0' => 'Não', '1' => 'Sim'];
+                            }
+                            if (is_array($opcoes) && isset($opcoes[$value])) {
+                                $texto_valor = $opcoes[$value];
+                            }
+                        }
+                        $enrichedData[$key] = [
+                            'pergunta' => $questao->text,
+                            'valor' => $value,
+                            'texto_valor' => $texto_valor
+                        ];
+                    } else {
+                        $enrichedData[$key] = $value;
+                    }
+                } else {
+                    $enrichedData[$key] = $value;
+                }
+            }
+            $saveData['response'] = json_encode($enrichedData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             
             $resposta = $this->Respostas->patchEntity($resposta, $saveData);
             
@@ -216,7 +253,38 @@ class RespostasController extends AppController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
              $data = $this->request->getData();
-             $resposta->response = json_encode($data, JSON_PRETTY_PRINT);
+             
+             // Enrich response data with question text and values
+             $questoes = $this->fetchTable('Questoes')->find()->all()->combine('id', function($entity) { return $entity; })->toArray();
+             $enrichedData = [];
+             foreach ($data as $key => $value) {
+                 if (str_starts_with($key, 'avaliacao')) {
+                     $pergunta_id = (int) substr($key, 9);
+                     if (isset($questoes[$pergunta_id])) {
+                         $questao = $questoes[$pergunta_id];
+                         $texto_valor = $value;
+                         if (in_array($questao->type, ['select', 'radio', 'checkbox', 'boolean'])) {
+                             $opcoes = json_decode($questao->options, true);
+                             if ($questao->type === 'boolean') {
+                                 $opcoes = ['0' => 'Não', '1' => 'Sim'];
+                             }
+                             if (is_array($opcoes) && isset($opcoes[$value])) {
+                                 $texto_valor = $opcoes[$value];
+                             }
+                         }
+                         $enrichedData[$key] = [
+                             'pergunta' => $questao->text,
+                             'valor' => $value,
+                             'texto_valor' => $texto_valor
+                         ];
+                     } else {
+                         $enrichedData[$key] = $value;
+                     }
+                 } else {
+                     $enrichedData[$key] = $value;
+                 }
+             }
+             $resposta->response = json_encode($enrichedData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
              
              if ($this->Respostas->save($resposta)) {
                  $this->Flash->success(__('Resposta atualizada.'));

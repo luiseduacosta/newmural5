@@ -53,7 +53,6 @@ use Cake\I18n\Time;
                 </td>
             </tr>
             <?php
-            $perguntas = json_decode($resposta->response, true);
             foreach ($avaliacoes as $key => $value): ?>
                 <tr>
                     <th>

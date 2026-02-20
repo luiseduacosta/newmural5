@@ -34,13 +34,23 @@ use Cake\I18n\DateTime;
             </tr>
             <?php
             $perguntas = json_decode($resposta->response, true);
-            foreach ($perguntas as $key => $value): ?>
+            foreach ($perguntas as $key => $value): 
+                if (!str_starts_with($key, 'avaliacao')) continue;
+                
+                $label = $key;
+                $displayValue = $value;
+                
+                if (is_array($value) && isset($value['pergunta'])) {
+                    $label = $value['pergunta'];
+                    $displayValue = $value['texto_valor'] ?? $value['valor'];
+                }
+            ?>
                 <tr>
                     <th>
-                        <?= h($key) ?>
+                        <?= h($label) ?>
                     </th>
                     <td>
-                        <?= h($value) ?>
+                        <?= h($displayValue) ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
