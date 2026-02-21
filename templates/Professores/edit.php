@@ -3,7 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Professor $professor
  */
-$user = $this->getRequest()->getAttribute('identity');
 ?>
 
 <!-- jQuery Mask -->
@@ -19,7 +18,6 @@ $user = $this->getRequest()->getAttribute('identity');
 </script>
 
 <?= $this->element('menu_mural') ?>
-
 <?= $this->element('templates') ?>
 
 <div class="d-flex justify-content-start">

@@ -270,6 +270,8 @@ class AlunosController extends AppController
     public function cargahoraria($ordem = null)
     {
 
+        $this->Authorization->skipAuthorization();
+
         ini_set("memory_limit", "2048M");
         $ordem = $this->request->getQuery("ordem");
 
@@ -282,13 +284,6 @@ class AlunosController extends AppController
             ->contain(["Estagiarios"])
             ->limit(20) // Original had limit 20
             ->toArray();
-
-        try {
-            $this->Authorization->authorize($alunos);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
-            $this->Flash->error(__("Acesso não autorizado."));
-            return $this->redirect(["controller" => "Muralestagios", "action" => "index"]);
-        }
 
         // Logic copied from original...
         if (empty($alunos)) {
@@ -548,12 +543,7 @@ class AlunosController extends AppController
 
     public function planilhacress($id = null)
     {
-        try {
-            $this->Authorization->authorize($this->Alunos);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
-            $this->Flash->error(__("Acesso não autorizado."));
-            return $this->redirect(["action" => "index"]);
-        }
+        $this->Authorization->skipAuthorization();
 
         $periodo = $this->getRequest()->getQuery('periodo');
 
@@ -587,12 +577,8 @@ class AlunosController extends AppController
 
     public function planilhaseguro($id = null)
     {
-        try {
-            $this->Authorization->authorize($this->Alunos);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
-            $this->Flash->error(__("Acesso não autorizado."));
-            return $this->redirect(["action" => "index"]);
-        }
+        
+        $this->Authorization->skipAuthorization();
 
         $periodo = $this->getRequest()->getQuery('periodo');
 

@@ -3,7 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Professor $professor
  */
-$user = $this->getRequest()->getAttribute('identity');
 ?>
 
 <!-- jQuery Mask -->

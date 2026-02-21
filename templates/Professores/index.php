@@ -3,7 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Professor[]|\Cake\Collection\CollectionInterface $professores
  */
-$user = $this->getRequest()->getAttribute('identity');
 ?>
 
 <?= $this->element('menu_mural') ?>
@@ -229,9 +228,9 @@ $user = $this->getRequest()->getAttribute('identity');
                             <td><?= h($professor->celular) ?></td>
                             <td><?= $professor->email ? $this->Html->link($professor->email, 'mailto:' . $professor->email) : '' ?>
                             </td>
-                            <td><?= $professor->has('homepage') ? $this->Html->link($professor->homepage, $professor->homepage) : '' ?>
+                            <td><?= $professor->hasValue('homepage') ? $this->Html->link($professor->homepage, $professor->homepage) : '' ?>
                             </td>
-                            <td><?= $professor->has('redesocial') ? $this->Html->link($professor->redesocial, $professor->redesocial) : '' ?>
+                            <td><?= $professor->hasValue('redesocial') ? $this->Html->link($professor->redesocial, $professor->redesocial) : '' ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

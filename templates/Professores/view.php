@@ -4,11 +4,10 @@
  * @var \App\Model\Entity\Professor $professor
  */
 use Cake\I18n\Date;
- 
-// $user = $this->getRequest()->getAttribute('identity');
 ?>
 
-<?php echo $this->element('menu_mural') ?>
+<?= $this->element('templates') ?>
+<?= $this->element('menu_mural') ?>
 
 <div class="d-flex justify-content-start">
     <nav class="navbar navbar-expand-lg py-2 navbar-light bg-light">

@@ -55,9 +55,6 @@
             </tr>
         </thead>
         <?php foreach ($t_seguro as $cada_aluno): ?>
-            <?php pr($cada_aluno['nascimento']);  ?>
-            <?php pr(date('d/m/Y', strtotime($cada_aluno['nascimento'])));  ?>
-            <?php // die(); ?>
             <tr>
                 <td>
                     <?php echo $this->Html->link($cada_aluno['nome'], '/Alunos/view/' . $cada_aluno['id']); ?>

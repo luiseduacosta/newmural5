@@ -18,7 +18,7 @@ class ProfessoresTablePolicy
      * @param \App\Model\Table\ProfessoresTable $professores
      * @return bool
      */
-    public function canView(?IdentityInterface $user, ProfessoresTable $professores)
+    public function canIndex(?IdentityInterface $user, ProfessoresTable $professores)
     {
         return isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '3');
     }    
