@@ -143,7 +143,6 @@ class RespostasController extends AppController
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
-
             $saveData = [];
             $saveData['questionario_id'] = $data['questionario_id'] ?? 1;
             $saveData['estagiario_id'] = $estagiario_id;
@@ -178,8 +177,8 @@ class RespostasController extends AppController
                     $enrichedData[$key] = $value;
                 }
             }
-            $saveData['response'] = json_encode($enrichedData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             
+            $saveData['response'] = json_encode($enrichedData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);            
             $resposta = $this->Respostas->patchEntity($resposta, $saveData);
             
             if ($this->Respostas->save($resposta)) {
@@ -215,7 +214,7 @@ class RespostasController extends AppController
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['action' => 'index']);
         }
-        
+
         $estagiario = $this->fetchTable('Estagiarios')->get($resposta->estagiario_id, [
             'contain' => ['Alunos']
         ]);
@@ -292,7 +291,6 @@ class RespostasController extends AppController
              }
              $this->Flash->error(__('Resposta não atualizada. Tente novamente.'));
         }
-        
         $this->set(compact('resposta', 'avaliacoes', 'estagiario'));
     }
 

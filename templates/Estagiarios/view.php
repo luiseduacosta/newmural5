@@ -179,7 +179,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab" href="#atividades" role="tab" aria-controls="atividades"
-                    aria-selected="false">Atividades desenvolvidas</a>
+                    aria-selected="false">Atividades</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab" href="#avaliacao" role="tab" aria-controls="avaliacao"
@@ -388,8 +388,7 @@
         </div>
 
         <div class="tab-content">
-            <div id="atividades" class="tab-pane container active show">
-                <?php // pr($estagiario->folhadeatividades); ?>
+            <div id="atividades" class="tab-pane container">
                 <?php if (empty($estagiario->folhadeatividades)): ?>
                     <div class="alert-warning" role="alert">
                         <h4 class="alert-heading">Atenção!</h4>
@@ -401,8 +400,7 @@
                                 ['controller' => 'folhadeatividades', 'action' => 'atividade', '?' => ['estagiario_id' => $estagiario->id]],
                                 ['class' => 'btn btn-sm btn-primary me-1']
                             ) ?>
-                            para adicionar
-                            atividades.
+                            para adicionar atividades.
                         </p>
                     </div>
                 <?php else: ?>
@@ -456,54 +454,64 @@
         </div>
 
         <div class="tab-content">
-            <div id="avaliacao" class="tab-pane container active show">
+            <div id="avaliacao" class="tab-pane container">
                 <?php if (empty($estagiario->resposta)): ?>
                     <div class="alert-warning" role="alert">
                         <h4 class="alert-heading">Atenção!</h4>
                         <p>Este estagiário ainda não possui avaliação.</p>
                         <hr>
-                        <p class="mb-0">Clique no botão
-                            <?= $this->Html->link(
-                                "Preencher Avaliação",
-                                ['controller' => 'respostas', 'action' => 'add', '?' => ['estagiario_id' => $estagiario->id]],
-                                ['class' => 'btn btn-info me-1 btn-sm']
-                            ) ?>
-                            para adicionar uma
-                            avaliação.
-                        </p>
+                        <?php if (isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '4')): ?>
+                            <p class="mb-0">Clique no botão
+                                <?= $this->Html->link(
+                                    "Preencher Avaliação",
+                                    ['controller' => 'respostas', 'action' => 'add', '?' => ['estagiario_id' => $estagiario->id]],
+                                    ['class' => 'btn btn-sm btn-info me-1']
+                                ) ?>
+                                para adicionar uma avaliação.
+                            </p>
+                        <?php endif; ?>
                     </div>
                 <?php else: ?>
                     <table class="table table-striped table-hover table-responsive">
                         <tr>
-                            <td class="text" colspan="2">
+                            <td colspan="3">
                                 <strong><?= __("Avaliação") ?></strong>
                             </td>
                         </tr>
-                        <?php foreach ($avaliacoes as $key => $value): ?>
-                            <tr>
-                                <th><?= h($key) ?></th>
-                                <td><?= h($value) ?></td>
-                            </tr>
+                        <?php $avaliacoes = json_decode($estagiario->resposta->response, true); ?>
+                        <?php foreach ($avaliacoes as $avaliacao): ?>
+                            <?php if (is_string($avaliacao)) { ?>
+                                <tr>
+                                    <td colspan="3"><?php // h($avaliacao) ?></td>
+                                </tr>
+                            <?php } elseif (is_array($avaliacao)) { ?>
+                                <tr>
+                                    <td><?= h($avaliacao['pergunta']) ?></td>
+                                    <td><?= h($avaliacao['valor']) ?></td>
+                                    <td><?= h($avaliacao['texto_valor']) ?></td>
+                                </tr>
+                            <?php } ?>
                         <?php endforeach; ?>
-                        <tr>
-                            <th><?= __("Criado") ?></th>
-                            <td><?= $this->Time->format(
-                                $estagiario->resposta->created,
-                                "d-MM-Y HH:mm:ss",
-                            ) ?></td>
-                        </tr>
-                        <tr>
-                            <th><?= __("Modificado") ?></th>
-                            <td><?= $this->Time->format(
-                                $estagiario->resposta->modified,
-                                "d-MM-Y HH:mm:ss",
-                            ) ?></td>
-                        </tr>
-                    </table>
-                <?php endif; ?>
+                        </table>
+                        <div class="row">
+                            <div class="col-6">
+                                <?= __("Criado: ") ?>
+                                <?= $this->Time->format(
+                                    $estagiario->resposta->created,
+                                    "d-MM-Y HH:mm",
+                                ) ?>
+                            </div>
+                            <div class="col-6 text-end">
+                                <?= __("Modificado: ") ?>
+                                <?= $this->Time->format(
+                                    $estagiario->resposta->modified,
+                                    "d-MM-Y HH:mm",
+                                ) ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
-
     </div>
-
 </div>

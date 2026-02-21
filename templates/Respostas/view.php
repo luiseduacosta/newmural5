@@ -32,26 +32,33 @@ use Cake\I18n\Time;
                     <?= $this->Html->link(__('Nova'), ['action' => 'add'], ['class' => 'btn btn-primary me-1']) ?>
                 </li>
             <?php endif ?>
+            <?php if (isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2')): ?>
+                <li class="nav-item">
+                    <?= $this->Html->link(__('Imprimir'), ['action' => 'imprimeresposta', '?' => ['estagiario_id' => $resposta->estagiario->id]], ['class' => 'btn btn-primary me-1']) ?>
+                </li>
+            <?php endif ?>
         </ul>
     </nav>
 
     <div class="container mt-4">
-        <h3><?= h($resposta->estagiario->aluno->nome) ?></h3>
+        <div class="card">
+            <div class="card-header">
+                <?= 'Avaliação de: ' . $resposta->estagiario->aluno->nome ?>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <?= 'Período: ' . $resposta->estagiario->periodo ?>
+                    </div>
+                    <div class="col-6 text-end">
+                        <?= 'Nível: ' . $resposta->estagiario->nivel ?>
+                    </div>
+                </div>
+            </div>    
+        </div>
+
         <table class="table table-responsive table-striped table-hover">
-            <tr>
-                <th><?= __('Avaliação') ?></th>
-                <td><?= $this->Number->format($resposta->id) ?></td>
-            </tr>
-            <tr>
-                <th><?= __('Aluno') ?></th>
-                <td><?= $this->Html->link($resposta->estagiario->aluno->nome, ['controller' => 'alunos', 'action' => 'view', $resposta->estagiario->aluno->id]) ?>
-                </td>
-            </tr>
-            <tr>
-                <th><?= __('Nível de estágio') ?></th>
-                <td><?= $resposta->has('estagiario') ? $this->Html->link($resposta->estagiario->nivel, ['controller' => 'Estagiarios', 'action' => 'view', $resposta->estagiario->id]) : '' ?>
-                </td>
-            </tr>
+
             <?php
             foreach ($avaliacoes as $key => $value): ?>
                 <tr>
