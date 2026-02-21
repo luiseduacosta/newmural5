@@ -27,12 +27,12 @@ class RespostasController extends AppController
             $this->Authorization->authorize($this->Respostas);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
 
         $query = $this->Respostas->find()
             ->contain(['Estagiarios' => ['Alunos']])
-            ->order(['Respostas.id' => 'DESC']);
+            ->orderBy(['Respostas.id' => 'DESC']);
 
         $respostas = $this->paginate($query);
         $this->set(compact('respostas'));
@@ -53,14 +53,14 @@ class RespostasController extends AppController
             ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('Registro não encontrado.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Respostas', 'action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($resposta);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
         
         $respostasData = json_decode($resposta->response, true) ?? [];
@@ -109,7 +109,7 @@ class RespostasController extends AppController
         
         if (!$estagiario_id) {
             $this->Flash->error(__('Estagiário não informado.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
         }
         
         $estagiario = $this->fetchTable('Estagiarios')->find()
@@ -119,16 +119,16 @@ class RespostasController extends AppController
             
         if (!$estagiario) {
             $this->Flash->error(__('Estagiário não localizado.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
         }
 
         $respostaExistente = $this->Respostas->find()
             ->where(['Respostas.estagiario_id' => $estagiario_id])
             ->first();
-            
+                
         if ($respostaExistente) {
             $this->Flash->error(__('Este estagiário já possui uma avaliação preenchida.'));
-            return $this->redirect(['action' => 'view', $respostaExistente->id]);
+            return $this->redirect(['controller' => 'Respostas', 'action' => 'view', $respostaExistente->id]);
         }
         
         $this->set('estagiario', $estagiario);
@@ -138,7 +138,7 @@ class RespostasController extends AppController
             $this->Authorization->authorize($resposta);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
 
         if ($this->request->is('post')) {
@@ -202,17 +202,19 @@ class RespostasController extends AppController
     public function edit($id = null)
     {
         try {
-            $resposta = $this->Respostas->get($id);
+            $resposta = $this->Respostas->get($id, [
+                'contain' => ['Questionarios'],
+            ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('Registro não encontrado.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Respostas', 'action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($resposta);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
 
         $estagiario = $this->fetchTable('Estagiarios')->get($resposta->estagiario_id, [
@@ -247,7 +249,6 @@ class RespostasController extends AppController
                     }
                 }
             }
-            
         }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -287,7 +288,7 @@ class RespostasController extends AppController
              
              if ($this->Respostas->save($resposta)) {
                  $this->Flash->success(__('Resposta atualizada.'));
-                 return $this->redirect(['action' => 'view', $resposta->id]);
+                 return $this->redirect(['controller' => 'Respostas', 'action' => 'view', $resposta->id]);
              }
              $this->Flash->error(__('Resposta não atualizada. Tente novamente.'));
         }
@@ -308,14 +309,14 @@ class RespostasController extends AppController
             $resposta = $this->Respostas->get($id);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('Registro não encontrado.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Respostas', 'action' => 'index']);
         }
         
         try {
             $this->Authorization->authorize($resposta);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
         
         if ($this->Respostas->delete($resposta)) {
@@ -324,7 +325,7 @@ class RespostasController extends AppController
             $this->Flash->error(__('Resposta não excluída. Tente novamente.'));
         }
         
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect(['controller' => 'Respostas', 'action' => 'index']);
     }
 
     /**

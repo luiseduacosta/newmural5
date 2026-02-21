@@ -141,12 +141,24 @@ class QuestionariosController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         try {
-            $questionario = $this->Questionarios->get($id);
+            $questionario = $this->Questionarios->get($id, [
+                'contain' => [],
+            ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('Registro não encontrado.'));
             return $this->redirect(['action' => 'index']);
         }
 
+        // Check if the questionario has any associated respostas
+        $respostasCount = $this->Respostas->find()
+            ->where(['Respostas.questionario_id' => $questionario->id])
+            ->count();
+
+        if ($respostasCount > 0) {
+            $this->Flash->error(__('Este questionário possui respostas associadas. Exclua as respostas antes de excluir o questionário.'));
+            return $this->redirect(['action' => 'view', $questionario->id]);
+        }
+        
         try {
             $this->Authorization->authorize($questionario);
         } catch (\Authorization\Exception\ForbiddenException $e) {

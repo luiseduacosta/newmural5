@@ -8,6 +8,8 @@ namespace App\Controller;
  *
  * @property \App\Model\Table\QuestoesTable $Questoes
  * @property \Authorization\Controller\Component\AuthorizationComponent $Authorization
+ * @property \Authentication\Controller\Component\AuthenticationComponent $Authentication
+ * @method \App\Model\Entity\Questao[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class QuestoesController extends AppController
 {
@@ -25,7 +27,9 @@ class QuestoesController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
-        $query = $this->Questoes->find()->contain(["Questionarios"]);
+        $query = $this->Questoes->find()
+            ->contain(["Questionarios"])
+            ->orderBy(["ordem" => "ASC"]);
         $questoes = $this->paginate($query, [
             "sortableFields" => [
                 "id",
@@ -35,7 +39,6 @@ class QuestoesController extends AppController
                 "ordem",
                 "Questionarios.title", // Check association alias
             ],
-            "order" => ["ordem" => "ASC"],
             "limit" => 20,
         ]);
         $this->set(compact("questoes"));
@@ -82,13 +85,13 @@ class QuestoesController extends AppController
             $this->Authorization->authorize($questao);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
 
         // Find last order
         $ultimaPergunta = $this->Questoes
             ->find()
-            ->order(["ordem" => "DESC"])
+            ->orderBy(["ordem" => "DESC"])
             ->first();
             
         if ($ultimaPergunta && $ultimaPergunta->ordem) {
@@ -128,14 +131,14 @@ class QuestoesController extends AppController
             ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__("Registro não encontrado."));
-            return $this->redirect(["action" => "index"]);
+            return $this->redirect(['controller' => 'Questoes', 'action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($questao);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
                 
         if ($this->request->is(["patch", "post", "put"])) {
@@ -168,17 +171,19 @@ class QuestoesController extends AppController
     {
         $this->request->allowMethod(["post", "delete"]);
         try {
-            $questao = $this->Questoes->get($id);
+            $questao = $this->Questoes->get($id, [
+                "contain" => [],
+            ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__("Registro não encontrado."));
-            return $this->redirect(["action" => "index"]);
+            return $this->redirect(['controller' => 'Questoes', 'action' => 'index']);
         }
         
         try {
             $this->Authorization->authorize($questao);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
         
         if ($this->Questoes->delete($questao)) {
