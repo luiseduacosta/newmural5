@@ -7,7 +7,7 @@
 
 <?php echo $this->element('menu_mural') ?>
 
-<?php $this->element('templates') ?>
+<?php echo $this->element('templates') ?>
 
 <div class="container mt-1">
 

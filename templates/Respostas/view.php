@@ -76,7 +76,7 @@ use Cake\I18n\Time;
             </tr>
             <tr>
                 <th><?= __('Modificado') ?></th>
-                <td><?= $this->time->format($resposta->modified, 'd-MM-Y HH:mm:ss') ?></td>
+                <td><?= $this->Time->format($resposta->modified, 'd-MM-Y HH:mm:ss') ?></td>
             </tr>
         </table>
     </div>

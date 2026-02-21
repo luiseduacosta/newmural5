@@ -6,7 +6,7 @@
 ?>
 <?php echo $this->element('menu_mural') ?>
 
-<?php $this->element('templates') ?>
+<?php echo $this->element('templates') ?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <ul class="navbar-nav mr-auto">

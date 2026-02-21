@@ -9,11 +9,13 @@
 
 <?php echo $this->element('menu_mural') ?>
 
+<?php echo $this->element('templates') ?>
+
 <div class="container mt-1">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <ul class="navbar-nav collapse navbar-collapse">
             <li class="nav-item">
-                <?= $this->Html->link(__('Listar respostas'), ['action' => 'index'], ['class' => 'btn btn-primary']) ?>
+                <?= $this->Html->link('Listar respostas', ['action' => 'index'], ['class' => 'btn btn-primary']) ?>
             </li>
         </ul>
     </nav>
@@ -155,8 +157,8 @@
                 'type' => 'hidden',
                 'value' => date('Y-m-d H:i:s')
             ]);
-            echo $this->Form->button(__('Confirma'), ['class' => 'btn btn-primary'])
-                ?>
+            echo $this->Form->button('Confirma', ['class' => 'btn btn-primary'])
+            ?>
         </fieldset>
         <?= $this->Form->end() ?>
     </div>

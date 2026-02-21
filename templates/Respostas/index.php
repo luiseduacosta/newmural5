@@ -7,14 +7,16 @@ use Cake\I18n\Time;
  */
 ?>
 
-<?php echo $this->element('menu_mural') ?>
+<?= $this->element('menu_mural') ?>
+
+<?= $this->element('templates') ?>
 
 <div class="container mt-1">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <ul class="navbar-nav mr-auto">
             <?php if (isset($user) && $user->categoria == '1'): ?>
-            <li class="nav-item active">
+            <li class="nav-item">
                 <?= $this->Html->link(__('Nova resposta'), ['action' => 'add'], ['class' => 'btn btn-primary']) ?>
             </li>
             <?php endif; ?>
