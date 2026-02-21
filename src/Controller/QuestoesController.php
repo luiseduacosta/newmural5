@@ -24,7 +24,7 @@ class QuestoesController extends AppController
             $this->Authorization->authorize($this->Questoes);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
 
         $query = $this->Questoes->find()
@@ -59,7 +59,7 @@ class QuestoesController extends AppController
             ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__("Registro não encontrado."));
-            return $this->redirect(["action" => "index"]);
+            return $this->redirect(["controller" => "Questoes", "action" => "index"]);
         }
 
         try {

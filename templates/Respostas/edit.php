@@ -5,9 +5,6 @@
  * @var string[]|\Cake\Collection\CollectionInterface $questiones
  * @var string[]|\Cake\Collection\CollectionInterface $estagiarios
  */
-// pr($resposta);
-// pr($avaliacoes);
-// pr($estagiario);
 ?>
 
 <?= $this->element('menu_mural') ?>
@@ -17,11 +14,13 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <ul class="navbar-nav collapse navbar-collapse">
             <li class="nav-item">
+                <?php if (isset($user) && $user->categoria == '1'): ?>
                 <?= $this->Form->postLink(
                     __('Excluir'),
                     ['action' => 'delete', $resposta->id],
                     ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $resposta->id), 'class' => 'btn btn-danger me-1']
                 ) ?>
+                <?php endif; ?>
             </li>
             <li class="nav-item">
                 <?= $this->Html->link(__('Listar respostas'), ['action' => 'index'], ['class' => 'btn btn-primary me-1']) ?>

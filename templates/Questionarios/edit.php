@@ -11,15 +11,17 @@
 <div class="container mt-1">
     <nav class="nav navbar-expand-lg navbar-light bg-light">
         <ul class="navbar-nav collapse navbar-collapse">
+            <?php if (isset($user) && $user->categoria == '1'): ?>
             <li class="nav-item">
                 <?= $this->Form->postLink(
                     __('Excluir'),
-                    ['action' => 'delete', $questionario->id],
+                    ['controller' => 'Questionarios', 'action' => 'delete', $questionario->id],
                     ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $questionario->id), 'class' => 'btn btn-danger me-1']
                 ) ?>
             </li>
+            <?php endif; ?>
             <li class="nav-item">
-                <?= $this->Html->link(__('Listar'), ['action' => 'index'], ['class' => 'btn btn-primary me-1']) ?>
+                <?= $this->Html->link(__('Listar'), ['controller' => 'Questionarios', 'action' => 'index'], ['class' => 'btn btn-primary me-1']) ?>
             </li>
         </ul>
     </nav>

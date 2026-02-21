@@ -17,6 +17,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <ul class="navbar-nav collapse navbar-collapse" id="navbarSupportedContent">
+            <?php if (isset($user) && $user->categoria == '1'): ?>
             <li class="nav-item">
                 <?= $this->Html->link(__('Editar'), ['action' => 'edit', $questionario->id], ['class' => 'btn btn-primary me-1']) ?>
             </li>
@@ -24,10 +25,11 @@
                 <?= $this->Form->postLink(__('Excluir'), ['action' => 'delete', $questionario->id], ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $questionario->id), 'class' => 'btn btn-danger me-1']) ?>
             </li>
             <li class="nav-item">
-                <?= $this->Html->link(__('Listar'), ['action' => 'index'], ['class' => 'btn btn-primary me-1']) ?>
-            </li>
-            <li class="nav-item">
                 <?= $this->Html->link(__('Novo'), ['action' => 'add'], ['class' => 'btn btn-primary me-1']) ?>
+            </li>
+            <?php endif; ?>
+            <li class="nav-item">
+                <?= $this->Html->link(__('Listar'), ['action' => 'index'], ['class' => 'btn btn-primary me-1']) ?>
             </li>
         </ul>
     </nav>
@@ -94,8 +96,10 @@
                                 <td><?= h($questoes->ordem) ?></td>
                                 <td class="d-grid">
                                     <?= $this->Html->link(__('Ver'), ['controller' => 'Questoes', 'action' => 'view', $questoes->id], ['class' => 'btn btn-primary btn-sm btn-block p-1 mb-1']) ?>
+                                    <?php if (isset($user) && $user->categoria == '1'): ?>
                                     <?= $this->Html->link(__('Editar'), ['controller' => 'Questoes', 'action' => 'edit', $questoes->id], ['class' => 'btn btn-primary btn-sm btn-block p-1 mb-1']) ?>
                                     <?= $this->Form->postLink(__('Excluir'), ['controller' => 'Questoes', 'action' => 'delete', $questoes->id], ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $questoes->id), 'class' => 'btn btn-danger btn-sm btn-block p-1 mb-1']) ?>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

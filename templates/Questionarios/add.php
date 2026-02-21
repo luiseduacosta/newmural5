@@ -16,7 +16,7 @@
             <li class="nav-item">
                 <?= $this->Html->link(
                     __("Listar Questionarios"),
-                    ["action" => "index"],
+                    ["controller" => "Questionarios", "action" => "index"],
                     ["class" => "btn btn-primary me-1"],
                 ) ?>
             </li>

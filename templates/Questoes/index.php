@@ -47,7 +47,7 @@
                 <?php foreach ($questoes as $questao): ?>
                     <tr>
                         <td><?= $this->Number->format($questao->id) ?></td>
-                        <td><?= $questao->has("questionario")
+                        <td><?= $questao->hasValue("questionario")
                             ? $this->Html->link(
                                 $questao->questionario->title,
                                 [
@@ -89,6 +89,7 @@
                             ], [
                                 "class" => "btn btn-primary btn-sm btn-block p-1 mb-1",
                             ]) ?>
+                            <?php if (isset($user) && $user->categoria == '1'): ?>
                             <?= $this->Html->link(__("Editar"), [
                                 "action" => "edit",
                                 $questao->id,
@@ -106,6 +107,7 @@
                                     'class' => 'btn btn-danger btn-sm btn-block p-1 mb-1',
                                 ],
                             ) ?>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
