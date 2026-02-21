@@ -1,11 +1,12 @@
 <?php
-use Cake\I18n\I18n;
-use Cake\I18n\DateTime;
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Resposta $resposta
  * @var \Cake\I18n\DateTime $hoje
  */
+use Cake\I18n\I18n;
+use Cake\I18n\DateTime;
+
 ?>
 
 <h2 style="text-align:center; line-height: 80%; margin: 0">
