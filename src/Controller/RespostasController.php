@@ -47,22 +47,38 @@ class RespostasController extends AppController
      */
     public function view($id = null)
     {
-        try {
-            $resposta = $this->Respostas->get($id, [
-                'contain' => ['Estagiarios' => ['Alunos']],
-            ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
-            $this->Flash->error(__('Registro não encontrado.'));
-            return $this->redirect(['controller' => 'Respostas', 'action' => 'index']);
+        $this->Authorization->skipAuthorization();
+        $resposta = null;
+        if ($id === null) {
+            $estagiario_id = $this->request->getQuery('estagiario_id');
+            if ($estagiario_id) {
+                $resposta = $this->Respostas->find()
+                    ->contain(['Estagiarios' => ['Alunos', 'Supervisores']])
+                    ->where(['Respostas.estagiario_id' => $estagiario_id])
+                    ->first();   
+                if (!$resposta) {
+                    $this->Flash->error(__('Nenhuma avaliação encontrada para o estagiário ID {0}.', $estagiario_id));
+                    return $this->redirect(['controller' => 'Respostas', 'action' => 'add', '?' => ['estagiario_id' => $estagiario_id]]);
+                } 
+            } 
         }
 
+        if (!$resposta) {
+            $resposta = $this->Respostas->get($id, [
+                        'contain' => ['Estagiarios' => ['Alunos', 'Supervisores']],
+            ]);
+            if (!$resposta) {
+                $this->Flash->error(__('Nenhuma avaliação encontrada para o estagiário ID {0}.', $estagiario_id));
+                return $this->redirect(['controller' => 'Respostas', 'action' => 'add', '?' => ['estagiario_id' => $estagiario_id]]);
+            }
+        }
+        
         try {
             $this->Authorization->authorize($resposta);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
             return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
-        
         $respostasData = json_decode($resposta->response, true) ?? [];
         $avaliacoes = [];
         

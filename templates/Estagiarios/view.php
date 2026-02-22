@@ -460,7 +460,7 @@
                         <h4 class="alert-heading">Atenção!</h4>
                         <p>Este estagiário ainda não possui avaliação.</p>
                         <hr>
-                        <?php if (isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '4')): ?>
+                        <?php if (isset($user->categoria)): ?>
                             <p class="mb-0">Clique no botão
                                 <?= $this->Html->link(
                                     "Preencher Avaliação",

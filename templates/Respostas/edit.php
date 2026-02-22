@@ -102,7 +102,6 @@
                             'class' => 'form-control',
                         ]); ?>
                 <?php } elseif ($avaliacao['type'] === 'text' || $avaliacao['type'] === 'textarea') { ?>
-                        <?= $this->Form->setTemplates(['textarea' => '<textarea name="{{name}}"{{attrs}}>{{value}}</textarea>']); ?>
                         <?= $this->Form->control('avaliacao' . $avaliacao['id'], [
                             'type' => $avaliacao['type'],
                             'div' => false,

@@ -52,6 +52,7 @@ class SupervisoresController extends AppController
      */
     public function view($id = null)
     {
+        $this->Authorization->skipAuthorization();
         
         if ($id === null) {
                 $this->Flash->error(__('Supervisora não encontrada.'));

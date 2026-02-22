@@ -29,8 +29,13 @@ use Cake\I18n\Time;
                     <?= $this->Form->postLink(__('Excluir'), ['action' => 'delete', $resposta->id], ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $resposta->id), 'class' => 'btn btn-danger me-1']) ?>
                 </li>
                 <li class="nav-item">
-                    <?= $this->Html->link(__('Nova'), ['action' => 'add'], ['class' => 'btn btn-primary me-1']) ?>
+                    <?= $this->Html->link(__('Nova'), ['action' => 'add', '?' => ['estagiario_id' => $resposta->estagiario->id]], ['class' => 'btn btn-primary me-1']) ?>
                 </li>
+                <?php if (isset($user->supervisor_id)): ?>
+                    <li class="nav-item">
+                        <?= $this->Html->link(__('Supervisor(a)'), ['controller' => 'Supervisores', 'action' => 'view', '?' => ['id' => $user->supervisor_id]], ['class' => 'btn btn-primary me-1']) ?>
+                    </li>
+                <?php endif ?>
             <?php endif ?>
             <?php if (isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2')): ?>
                 <li class="nav-item">
@@ -44,6 +49,7 @@ use Cake\I18n\Time;
         <div class="card">
             <div class="card-header">
                 <?= 'Avaliação de: ' . $resposta->estagiario->aluno->nome ?>
+                <?= ' - Supervisor(a): ' . $this->Html->link($resposta->estagiario->supervisor->nome, ['controller' => 'Supervisores', 'action' => 'view', $resposta->estagiario->supervisor->id]) ?>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -70,14 +76,13 @@ use Cake\I18n\Time;
                     </td>
                 </tr>
             <?php endforeach; ?>
-            <tr>
-                <th><?= __('Criado') ?></th>
-                <td><?= $this->Time->format($resposta->created, 'd-MM-Y HH:mm:ss') ?></td>
-            </tr>
-            <tr>
-                <th><?= __('Modificado') ?></th>
-                <td><?= $this->Time->format($resposta->modified, 'd-MM-Y HH:mm:ss') ?></td>
-            </tr>
-        </table>
+            </table>
+            <p>
+                <div class="row">
+                    <span class="col-6 text-start"><?= __('Criado') ?>: <?= $this->Time->format($resposta->created, 'd-MM-Y HH:mm:ss') ?></span>
+                    <span class="col-6 text-end"><?= __('Modificado') ?>: <?= $this->Time->format($resposta->modified, 'd-MM-Y HH:mm:ss') ?></span>
+                </div>
+            </p>
+        </div>
     </div>
 </div>

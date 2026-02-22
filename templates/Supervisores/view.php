@@ -42,7 +42,7 @@ $user = $this->getRequest()->getAttribute("identity");
                 ],
             ) ?>
         <?php elseif (isset($user) && $user->categoria == "4"): ?>
-            <?php if ($user->numero == $supervisor->cress): ?>
+            <?php if ($user->supervisor_id == $supervisor->id): ?>
                 <?= $this->Html->link(
                     __("Editar supervisor(a)"),
                     ["action" => "edit", $supervisor->id],
@@ -328,6 +328,16 @@ $user = $this->getRequest()->getAttribute("identity");
                             <td><?= h($estagiarios->ch) ?></td>
                             <td><?= h($estagiarios->observacoes) ?></td>
                             <td class="d-grid">
+                                <?php if (
+                                    isset($user) &&
+                                    ($user->categoria == "1" || $user->categoria == "4")
+                                ): ?>
+                                <?= $this->Html->link(__("Avaliação"), [
+                                    "controller" => "Respostas",
+                                    "action" => "view",
+                                    "?" => ["estagiario_id" => $estagiarios->id],
+                                ], ["class" => "btn btn-primary btn-sm btn-block mb-1"]) ?>
+                                <?php endif; ?>
                                 <?= $this->Html->link(__("Ver"), [
                                     "controller" => "Estagiarios",
                                     "action" => "view",

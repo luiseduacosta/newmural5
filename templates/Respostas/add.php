@@ -8,7 +8,6 @@
 ?>
 
 <?= $this->element('menu_mural') ?>
-<?= $this->element('templates') ?>
 
 <div class="container mt-1">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -22,7 +21,7 @@
     <div class="container mt-4">
         <?= $this->Form->create($resposta, ['container' => false]) ?>
         <fieldset>
-            <legend><?= $estagiario->aluno->nome . ' estagiário nível ' . $estagiario->nivel ?></legend>
+            <legend><?= $estagiario->aluno->nome . ' estagiário - nível ' . $estagiario->nivel ?></legend>
             <?php
             echo $this->Form->control('estagiario_id', [
                 'div' => false,
