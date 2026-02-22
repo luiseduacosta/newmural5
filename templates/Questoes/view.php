@@ -56,14 +56,9 @@
                     if (!empty($questao->options)) {
                         $i = 0;
                         $opcoes = json_decode($questao->options, true);
-                        // pr($opcoes);
-                        for ($i = 0; $i <= array_key_last($opcoes); $i++):
-                            if ($i === array_key_last($opcoes)):
-                                echo $opcoes[$i];
-                            else:
-                                echo $opcoes[$i] . ', ';
-                            endif;
-                        endfor;
+                        foreach ($opcoes as $key => $opcao):
+                            echo $key . " - " . $opcao . "<br>";
+                        endforeach;
                     }
                     ?>
                 </td>
