@@ -3,7 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
  */
-$user = $this->getRequest()->getAttribute('identity');
 ?>
 
 <?= $this->element('menu_monografias') ?>
@@ -41,8 +40,10 @@ $user = $this->getRequest()->getAttribute('identity');
                     <td><?= h($user->categoria) ?></td>
                     <td>
                         <?= $this->Html->link(__('Ver'), ['action' => 'view', $user->id]) ?>
-                        <?= $this->Html->link(__('Editar'), ['action' => 'edit', $user->id]) ?>
-                        <?= $this->Form->postLink(__('Excluir'), ['action' => 'delete', $user->id], ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $user->id)]) ?>
+                        <?php if (isset($user->categoria) && $user->categoria == '1'): ?>
+                            <?= $this->Html->link(__('Editar'), ['action' => 'edit', $user->id]) ?>
+                            <?= $this->Form->postLink(__('Excluir'), ['action' => 'delete', $user->id], ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $user->id)]) ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

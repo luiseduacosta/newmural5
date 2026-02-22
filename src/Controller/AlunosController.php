@@ -169,6 +169,10 @@ class AlunosController extends AppController
             if ($this->Authorization->authorize($aluno)) {
                 if ($this->Alunos->save($aluno)) {
                     $this->Flash->success(__("Dados do aluno inseridos."));
+                    if ($user->categoria == 2 && $user->estudante_id == null) {
+                        $user->estudante_id = $aluno->id;
+                        $this->fetchTable('Users')->save($user);
+                    }
                     return $this->redirect(["action" => "view", $aluno->id]);
                 }
                 $this->Flash->error(__("Dados do aluno não inseridos."));
@@ -269,7 +273,6 @@ class AlunosController extends AppController
      */
     public function cargahoraria($ordem = null)
     {
-
         $this->Authorization->skipAuthorization();
 
         ini_set("memory_limit", "2048M");
@@ -326,6 +329,12 @@ class AlunosController extends AppController
         }
     }
 
+    /**
+     * Gera a declaração de período do aluno.
+     * 
+     * @param string|null $id
+     * @return void
+     */
     public function declaracaoperiodo($id = null)
     {
         $this->Authorization->skipAuthorization();
@@ -383,8 +392,13 @@ class AlunosController extends AppController
         }
         $this->set("aluno", $aluno);
     }
-    
-
+        
+    /**
+     * Gera o certificado de período do aluno.
+     * 
+     * @param string|null $id
+     * @return void
+     */
     public function certificadoperiodo($id = null)
     {
         $totalperiodos = $this->request->getQuery("totalperiodos");
@@ -443,7 +457,13 @@ class AlunosController extends AppController
         
         $this->set(compact("aluno", "totalperiodos", "novoperiodo"));
     }
-
+        
+    /**
+     * Gera o PDF do certificado de período do aluno.
+     * 
+     * @param string|null $id
+     * @return void
+     */
     public function certificadoperiodopdf($id = null)
     {
         $id = $this->request->getQuery("id");
@@ -541,6 +561,12 @@ class AlunosController extends AppController
          return $this->redirect(["action" => "index"]);
     }
 
+    /**
+     * Gera a planilha de CRESS do aluno.
+     * 
+     * @param string|null $id
+     * @return void
+     */
     public function planilhacress($id = null)
     {
         $this->Authorization->skipAuthorization();
@@ -574,7 +600,12 @@ class AlunosController extends AppController
 
     }
 
-
+    /**
+     * Gera a planilha de seguro do aluno.
+     * 
+     * @param string|null $id
+     * @return void
+     */
     public function planilhaseguro($id = null)
     {
         

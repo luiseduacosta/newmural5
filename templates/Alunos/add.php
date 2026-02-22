@@ -4,9 +4,6 @@
  * @var \App\Model\Entity\Aluno $aluno
  * @var \App\Model\Entity\User $user
  */
-// $user = $this->getRequest()->getAttribute('identity');
-// pr($registro);
-// die();
 ?>
 
 <script>

@@ -3,7 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Aluno $aluno
  */
-//pr($cargahorariatotal); 
 ?>
 
 <?php echo $this->element('menu_mural') ?>

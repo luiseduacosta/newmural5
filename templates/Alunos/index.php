@@ -3,8 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Aluno[]|\Cake\Collection\CollectionInterface $alunos
  */
-// $user = $this->getRequest()->getAttribute('identity');
-// pr($alunos);
 ?>
 
 <?php echo $this->element("menu_mural"); ?>

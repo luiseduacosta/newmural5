@@ -3,9 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Aluno $aluno
  */
-// pr($cargahorariatotal); 
-// pr($aluno);
-// die('declaracao');
 ?>
 
 <?= $this->element('menu_mural') ?>
@@ -52,7 +49,6 @@ $Confirma = [
     <div class="d-flex justify-content-center">
         <div class="btn-group" role="group" aria-label="Confirma">
             <?= $this->Html->link('Imprime PDF', ['action' => 'certificadoperiodopdf', '?' => ['id' => $aluno->id, 'totalperiodos' => $totalperiodos]], ['class' => 'btn btn-lg btn-primary', 'rule' => 'button']); ?>
-            <?php $this->Form->setTemplates($Confirma); ?>
             <?= $this->Form->button(__('Confirmar alterações'), ['type' => 'Confirma', 'class' => 'btn btn-lg btn-danger']) ?>
             <?= $this->Form->end() ?>
         </div>

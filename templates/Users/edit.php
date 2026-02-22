@@ -3,7 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
  */
-$user = $this->getRequest()->getAttribute('identity');
 ?>
 
 <?= $this->element('menu_monografias') ?>
@@ -24,10 +23,10 @@ $user = $this->getRequest()->getAttribute('identity');
                 )
                 ?>
             </li>
-        <?php endif; ?>
         <li class="nav-link">
             <?= $this->Html->link(__('Listar usuários'), ['action' => 'index'], ['class' => 'btn btn-primary float-start']) ?>
         </li>
+        <?php endif; ?>
     </ul>
 </nav>
 

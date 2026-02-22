@@ -51,7 +51,6 @@ class ProfessoresController extends AppController
         
         if (count($professores) === 0) {
             $this->Flash->error(__('Nenhum(a) professor(a) encontrado.'));
-             // return $this->redirect(['action' => 'add']); // Avoid redirect loop if empty?
         }
         
         $this->set(compact('professores'));
@@ -158,11 +157,14 @@ class ProfessoresController extends AppController
             $professor = $this->Professores->patchEntity($professor, $data);
             if ($this->Professores->save($professor)) {
                 $this->Flash->success(__('Registro do(a) professor(a) inserido.'));
+                if ($user->categoria == 3 && $user->professor_id == null) {
+                    $user->professor_id = $professor->id;
+                    $this->fetchTable('Users')->save($user);
+                }
                 return $this->redirect(['action' => 'view', $professor->id]);
             }
             $this->Flash->error(__('Registro do(a) professor(a) não inserido. Tente novamente.'));
-            
-            // Re-populate query params on failure if valid?
+
         }
         $this->set(compact('professor'));
     }
@@ -244,6 +246,11 @@ class ProfessoresController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
+    /**
+     * Busca professor method
+     *
+     * @return \Cake\Http\Response|null|void Redirects to index.
+     */
     public function buscaprofessor()
     {
         $this->Authorization->skipAuthorization();

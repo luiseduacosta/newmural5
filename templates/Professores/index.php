@@ -13,7 +13,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <ul class="navbar-nav collapse navbar-collapse" id="navbarTogglerProfessor">
-        <?php if (isset($user) && $user->categoria == '1'): ?>
+        <?php if (isset($user) && ($user->categoria == '1' || $user->categoria == '3')): ?>
             <li class="nav-item me-1">
                 <?= $this->Html->link(__('Nova professora'), ['action' => 'add'], ['class' => 'btn btn-primary float-end']) ?>
             </li>

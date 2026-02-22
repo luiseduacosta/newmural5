@@ -3,10 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Aluno $aluno
  */
-// pr($cress);
-// pr($periodos);
-// pr($periodoselecionado);
-// die();
 ?>
 
 <?= $this->element('menu_mural') ?>
@@ -17,7 +13,6 @@
 
         var base_url = "<?= $this->Html->Url->build(['controller' => 'alunos', 'action' => 'planilhacress']); ?>";
         /* alert(base_url); */
-
         $("#EstudantesPeriodo").change(function () {
             var periodo = $(this).val();
             window.location = base_url + "?periodo=" + periodo;

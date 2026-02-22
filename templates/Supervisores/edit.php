@@ -3,9 +3,9 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Supervisor $supervisor
  */
-$user = $this->getRequest()->getAttribute("identity"); ?>
+?>
 
-<script>
+<script type="text/javascript">
     $(document).ready(function() {
         $('#cpf').mask('000.000.000-00');
         $('#telefone').mask('(00) 0000-0000');
