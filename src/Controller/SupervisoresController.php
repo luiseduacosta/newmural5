@@ -85,6 +85,24 @@ class SupervisoresController extends AppController
      */
     public function add()
     {
+        // This fields cames from the adding of the UserController
+        $cress = $this->getRequest()->getQuery("cress");
+        $email = $this->getRequest()->getQuery("email");
+
+        if ($cress && $email) {
+            $user = $this->fetchTable('Users')->find()
+                ->where(['cress' => $cress, 'email' => $email])
+                ->first();
+            if ($user) {
+                $this->Flash->error(__('Já existe um usuário com este CRESS e email.'));
+                return $this->redirect(['action' => 'index']);
+            }
+        } else {
+            // Set the cress and email for the add view
+            $this->set('cress', $cress);
+            $this->set('email', $email);
+        }
+
         $supervisor = $this->Supervisores->newEmptyEntity();
         try {
             $this->Authorization->authorize($supervisor);

@@ -209,7 +209,7 @@ class UsersController extends AppController
                             $this->Users->save($user);
                             return $this->redirect(['controller' => 'Alunos', 'action' => 'view', $aluno->id]);
                         } else {
-                             $this->Flash->error(__('Ingresse para continuar com o cadastro do(a) aluno(a).'));
+                             $this->Flash->error(__('Redirectiona para continuar com o cadastro do(a) aluno(a).'));
                              return $this->redirect(['controller' => 'Alunos', 'action' => 'add', '?' => ['dre' => $user->numero, 'email' => $user->email]]);
                         }
                         break;

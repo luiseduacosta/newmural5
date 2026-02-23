@@ -122,8 +122,21 @@ class AlunosController extends AppController
      */
     public function add()
     {
-        $dre = $this->request->getQuery("dre");
-        $email = $this->request->getQuery("email");
+        $dre = $this->getRequest()->getQuery("dre");
+        $email = $this->getRequest()->getQuery("email");
+
+        if ($dre && $email) {
+            $aluno = $this->Alunos->find()
+                ->where([
+                    "registro" => $dre,
+                    "email" => $email,
+                ])
+                ->first();
+            if ($aluno) {
+                $this->Flash->error(__("DRE ou Email já cadastrado."));
+                return $this->redirect(["action" => "view", $aluno->id]);
+            }
+        }
         $aluno = $this->Alunos->newEmptyEntity();
         
         try {
@@ -178,9 +191,10 @@ class AlunosController extends AppController
                 $this->Flash->error(__("Dados do aluno não inseridos."));
             }
         }
+
         if (!empty($dre) && !empty($email)) {
-            $aluno->registro = $dre;
-            $aluno->email = $email;
+            $this->set("dre", $dre);
+            $this->set("email", $email);
         }
         $this->set(compact("aluno"));
     }

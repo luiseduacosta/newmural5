@@ -19,7 +19,7 @@ class EstagiariomonografiasTablePolicy {
      * @param \App\Model\Table\EstagiariomonografiasTable $estagiariomonografias
      * @return bool
      */
-    public function canw+(?IdentityInterface $user, EstagiariomonografiasTable $estagiariomonografias) {
+    public function canIndex(?IdentityInterface $user, EstagiariomonografiasTable $estagiariomonografias) {
         return isset($user->categoria) && $user->categoria == '1';
     }
 

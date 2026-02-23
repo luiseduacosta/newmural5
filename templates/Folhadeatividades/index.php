@@ -5,11 +5,10 @@ use Cake\I18n\Time;
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Folhadeatividade[]|\Cake\Collection\CollectionInterface $folhadeatividades
  */
-$user = $this->getRequest()->getAttribute('identity');
 
 $supervisora = isset($estagiario->supervisor->nome) ? $estagiario->supervisor->nome : '_______________';
 $cress = isset($estagiario->supervisor->cress) ? $estagiario->supervisor->cress : '_______________';
-$professora = isset($estagiario->docente->nome) ? $estagiario->docente->nome : '_______________';
+$professora = isset($estagiario->professor->nome) ? $estagiario->professor->nome : '_______________';
 ?>
 
 <?php echo $this->element('menu_mural') ?>
@@ -22,16 +21,16 @@ $professora = isset($estagiario->docente->nome) ? $estagiario->docente->nome : '
     <ul class="navbar-nav collapse navbar-collapse" id="navbarTogglerAtividades">
         <?php if ($user->categoria == '1' || $user->categoria == '2'): ?>
             <li class='nav-link'>
-                <?= $this->Html->link(__('Cadastra nova atividade'), ['action' => 'add/' . $id], ['class' => 'btn btn-primary me-1']) ?>
+                <?= $this->Html->link(__('Cadastra nova atividade'), ['action' => 'add', '?' => ['estagiario_id' => $estagiario->id]], ['class' => 'btn btn-primary me-1']) ?>
             </li>
         <?php endif; ?>
         <li class='nav-link'>
-            <?= $this->Html->link(__('Imprime folha de atividades'), ['action' => 'folhadeatividadespdf/' . $id], ['class' => 'btn btn-primary']) ?>
+            <?= $this->Html->link(__('Imprime folha de atividades'), ['action' => 'folhadeatividadespdf', '?' => ['estagiario_id' => $estagiario->id]], ['class' => 'btn btn-primary']) ?>
         </li>
     </ul>
 </nav>
 
-<h3 class="text-center"><?= __('Folha de atividades da(o) estagiária(o) ' . $estagiario->estudante->nome) ?></h3>
+<h3 class="text-center"><?= __('Folha de atividades da(o) estagiária(o) ' . $estagiario->aluno->nome) ?></h3>
 
 <div class="table-responsive">
     <table class="table table-responsive table-striped table-hover">

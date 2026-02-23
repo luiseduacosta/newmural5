@@ -187,6 +187,11 @@ class EstagiariosController extends AppController
                         "sort" => ["dia" => "desc"],
                     ],
                 ],
+                "order" => [
+                    "Estagiarios.periodo" => "ASC",
+                    "Estagiarios.nivel" => "ASC",
+                    "Alunos.nome" => "ASC",
+                ],
             ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__("Estagiário não encontrado."));
@@ -355,6 +360,13 @@ class EstagiariosController extends AppController
         );
     }
     
+    /**
+     * Novotermocompromisso method
+     *
+     * @param string|null $id Estagiario id.
+     * @return \Cake\Http\Response|null|void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
     public function novotermocompromisso($id = null)
     {
 
@@ -413,6 +425,13 @@ class EstagiariosController extends AppController
         }
     }
 
+    /**
+     * Termodecompromissopdf method
+     *
+     * @param string|null $id Estagiario id.
+     * @return \Cake\Http\Response|null|void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
     public function termodecompromissopdf($id = null)
     {
         $this->Authorization->skipAuthorization();
@@ -439,7 +458,14 @@ class EstagiariosController extends AppController
         $this->set("configuracao", $configuracao);
         $this->set("estagiario", $estagiario);
     }
-    
+
+    /**
+     * Declaracaodeestagiopdf method
+     *
+     * @param string|null $id Estagiario id.
+     * @return \Cake\Http\Response|null|void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
     public function declaracaodeestagiopdf($id = null)
     {
         $this->Authorization->skipAuthorization();
@@ -487,6 +513,13 @@ class EstagiariosController extends AppController
         $this->set("estagiario", $estagiario);
     }
 
+    /**
+     * Folhadeatividadespdf method
+     *
+     * @param string|null $id Estagiario id.
+     * @return \Cake\Http\Response|null|void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
     public function folhadeatividadespdf($id = null) // ID param seems unused in original, uses query param
     {
         $this->Authorization->skipAuthorization();
@@ -580,6 +613,11 @@ class EstagiariosController extends AppController
      */
     public function edit($id = null)
     {
+        // Support AJAX POST with id in request body
+        if ($id === null && $this->request->is(['post', 'put', 'patch'])) {
+            $id = $this->request->getData('id');
+        }
+        
         if ($id === null) {
             $this->Flash->error(__("Sem parâmetro para localizar o estagiário."));
             return $this->redirect(["action" => "index"]);

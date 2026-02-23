@@ -6,6 +6,8 @@
  */
 ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
 <script>
     $(document).ready(function() {
         $('#cpf').mask('000.000.000-00');
@@ -54,11 +56,19 @@
             "label" => "Nome social",
             "class" => "form-control",
         ]);
-        echo $this->Form->control("registro", [
-            'placeholder' => 'Número do DRE',
-            "label" => "Registro",
-            "class" => "form-control",
-        ]);
+        if (isset($dre)) {
+            echo $this->Form->control("registro", [
+                'value' => $dre,
+                "label" => "Registro",
+                "class" => "form-control",
+            ]);
+        } else {
+            echo $this->Form->control("registro", [
+                'placeholder' => 'Número do DRE',
+                "label" => "Registro",
+                "class" => "form-control",
+            ]);
+        }
         echo $this->Form->control("ingresso", [
             'placeholder' => 'Ano e semestre, separado por hífen de ingresso no curso: ex: 2023-1',
             "label" => "Ingresso",
@@ -90,10 +100,19 @@
             "label" => "Orgão",
             "class" => "form-control",
         ]);
-        echo $this->Form->control("email", [
-            "label" => "E-mail",
-            "class" => "form-control",
-        ]);
+        if (isset($email)) {
+            echo $this->Form->control("email", [
+                'value' => $email,
+                "label" => "E-mail",
+                "class" => "form-control",
+            ]);
+        } else {
+            echo $this->Form->control("email", [
+                "label" => "E-mail",
+                "class" => "form-control",
+                "placeholder" => "E-mail",
+            ]);
+        }
         echo $this->Form->control("codigo_telefone", [
             "label" => "DDD",
             "class" => "form-control",

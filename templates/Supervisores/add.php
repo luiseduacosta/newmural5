@@ -5,6 +5,8 @@
  */
 ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
 <script type="text/javascript">
     $(document).ready(function() {
         $('#cpf').mask('000.000.000-00');
@@ -90,10 +92,19 @@
             "mask" => "(00) 00000-0000",
             "placeholder" => "(00) 00000-0000",
         ]);
-        echo $this->Form->control("email", [
-            "label" => ["text" => "E-mail"],
-            "type" => "email",
-        ]);
+        if (isset($email)) {
+            echo $this->Form->control("email", [
+                "label" => ["text" => "E-mail"],
+                "type" => "email",
+                "value" => $email,
+                "readonly" => true,
+            ]);
+        } else {
+            echo $this->Form->control("email", [
+                "label" => ["text" => "E-mail"],
+                "type" => "email",
+            ]);
+        }
         echo $this->Form->control("escola", [
             "label" => ["text" => "Escola de origem"],
             "type" => "text",
@@ -104,13 +115,23 @@
             "mask" => "0000",
             "placeholder" => "0000",
         ]);
-        echo $this->Form->control("cress", [
-            "label" => ["text" => "Cress"],
-            "type" => "number",
-        ]);
+        if (isset($cress)) {
+            echo $this->Form->control("cress", [
+                "label" => ["text" => "Cress"],
+                "type" => "number",
+                "value" => $cress,
+                "readonly" => true,
+            ]);
+        } else {
+            echo $this->Form->control("cress", [
+                "label" => ["text" => "Cress"],
+                "type" => "number",
+            ]);
+        }
         echo $this->Form->control("regiao", [
             "label" => ["text" => "Região"],
             "type" => "number",
+            "value" => 7,
         ]);
         echo $this->Form->control("outros_estudos", [
             "label" => ["text" => "Outros estudos"],

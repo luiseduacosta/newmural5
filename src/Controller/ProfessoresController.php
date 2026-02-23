@@ -103,34 +103,25 @@ class ProfessoresController extends AppController
      */
     public function add()
     {
+
+        $this->Authorization->skipAuthorization();
+        // This fields cames from the adding of the UserController
         $siape = $this->getRequest()->getQuery('siape');
         $email = $this->getRequest()->getQuery('email');
 
+        // Verify is there is a record with this values
+        if ($siape && $email) {
+            $professor = $this->Professores->find()
+                ->where(['siape' => $siape, 'email' => $email])
+                ->first();
+            if ($professor) {
+                $this->Flash->error(__('Já existe um professor com este SIAPE e email.'));
+                return $this->redirect(['action' => 'view', $professor->id]);
+            }
+        }
+
         if ($siape) $this->set('siape', $siape);
         if ($email) $this->set('email', $email);
-
-        /* Verifico se já está cadastrado */
-        if ($siape) {
-            $professorcadastrado = $this->Professores->find()
-                ->where(['siape' => $siape])
-                ->first();
-
-            if ($professorcadastrado) {
-                $this->Flash->error(__('Siape do(a) professor(a) já cadastrado'));
-                return $this->redirect(['action' => 'view', $professorcadastrado->id]);
-            }
-        }
-
-        if ($email) {
-            $professorcadastrado = $this->Professores->find()
-                ->where(['email' => $email])
-                ->first();
-
-            if ($professorcadastrado) {
-                $this->Flash->error(__('E-mail do(a) professor(a) já cadastrado'));
-                return $this->redirect(['action' => 'view', $professorcadastrado->id]);
-            }
-        }
 
         $professor = $this->Professores->newEmptyEntity();
  
@@ -143,17 +134,7 @@ class ProfessoresController extends AppController
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
-            $siape = $data['siape'];
             
-            /** Busca se já está cadastrado como user */
-            $usercadastrado = $this->fetchTable('Users')->find()
-                ->where(['categoria' => 3, 'numero' => $siape])
-                ->first();
-                
-            if (empty($usercadastrado)) {
-                $this->Flash->error(__('Professor(a) não cadastrado(a) como usuário(a)'));
-            }
-
             $professor = $this->Professores->patchEntity($professor, $data);
             if ($this->Professores->save($professor)) {
                 $this->Flash->success(__('Registro do(a) professor(a) inserido.'));

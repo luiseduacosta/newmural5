@@ -54,7 +54,7 @@ use Cake\I18n\Date;
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="#notas" role="tab" aria-controls="estagiarios"
-                aria-selected="false">Atividades de estágio</a>
+                aria-selected="false">Avaliação</a>
         </li>
     </ul>
 </div>
@@ -304,9 +304,10 @@ use Cake\I18n\Date;
     </div>
 
     <div id="notas" class="tab-pane container fade">
-        <h4><?= __('Atividades') ?></h4>
+        <h4><?= __('Avaliação') ?></h4>
         <?php if (!empty($professor->estagiarios)): ?>
-            <table class="table table-striped table-hover table-responsive">
+            <table class="table table-striped table-hover table-responsive" id="table-estagiarios">
+                <thead>
                 <tr>
                     <?php if (isset($user) && $user->categoria == '1'): ?>
                         <th><?= __('Id') ?></th>
@@ -320,23 +321,25 @@ use Cake\I18n\Date;
                     <th><?= __('Instituição') ?></th>
                     <th><?= __('Supervisora') ?></th>
                     <th><?= __('Periodo') ?></th>
-                    <?php if (isset($user) && $user->categoria == '1'): ?>
+                    <?php if (isset($user) && ($user->categoria == '1' || $user->categoria == '3')): ?>
                         <th><?= __('Nota') ?></th>
                         <th><?= __('CH') ?></th>
                         <th><?= __('Observações') ?></th>
                         <th><?= __('Ações') ?></th>
                     <?php endif; ?>
                 </tr>
+                </thead>
+                <tbody id="table-estagiarios-body">
                 <?php foreach ($professor->estagiarios as $estagiarios): ?>
                     <?php // pr($estagiarios->folhadeatividade) ?>
-                    <tr>
+                    <tr data-id="<?= h($estagiarios->id) ?>">
                         <?php if (isset($user) && $user->categoria == '1'): ?>
                             <td><?= h($estagiarios->id) ?></td>
                         <?php endif; ?>
                         <td><?= $estagiarios->hasValue('aluno') ? $estagiarios->aluno->nome : "" ?>
                         </td>
                         <td><?= h($estagiarios->registro) ?></td>
-                        <?php if (isset($user) && $user->categoria == '1'): ?>
+                        <?php if (isset($user) && ($user->categoria == '1' || $user->categoria == '3')): ?>
                             <td><?= $estagiarios->hasValue('folhadeatividade') ? $this->Html->link('Atividades de estágio', ['controller' => 'folhadeatividades', 'action' => 'index', $estagiarios->id]) : $this->Html->link('Cadastrar atividades de estágio', ['controller' => 'folhadeatividades', 'action' => 'add', '?' => ['estagiario_id' => $estagiarios->id]]) ?>
                             </td>
                         <?php else: ?>
@@ -352,21 +355,104 @@ use Cake\I18n\Date;
                         <td><?= $estagiarios->hasValue('supervisor') ? $this->Html->link($estagiarios->supervisor->nome, ['controller' => 'supervisores', 'action' => 'view', $estagiarios->supervisor->id]) : "" ?>
                         </td>
                         <td><?= h($estagiarios->periodo) ?></td>
-                        <?php if (isset($user) && $user->categoria == '1'): ?>
-                            <td><?= h($estagiarios->nota) ?></td>
-                            <td><?= h($estagiarios->ch) ?></td>
+                        <?php if (isset($user) && ($user->categoria == '1' || $user->categoria == '3')): ?>
+                            <td class="editable-field" data-field="nota"><?= h($estagiarios->nota) ?></td>
+                            <td class="editable-field" data-field="ch"><?= h($estagiarios->ch) ?></td>
                             <td><?= h($estagiarios->observacoes) ?></td>
                             <td>
                                 <?= $this->Html->link(__('Atividades'), ['controller' => 'Folhadeatividades', 'action' => 'index', '?' => ['estagiario_id' => $estagiarios->id]]) ?>
-                                <?php if (isset($user) && $user->categoria == '1'): ?>
-                                    <?= $this->Html->link(__('Editar'), ['controller' => 'Estagiarios', 'action' => 'edit', $estagiarios->id]) ?>
-                                    <?= $this->Form->postLink(__('Excluir'), ['controller' => 'Estagiarios', 'action' => 'delete', $estagiarios->id], ['confirm' => __('Tem certeza que quer excluir o registro # {0}?', $estagiarios->id)]) ?>
-                                <?php endif; ?>
+                                <button type="button" class="btn btn-sm btn-warning btn-edit"><?= __('Editar') ?></button>
+                                <button type="button" class="btn btn-sm btn-primary btn-save" style="display:none">Salvar</button>
+                                <button type="button" class="btn btn-sm btn-secondary btn-cancel" style="display:none">Cancelar</button>
                             </td>
                         <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
+                </tbody>
             </table>
         <?php endif; ?>
+
+<script type="text/javascript">
+
+document.addEventListener('DOMContentLoaded', () => {
+    const tableBody = document.querySelector('#table-estagiarios tbody');
+    if (!tableBody) return;
+
+    tableBody.addEventListener('click', (event) => {
+        const target = event.target;
+        const row = target.closest('tr');
+        if (!row) return;
+
+        if (target.classList.contains('btn-edit')) {
+            makeRowEditable(row);
+        } else if (target.classList.contains('btn-save')) {
+            saveRow(row);
+        } else if (target.classList.contains('btn-cancel')) {
+            cancelEdit(row);
+        }
+    });
+});
+
+function makeRowEditable(row) {
+    row.classList.add('editing');
+    const cells = row.querySelectorAll('.editable-field');
+    cells.forEach(cell => {
+        const text = cell.textContent.trim() === '' ? '' : cell.textContent.trim();
+        cell.innerHTML = `<input class="form-control form-control-sm" type="text" value="${text}">`;
+    });
+
+    // Toggle buttons
+    row.querySelector('.btn-edit').style.display = 'none';
+    row.querySelector('.btn-save').style.display = 'inline-block';
+    row.querySelector('.btn-cancel').style.display = 'inline-block';
+
+}
+
+function saveRow(row) {
+    const cells = row.querySelectorAll('.editable-field');
+    const data = {
+        id: row.dataset.id
+    };
+    cells.forEach(cell => {
+        const input = cell.querySelector('input');
+        const fieldName = cell.dataset.field;
+        let value = input.value.trim();
+        cell.textContent = value;
+        data[fieldName] = value;
+    });
+    
+    $.ajax({
+        url: '<?= $this->Url->build(['controller' => 'Estagiarios', 'action' => 'edit']) ?>',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/x-www-form-urlencoded',
+        headers: {
+            'X-CSRF-Token': '<?= $this->request->getAttribute('csrfToken') ?>'
+        },
+        data: $.param(data),
+        success: function(response) {
+            console.log('Success:', response);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+    
+    row.classList.remove('editing');
+    row.querySelector('.btn-edit').style.display = 'inline-block';
+    row.querySelector('.btn-save').style.display = 'none';
+    row.querySelector('.btn-cancel').style.display = 'none';
+}
+
+ function cancelEdit(row) {
+    row.classList.remove('editing');
+    const cells = row.querySelectorAll('.editable-field');
+    cells.forEach(cell => {
+        cell.textContent = cell.textContent.trim() === '' ? '' : cell.textContent.trim();
+    });
+}
+
+</script>    
+
     </div>
 </div>
