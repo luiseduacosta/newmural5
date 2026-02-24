@@ -30,6 +30,11 @@ use Cake\Event\EventInterface;
 class AppController extends Controller
 {
     /**
+     * @var \Authorization\IdentityInterface|null
+     */
+    protected $user;
+
+    /**
      * Initialization hook method.
      *
      * Use this method to add common initialization code like loading components.
@@ -60,11 +65,7 @@ class AppController extends Controller
     {
         parent::beforeFilter($event);
         
-        // for all controllers in our application, make index and view and busca
-        // actions public, skipping the authentication check
-        $this->Authentication->addUnauthenticatedActions(['index', 'view', 'busca', 'download']);
-
-        $user = $this->request->getAttribute('identity');
-        $this->set('user', $user);
+        $this->user = $this->request->getAttribute('identity');
+        $this->set('user', $this->user);
     }
 }

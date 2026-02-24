@@ -35,7 +35,7 @@ $user = $this->getRequest()->getAttribute('identity');
     <fieldset class="border p-2">
         <legend><?= __('Editar agendamento de defesa de TCC') ?></legend>
         <?php
-        echo $this->Form->control('estudante_id', [
+        echo $this->Form->control('aluno_id', [
             'options' => $estudantes,
             'type' => 'select',
             'div' => false,

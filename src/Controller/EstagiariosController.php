@@ -325,9 +325,9 @@ class EstagiariosController extends AppController
             $this->set("aluno", $aluno);
             
         } else {
-             if (isset($user) && $user->categoria == "2") {
-                 $aluno_id = $user->estudante_id;
-                 $aluno = $this->fetchTable("Alunos")->get($user->estudante_id);
+             if (isset($this->user) && $this->user->categoria == "2") {
+                 $aluno_id = $this->user->aluno_id;
+                 $aluno = $this->fetchTable("Alunos")->get($this->user->aluno_id);
                  $this->set("aluno", $aluno);
              } else {
                  $this->Flash->error(__("Selecionar o aluno para o estágio."));
@@ -374,9 +374,8 @@ class EstagiariosController extends AppController
         $aluno_id = $this->getRequest()->getQuery("aluno_id");
         
         if (empty($aluno_id)) {
-            $user = $this->getRequest()->getAttribute("identity");
-            if (isset($user) && $user->categoria == "2") {
-                $aluno_id = $user->estudante_id;
+            if (isset($this->user) && $this->user->categoria == "2") {
+                $aluno_id = $this->user->aluno_id;
             }
         }
         
@@ -559,12 +558,11 @@ class EstagiariosController extends AppController
         $estagiario_id = $this->getRequest()->getQuery("estagiario_id");
         
         if (empty($estagiario_id)) {
-            $user = $this->getRequest()->getAttribute("identity");
-            if (isset($user) && $user->categoria == "2") {
+            if (isset($this->user) && $this->user->categoria == "2") {
                 $estagiario = $this->Estagiarios
                     ->find()
                     ->contain(["Alunos", "Supervisores", "Instituicoes"])
-                    ->where(["Estagiarios.aluno_id" => $user->estudante_id])
+                    ->where(["Estagiarios.aluno_id" => $this->user->aluno_id])
                     ->first();
             } else {
                  $this->Flash->error(__("Selecionar o estudante estagiário"));

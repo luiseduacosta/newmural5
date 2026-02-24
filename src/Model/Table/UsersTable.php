@@ -47,7 +47,7 @@ class UsersTable extends Table {
         $this->setPrimaryKey('id');
 
         $this->belongsTo('Alunos', [
-            'foreignKey' => 'estudante_id',
+            'foreignKey' => 'aluno_id',
         ]);
         
         $this->belongsTo('Supervisores', [
@@ -91,8 +91,8 @@ class UsersTable extends Table {
             ->allowEmptyString('numero');
 
         $validator
-            ->integer('estudante_id')
-            ->allowEmptyString('estudante_id');
+            ->integer('aluno_id')
+            ->allowEmptyString('aluno_id');
         
         $validator
             ->integer('supervisor_id')
@@ -117,7 +117,7 @@ class UsersTable extends Table {
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-    //  $rules->add($rules->existsIn(['estudante_id'], 'Estudantes'), ['errorField' => 'estudante_id']);
+    //  $rules->add($rules->existsIn(['aluno_id'], 'Estudantes'), ['errorField' => 'aluno_id']);
     //  $rules->add($rules->existsIn(['supervisor_id'], 'Supervisores'), ['errorField' => 'supervisor_id']);
     //  $rules->add($rules->existsIn(['professor_id'], 'Professores'), ['errorField' => 'professor_id']);
 

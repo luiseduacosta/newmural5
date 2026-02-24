@@ -28,7 +28,7 @@ class MuralinscricoesController extends AppController
             $this->Authorization->authorize($this->Muralinscricoes);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         if (empty($periodo)) {
@@ -76,14 +76,14 @@ class MuralinscricoesController extends AppController
             ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('Nao ha registros de inscrições para esse número!'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($muralinscricao);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         $this->set(compact('muralinscricao'));
@@ -103,7 +103,7 @@ class MuralinscricoesController extends AppController
             $this->Authorization->authorize($muralinscricao);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         $muralestagios = []; // Init variables
@@ -139,14 +139,13 @@ class MuralinscricoesController extends AppController
                  return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
             }
 
-            $user = $this->Authentication->getIdentity();
             $hoje = DateTime::now();
             
             // Date check logic
             $dataInscricao = $muralestagio->dataInscricao ?? $hoje->addDays(1);
             
             /** Verifica se o período de inscrição está aberto para o aluno fazer inscrição */
-            if ($user && $user->categoria == '2' && $dataInscricao < $hoje) {
+            if ($this->user && $this->user->categoria == '2' && $dataInscricao < $hoje) {
                 $this->Flash->error(__('Período de inscrição encerrado em {0}. Não é possível fazer inscrição.', $dataInscricao));
                 return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
             }
@@ -249,14 +248,14 @@ class MuralinscricoesController extends AppController
             ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('Registro de inscrição não foi encontrado. Tente novamente.'));
-            return $this->redirect(['controller' => 'Muralinscricoes', 'action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($muralinscricao);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['controller' => 'Muralinscricoes', 'action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
         
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -340,14 +339,14 @@ class MuralinscricoesController extends AppController
             $muralinscricao = $this->Muralinscricoes->get($id);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('Registro de inscrição não foi encontrado. Tente novamente.'));
-            return $this->redirect(['controller' => 'Muralinscricoes', 'action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($muralinscricao);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['controller' => 'Muralinscricoes', 'action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
         
         if ($this->Muralinscricoes->delete($muralinscricao)) {
@@ -357,7 +356,7 @@ class MuralinscricoesController extends AppController
             $this->Flash->error(__('Não foi possível excluir a inscrição.'));
             return $this->redirect(['controller' => 'Muralinscricoes', 'action' => 'view', $muralinscricao->id]);
         }
-        return $this->redirect(['controller' => 'Muralinscricoes', 'action' => 'index']);
+        return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
     }
 
 }

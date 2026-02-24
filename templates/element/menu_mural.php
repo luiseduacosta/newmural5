@@ -100,7 +100,7 @@ use Cake\ORM\TableRegistry;
 
                 <?php if (isset($user) && $user->categoria == '2'): ?>
                     <li class="nav-item">
-                        <?php echo $this->Html->link("Meus dados", "/Alunos/view/" . $user['estudante_id'], ['class' => 'nav-link']); ?>
+                        <?php echo $this->Html->link("Meus dados", "/Alunos/view/" . $user['aluno_id'], ['class' => 'nav-link']); ?>
                     </li>
                 <?php endif; ?>
 
@@ -127,11 +127,11 @@ use Cake\ORM\TableRegistry;
                     <?php echo $this->Html->link('TCC', ['controller' => 'Monografias', 'action' => 'index'], ['class' => 'btn btn-info']); ?>
                 </li>      
                 <?php if (isset($user) && !empty($user)): ?>
-                    <?php if ($user->categoria == 2 && !empty($user->estudante_id)) {
-                        $aluno = TableRegistry::getTableLocator()->get('Alunos')->find()->where(['Alunos.id' => $user->estudante_id])->first();
+                    <?php if ($user->categoria == 2 && !empty($user->aluno_id)) {
+                        $aluno = TableRegistry::getTableLocator()->get('Alunos')->find()->where(['Alunos.id' => $user->aluno_id])->first();
                         ?>
                         <li class='nav-item'>
-                            <?= $this->Html->link($user->email, ['controller' => 'Alunos', 'action' => 'view', $user->estudante_id], ['class' => 'btn btn-primary']) ?>
+                            <?= $this->Html->link($user->email, ['controller' => 'Alunos', 'action' => 'view', $user->aluno_id], ['class' => 'btn btn-primary']) ?>
                         </li>
                     <?php } ?>
                 <?php else: ?>

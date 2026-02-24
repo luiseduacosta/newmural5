@@ -39,8 +39,8 @@ class UsersController extends AppController
             // Check category and ensure linkage
             switch ($user->categoria) {
                 case '2': // Aluno
-                    $estudante_id = $user->estudante_id;
-                    if (empty($estudante_id)) {
+                    $aluno_id = $user->aluno_id;
+                    if (empty($aluno_id)) {
                         $estudante = $this->fetchTable('Alunos')->find()
                             ->where(['Alunos.email' => $user->email])
                             ->first();
@@ -52,12 +52,12 @@ class UsersController extends AppController
                         } else {
                             // Link found, update user
                             $userEntity = $this->Users->get($user->id);
-                            $userEntity->estudante_id = $estudante->id;
+                            $userEntity->aluno_id = $estudante->id;
                             $this->Users->save($userEntity);
                             $parametro = $estudante->id;
                         }
                     } else {
-                        $parametro = $estudante_id;
+                        $parametro = $aluno_id;
                     }
                     $controlador = 'Alunos';
                     $acao = 'view';
@@ -205,7 +205,7 @@ class UsersController extends AppController
                             ->first();
                             
                         if ($aluno) {
-                            $user->estudante_id = $aluno->id;
+                            $user->aluno_id = $aluno->id;
                             $this->Users->save($user);
                             return $this->redirect(['controller' => 'Alunos', 'action' => 'view', $aluno->id]);
                         } else {

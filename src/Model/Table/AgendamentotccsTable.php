@@ -49,7 +49,7 @@ class AgendamentotccsTable extends Table
                 $this->setPrimaryKey('id');
 
                 $this->belongsTo('Estudantes', [
-                        'foreignKey' => 'estudante_id',
+                        'foreignKey' => 'aluno_id',
                         'joinType' => 'LEFT',
                 ]);
                 $this->belongsTo('Docentes', [
@@ -139,7 +139,7 @@ class AgendamentotccsTable extends Table
          */
         public function buildRules(RulesChecker $rules): RulesChecker
         {
-                $rules->add($rules->existsIn(['estudante_id'], 'Estudantes'));
+                $rules->add($rules->existsIn(['aluno_id'], 'Estudantes'));
                 $rules->add($rules->existsIn(['docente_id'], 'Docentes'));
                 $rules->add($rules->existsIn(['docentebanca1_id'], 'Docentes')); // Note: foreign key is banca1 but alias might be Docentebanca1. Check if relation uses propertyName correctly.
                 // In initialize: belongsTo('Docentebanca1', [foreignKey => 'banca1']).

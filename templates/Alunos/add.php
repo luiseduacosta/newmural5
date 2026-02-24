@@ -17,8 +17,26 @@
         $('#ingresso').mask('0000-0');
         $('#novoperiodo').val($('#ingresso').val());
         $('#novoperiodo').mask('0000-0');
-        $('#nascimento').mask('0000-00-00', { placeholder: "AAAA-MM-DD" });
+        $('#nascimento').mask('00-00-0000', { placeholder: "dd-MM-yyyy" });
+
+        onComplete: function(cep, e, masks) {
+            buscarEndereco(cep);
+        }
     });
+
+    function buscarEndereco(cep) {
+        $.ajax({
+            url: "https://viacep.com.br/ws/" + cep + "/json/",
+            type: "GET",
+            dataType: "json",
+            success: function(data) {
+                $('#endereco').val(data.logradouro);
+                $('#bairro').val(data.bairro);
+                $('#municipio').val(data.localidade);
+            }
+        });
+    }
+
 </script>
 
 <?php echo $this->element("menu_mural"); ?>
@@ -81,7 +99,7 @@
         ]);
         echo $this->Form->control("nascimento", [
             "label" => "Data de nascimento",
-            "placeholder" => "AAAA-MM-DD",
+            "placeholder" => "dd-MM-yyyy",
             "empty" => true,
             "class" => "form-control",
         ]);

@@ -138,9 +138,9 @@ class ProfessoresController extends AppController
             $professor = $this->Professores->patchEntity($professor, $data);
             if ($this->Professores->save($professor)) {
                 $this->Flash->success(__('Registro do(a) professor(a) inserido.'));
-                if ($user->categoria == 3 && $user->professor_id == null) {
-                    $user->professor_id = $professor->id;
-                    $this->fetchTable('Users')->save($user);
+                if ($this->user->categoria == 3 && $this->user->professor_id == null) {
+                    $this->user->professor_id = $professor->id;
+                    $this->fetchTable('Users')->save($this->user);
                 }
                 return $this->redirect(['action' => 'view', $professor->id]);
             }

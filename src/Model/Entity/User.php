@@ -15,7 +15,7 @@ use Cake\ORM\Entity;
  * @property string|null $password
  * @property numeric|null $categoria
  * @property numeric|null $numero
- * @property int|null $estudante_id
+ * @property int|null $aluno_id
  * @property int|null $supervisor_id
  * @property int|null $professor_id
  * @property \Cake\I18n\DateTime $timestamp
@@ -41,7 +41,7 @@ class User extends Entity {
         'password' => true,
         'categoria' => true,
         'numero' => true,
-        'estudante_id' => true,
+        'aluno_id' => true,
         'supervisor_id' => true,
         'professor_id' => true,
         'timestamp' => true,

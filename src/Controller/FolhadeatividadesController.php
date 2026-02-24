@@ -63,7 +63,6 @@ class FolhadeatividadesController extends AppController
     public function view($id = null)
     {
         $this->Authorization->skipAuthorization();
-        $user = $this->getRequest()->getAttribute('identity');
         
         try {
              $folhadeatividade = $this->Folhadeatividades->get($id, [
@@ -81,11 +80,11 @@ class FolhadeatividadesController extends AppController
             return $this->redirect(['action' => 'index']);
         }
 
-        if (isset($user) && $user->categoria == '2') {
+        if (isset($this->user) && $this->user->categoria == '2') {
              // Student check
-             if ($user->estudante_id != $folhadeatividade->estagiario->aluno_id) {
+             if ($this->user->aluno_id != $folhadeatividade->estagiario->aluno_id) {
                   $this->Flash->error(__('Você não tem permissão para acessar esta página'));
-                  return $this->redirect(['controller' => 'Alunos', 'action' => 'view', $user->estudante_id]);
+                  return $this->redirect(['controller' => 'Alunos', 'action' => 'view', $this->user->aluno_id]);
              }
         }
         
@@ -101,7 +100,6 @@ class FolhadeatividadesController extends AppController
     public function atividade($id = null)
     {
         $this->Authorization->skipAuthorization();
-        $user = $this->getRequest()->getAttribute('identity');
         $estagiario_id = $this->getRequest()->getQuery('estagiario_id');
         
         // If ID provided, maybe it's Folhadeatividade ID? Original logic was murky. 
@@ -133,10 +131,10 @@ class FolhadeatividadesController extends AppController
         }
         
         // Security check
-        if (isset($user) && $user->categoria == '2') {
-             if ($user->estudante_id != $folhadeatividade->aluno_id) {
+        if (isset($this->user) && $this->user->categoria == '2') {
+             if ($this->user->aluno_id != $folhadeatividade->aluno_id) {
                   $this->Flash->error(__('Você não tem permissão para acessar esta página'));
-                  return $this->redirect(['controller' => 'Alunos', 'action' => 'view', $user->estudante_id]);
+                  return $this->redirect(['controller' => 'Alunos', 'action' => 'view', $this->user->aluno_id]);
              }
         }
         

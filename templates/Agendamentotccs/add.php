@@ -43,7 +43,7 @@ $user = $this->getRequest()->getAttribute('identity');
     <fieldset class="border p-2">
         <legend><?= __('Agendamento de oficina de defesa de TCC') ?></legend>
         <?php
-        echo $this->Form->control('estudante_id', [
+        echo $this->Form->control('aluno_id', [
             'label' => 'Estudante', 
             'options' => $estudantes, 
             'empty' => 'Seleciona', 

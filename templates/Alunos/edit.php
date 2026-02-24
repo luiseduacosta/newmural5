@@ -6,6 +6,8 @@
  */
 ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
 <script>
     $(document).ready(function () {
 
@@ -35,12 +37,29 @@
         } else {
             $('#celular').mask('(00) 0000-0000');
         }
-        $('#nascimento').mask('0000-00-00', { placeholder: "AAAA-MM-DD" });
+        $('#nascimento').mask('00-00-0000', { placeholder: "dd-MM-yyyy" });
         $('#cep').mask('00000-000');
         $('#ingresso').mask('0000-0');
         $('#novoperiodo').val($('#ingresso').val());
         $('#novoperiodo').mask('0000-0');
+
+        $('#cep').on('blur', function() {
+            buscarEndereco($(this).val());
+        });
     });
+
+    function buscarEndereco(cep) {
+        $.ajax({
+            url: "https://viacep.com.br/ws/" + cep + "/json/",
+            type: "GET",
+            dataType: "json",
+            success: function(data) {
+                $('#endereco').val(data.logradouro);
+                $('#bairro').val(data.bairro);
+                $('#municipio').val(data.localidade);
+            }
+        });
+    }
 </script>
 
 <?php echo $this->element("menu_mural"); ?>
@@ -107,15 +126,20 @@
         ]);
         echo $this->Form->control("turno", [
             'placeholder' => 'diurno, noturno ou outro',
+            'options' => [
+                'diurno' => 'Diurno',
+                'noturno' => 'Noturno',
+                'outro' => 'Outro',
+            ],
             "label" => "Turno",
             "class" => "form-control",
         ]);
         echo $this->Form->control("nascimento", [
-            'value' => $aluno->nascimento ? $aluno->nascimento->format('Y-m-d') : '',
-            'placeholder' => 'AAAA-MM-DD',
+            'value' => $aluno->nascimento ? $aluno->nascimento->i18nFormat('dd-MM-yyyy') : '',
+            'placeholder' => 'dd-MM-yyyy',
             'type' => 'text',
-            'pattern' => '\d{4}-\d{2}-\d{2}',
-            'title' => 'Formato: AAAA-MM-DD',
+            'pattern' => '\d{2}-\d{2}-\d{4}',
+            'title' => 'Formato: dd-MM-yyyy',
             "label" => "Data de nascimento",
             "empty" => true,
             "class" => "form-control",

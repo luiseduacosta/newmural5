@@ -88,23 +88,23 @@ class TccestudantesController extends AppController
 
     /**
      * Add method
-     * @param string|null $estudante_id Estudante id.
+     * @param string|null $aluno_id Estudante id.
      * @param string|null $monografia_id Monografia id.
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
-    public function add($estudante_id = null, $monografia_id = null)
+    public function add($aluno_id = null, $monografia_id = null)
     {
-        if ($estudante_id) {
-            if (strlen($estudante_id) < 9) {
+        if ($aluno_id) {
+            if (strlen($aluno_id) < 9) {
                 $this->Flash->error(__('Registro inválido.'));
                 return $this->redirect(['action' => 'index']);
             }
-            $registro = $estudante_id;
+            $registro = $aluno_id;
 
             /* Nome do aluno */
             $resultado = $this->fetchTable('Alunos') // Changed from Estudantes to Alunos
                 ->find()
-                ->where(['registro' => $estudante_id])
+                ->where(['registro' => $aluno_id])
                 ->select(['nome'])
                 ->first();
                 
@@ -144,7 +144,7 @@ class TccestudantesController extends AppController
              'order' => ['nome' => 'asc']
         ]);
 
-        $this->set(compact('monografia_id', 'estudante_id', 'monografias', 'tccestudante', 'estudantes'));
+        $this->set(compact('monografia_id', 'aluno_id', 'monografias', 'tccestudante', 'estudantes'));
     }
 
     /**

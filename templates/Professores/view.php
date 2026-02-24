@@ -357,8 +357,8 @@ use Cake\I18n\Date;
                         </td>
                         <td><?= h($estagiarios->periodo) ?></td>
                         <?php if (isset($user) && ($user->categoria == '1' || $user->categoria == '3')): ?>
-                            <td class="editable-field" data-field="nota"><?= h($estagiarios->nota) ?></td>
-                            <td class="editable-field" data-field="ch"><?= h($estagiarios->ch) ?></td>
+                            <td class="editable-field" width="100px" data-field="nota"><?= h($estagiarios->nota) ?></td>
+                            <td class="editable-field" width="100px" data-field="ch"><?= h($estagiarios->ch) ?></td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-warning btn-edit"><?= __('Editar') ?></button>
                                 <button type="button" class="btn btn-sm btn-primary btn-save" style="display:none">Salvar</button>

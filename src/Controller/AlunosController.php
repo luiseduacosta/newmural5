@@ -80,6 +80,10 @@ class AlunosController extends AppController
      */
     public function view($id = null)
     {        
+        if ($this->user->categoria == 2) {
+            $user = $this->fetchTable('Users')->find()->where(['id' => $this->user->id])->first();
+            $id = $user->aluno_id;
+        }
         $aluno = $this->Alunos
             ->find()
             ->contain([
@@ -137,8 +141,9 @@ class AlunosController extends AppController
                 return $this->redirect(["action" => "view", $aluno->id]);
             }
         }
+
         $aluno = $this->Alunos->newEmptyEntity();
-        
+
         try {
             $this->Authorization->authorize($aluno);
         } catch (\Authorization\Exception\ForbiddenException $e) {
@@ -178,18 +183,20 @@ class AlunosController extends AppController
                 return $this->redirect(["action" => "view", $emailCheck->id]);
             }
 
+            $dataOjbeto = \Cake\I18n\Date::parse($data['nascimento']);
+            $data['nascimento'] = $dataOjbeto->i18nFormat('yyyy-MM-dd');
+
             $aluno = $this->Alunos->patchEntity($aluno, $data);
-            if ($this->Authorization->authorize($aluno)) {
-                if ($this->Alunos->save($aluno)) {
-                    $this->Flash->success(__("Dados do aluno inseridos."));
-                    if ($user->categoria == 2 && $user->estudante_id == null) {
-                        $user->estudante_id = $aluno->id;
-                        $this->fetchTable('Users')->save($user);
-                    }
-                    return $this->redirect(["action" => "view", $aluno->id]);
+            if ($this->Alunos->save($aluno)) {
+                $this->Flash->success(__("Dados do aluno inseridos."));
+                $user = $this->fetchTable('Users')->get($this->user->id);
+                if ($user->categoria == 2 && $user->aluno_id == null) {
+                    $user->aluno_id = $aluno->id;
+                    $this->fetchTable('Users')->save($user);
                 }
-                $this->Flash->error(__("Dados do aluno não inseridos."));
+                return $this->redirect(["action" => "view", $aluno->id]);
             }
+            $this->Flash->error(__("Dados do aluno não inseridos."));
         }
 
         if (!empty($dre) && !empty($email)) {
@@ -225,10 +232,12 @@ class AlunosController extends AppController
         }
 
         if ($this->request->is(["patch", "post", "put"])) {
-            $aluno = $this->Alunos->patchEntity(
-                $aluno,
-                $this->request->getData(),
-            );
+            
+            $data = $this->request->getData();
+            $dataOjbeto = \Cake\I18n\Date::parse($data['nascimento']);
+            $data['nascimento'] = $dataOjbeto->i18nFormat('yyyy-MM-dd');
+            
+            $aluno = $this->Alunos->patchEntity($aluno, $data);
             if ($this->Alunos->save($aluno)) {
                 $this->Flash->success(__("Dados do aluno atualizados."));
                 return $this->redirect(["action" => "view", $aluno->id]);
@@ -268,6 +277,15 @@ class AlunosController extends AppController
                 __("Aluno possui estagiários, não pode ser excluído."),
             );
             return $this->redirect(["action" => "view", $id]);
+        }
+
+        // Users must be deleted before the student
+        $users = $this->Alunos->Users
+            ->find()
+            ->where(["Users.aluno_id" => $id])
+            ->first();
+        if ($users) {
+            $this->Alunos->Users->delete($users);
         }
 
         if ($this->Alunos->delete($aluno)) {
@@ -545,7 +563,7 @@ class AlunosController extends AppController
              ->withStringBody(json_encode(["error" => "Not implemented fully in migration yet"])); 
     }
     
-     public function buscaalunoregistro($registro = null)
+    public function buscaalunoregistro($registro = null)
     {
         $this->Authorization->skipAuthorization();
         $registro = $this->request->getData("registro");

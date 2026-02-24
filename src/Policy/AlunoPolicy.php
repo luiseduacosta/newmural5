@@ -27,9 +27,9 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->getOriginalData()->isAdmin()) {
+        } elseif ($user->categoria == 1) {
             return true;
-        } elseif ($user->getOriginalData()->isAluno()) {
+        } elseif ($user->categoria == 2) {
             return true;
         } else {
             return false;
@@ -47,10 +47,10 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->getOriginalData()->isAdmin()) {
+        } elseif ($user->categoria == 1) {
             return true;
-        } elseif ($user->getOriginalData()->isAluno()) {
-            return $this->isAuthor($user, $aluno);
+        } elseif ($user->categoria == 2) {
+            return true;
         } else {
             return false;
         }
@@ -67,10 +67,10 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->getOriginalData()->isAdmin()) {
+        } elseif ($user->categoria == 1) {
             return true;
-        } elseif ($user->getOriginalData()->isAluno()) {
-            return $this->isAuthor($user, $aluno);
+        } elseif ($user->categoria == 2) {
+            return true;
         } else {
             return false;
         }
@@ -79,21 +79,29 @@ class AlunoPolicy
     /**
      * Check if $user can delete Aluno
      *
-     * @param \Authorization\IdentityInterface $user The user.
+     * @param \Authorization\IdentityInterface|null $user The user.
      * @param \App\Model\Entity\Aluno $aluno
      * @return bool
      */
     public function canDelete(?IdentityInterface $user, Aluno $aluno)
     {
-        return isset($user) && $user->getOriginalData()->isAdmin();
+        if (!isset($user)) {
+            return false;
+        } elseif ($user->categoria == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function canCargaHoraria(?IdentityInterface $user, Aluno $aluno)
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->getOriginalData()->isAdmin()) {
+        } elseif ($user->categoria == 1) {
             return true;
+        } else {
+            return false;
         }
     }
 
@@ -101,9 +109,9 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->getOriginalData()->isAdmin()) {
+        } elseif ($user->categoria == 1) {
             return true;
-        } elseif ($user->getOriginalData()->isAluno()) {
+        } elseif ($user->categoria == 2) {
             return $this->isAuthor($user, $aluno);
         } else {
             return false;
@@ -114,9 +122,9 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->getOriginalData()->isAdmin()) {
+        } elseif ($user->categoria == 1) {
             return true;
-        } elseif ($user->getOriginalData()->isAluno()) {
+        } elseif ($user->categoria == 2) {
             return $this->isAuthor($user, $aluno);
         } else {
             return false;
@@ -127,9 +135,9 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->getOriginalData()->isAdmin()) {
+        } elseif ($user->categoria == 1) {
             return true;
-        } elseif ($user->getOriginalData()->isAluno()) {
+        } elseif ($user->categoria == 2) {
             return $this->isAuthor($user, $aluno);
         } else {
             return false;
@@ -140,14 +148,16 @@ class AlunoPolicy
     {
         if (!isset($user)) {
             return false;
-        } elseif ($user->getOriginalData()->isAdmin()) {
+        } elseif ($user->categoria == 1) {
             return true;
-        } 
+        } else {
+            return false;
+        }
     }
 
     protected function isAuthor(?IdentityInterface $user, Aluno $aluno)
     {
-        return $aluno->id === $user->estudante_id;
+        return $aluno->id === $user->aluno_id;
     }
 
     public function isAuthorMonografia(?IdentityInterface $user, Monografia $monografia)

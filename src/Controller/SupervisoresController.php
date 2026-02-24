@@ -114,9 +114,9 @@ class SupervisoresController extends AppController
         if ($this->request->is('post')) {
             $supervisor = $this->Supervisores->patchEntity($supervisor, $this->request->getData());
             if ($this->Supervisores->save($supervisor)) {
-                if ($user->categoria == 3 && $user->supervisor_id == null) {
-                    $user->supervisor_id = $supervisor->id;
-                    $this->fetchTable('Users')->save($user);
+                if ($this->user->categoria == 3 && $this->user->supervisor_id == null) {
+                    $this->user->supervisor_id = $supervisor->id;
+                    $this->fetchTable('Users')->save($this->user);
                 }
                 $this->Flash->success(__('Registro de supervisora realizado.'));
                 return $this->redirect(['action' => 'view', $supervisor->id]);

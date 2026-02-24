@@ -42,7 +42,7 @@ if (isset($supervisores)) {
 <script type="text/javascript">
     $(document).ready(function () {
 
-        var url = "<?= $this->Html->Url->build(['controller' => 'estagiarios', 'action' => 'termodecompromisso', '?' => ['estudante_id' => $estudante->id]]); ?>";
+        var url = "<?= $this->Html->Url->build(['controller' => 'estagiarios', 'action' => 'termodecompromisso', '?' => ['aluno_id' => $estudante->id]]); ?>";
         /* alert(url); */
         $("#id-instituicao").change(function () {
             var instituicao = $(this).val();
@@ -68,7 +68,7 @@ $Confirma = [
 <?php if ((isset($ultimoestagio) && $ultimoestagio) || (isset($estudante_semestagio) && $estudante_semestagio)): ?>
     <div class="row">
         <div class="container">
-            <?= $this->Form->create(null, ['type' => 'post', 'url' => ['controller' => 'estagiarios', 'action' => 'termodecompromisso', '?' => ['estudante_id' => $estudante->id]]]) ?>
+            <?= $this->Form->create(null, ['type' => 'post', 'url' => ['controller' => 'estagiarios', 'action' => 'termodecompromisso', '?' => ['aluno_id' => $estudante->id]]]) ?>
             <fieldset>
                 <legend><?= __('Solicitação de termo de compromisso') ?></legend>
                 <?php

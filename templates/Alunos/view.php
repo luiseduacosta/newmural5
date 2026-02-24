@@ -36,8 +36,9 @@
                 <li class="nav-item">
                     <?= $this->Form->postLink(__('Excluir Aluno'), ['controller' => 'Alunos', 'action' => 'delete', $aluno->id], ['confirm' => __('Tem certeza que quer excluir o registro # {0}?', $aluno->id), 'class' => 'btn btn-danger me-1']) ?>
                 </li>
-            <?php elseif (isset($user) && $user->categoria == '2'): ?>
-                <?php if ($user->estudante_id == $aluno->id): ?>
+            <?php endif ?>
+            <?php if (isset($user) && $user->categoria == '2'): ?>
+                <?php if ($user->aluno_id == $aluno->id): ?>
                     <li class="nav-item">
                         <?= $this->Html->link(__('Editar Aluno'), ['controller' => 'Alunos', 'action' => 'edit', $aluno->id], ['class' => 'btn btn-primary me-1']) ?>
                     </li>
@@ -102,7 +103,7 @@
                         <th><?= __('Turno') ?></th>
                         <td><?= h($aluno->turno) ?></td>
                     </tr>
-                    <?php if (isset($user) && ($user->categoria == '1' || ($user->categoria == '2' && $aluno->id == $user->estudante_id))): ?>
+                    <?php if (isset($user) && ($user->categoria == '1' || ($user->categoria == '2' && $aluno->id == $user->aluno_id))): ?>
                         <tr>
                             <th><?= __('Data de nascimento') ?></th>
                             <td><?= $aluno->nascimento ? $aluno->nascimento->i18nFormat('dd-MM-yyyy') : '' ?></td>

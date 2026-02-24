@@ -80,7 +80,7 @@ $user = $this->getRequest()->getAttribute('identity');
         elseif (isset($user) && $user->categoria == 2):
             echo $this->Form->control('aluno_id', [
                 'label' => 'Aluno(a)',
-                'options' => [$alunos[$user->estudante_id]],
+                'options' => [$alunos[$user->aluno_id]],
                 'readonly' => true,
                 'templates' => [
                     'formGroup' => '<div class="form-group row">{{label}}<div class="col-sm-9">{{input}}</div></div>',

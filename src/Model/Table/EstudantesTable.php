@@ -58,11 +58,11 @@ class EstudantesTable extends Table
             'joinType' => 'INNER'
         ]);
 
-        /** A tabela Agendamentotcc tem um campo estudante_id que se conexta com o id de Estudantes */
+        /** A tabela Agendamentotcc tem um campo aluno_id que se conexta com o id de Estudantes */
         $this->hasMany('Agendamentotccs', [
             'className' => 'Agendamentotccs',
             'targetForeignKey' => 'id',
-            'foreignKey' => 'estudante_id',
+            'foreignKey' => 'aluno_id',
             'joinType' => 'INNER'
         ]);
 

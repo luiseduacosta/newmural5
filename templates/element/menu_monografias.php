@@ -48,10 +48,10 @@ $user = $this->getRequest()->getAttribute('identity');
                 </li>
                 <?php if (isset($user) && !empty($user)): ?>
                     <?php if ($user->categoria == 2):
-                        $estudante = TableRegistry::getTableLocator()->get('Estudantes')->find()->where(['Estudantes.id' => $user->estudante_id])->first();
+                        $estudante = TableRegistry::getTableLocator()->get('Estudantes')->find()->where(['Estudantes.id' => $user->aluno_id])->first();
                         ?>
                         <li class='nav-item'>
-                            <?= $this->Html->link($user->email, ['controller' => 'Estudantes', 'action' => 'view', $user->estudante_id], ['class' => 'btn btn-primary me-1']) ?>
+                            <?= $this->Html->link($user->email, ['controller' => 'Estudantes', 'action' => 'view', $user->aluno_id], ['class' => 'btn btn-primary me-1']) ?>
                         </li>
                     <?php endif; ?>
                 <?php else: ?>
