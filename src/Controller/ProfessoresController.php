@@ -78,7 +78,7 @@ class ProfessoresController extends AppController
             $professor = $this->Professores->get(
                 $id,
                 [
-                    'contain' => ['Estagiarios' => ['sort' => ['Estagiarios.periodo' => 'DESC'], 'Instituicoes', 'Supervisores', 'Professores', 'Alunos']]
+                    'contain' => ['Estagiarios' => ['sort' => ['Estagiarios.periodo' => 'DESC'], 'Instituicoes', 'Supervisores', 'Professores', 'Alunos', 'Folhadeatividades', 'Respostas']]
                 ]
             );
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {

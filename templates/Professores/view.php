@@ -324,7 +324,6 @@ use Cake\I18n\Date;
                     <?php if (isset($user) && ($user->categoria == '1' || $user->categoria == '3')): ?>
                         <th><?= __('Nota') ?></th>
                         <th><?= __('CH') ?></th>
-                        <th><?= __('Observações') ?></th>
                         <th><?= __('Ações') ?></th>
                     <?php endif; ?>
                 </tr>
@@ -336,18 +335,20 @@ use Cake\I18n\Date;
                         <?php if (isset($user) && $user->categoria == '1'): ?>
                             <td><?= h($estagiarios->id) ?></td>
                         <?php endif; ?>
-                        <td><?= $estagiarios->hasValue('aluno') ? $estagiarios->aluno->nome : "" ?>
+                        <td><?= $estagiarios->hasValue('aluno') ? $this->Html->link($estagiarios->aluno->nome, ['controller' => 'alunos', 'action' => 'view', $estagiarios->aluno->id]) : "Sem dados" ?>
                         </td>
                         <td><?= h($estagiarios->registro) ?></td>
                         <?php if (isset($user) && ($user->categoria == '1' || $user->categoria == '3')): ?>
-                            <td><?= $estagiarios->hasValue('folhadeatividade') ? $this->Html->link('Atividades de estágio', ['controller' => 'folhadeatividades', 'action' => 'index', $estagiarios->id]) : $this->Html->link('Cadastrar atividades de estágio', ['controller' => 'folhadeatividades', 'action' => 'add', '?' => ['estagiario_id' => $estagiarios->id]]) ?>
+                            <td><?= $estagiarios->hasValue('folhadeatividades') ? $this->Html->link('Atividades de estágio', ['controller' => 'folhadeatividades', 'action' => 'index', '?' => ['estagiario_id' => $estagiarios->id]]) : "Sem atividades cadastradas" ?>
+                            </td>
+                            <td><?= $estagiarios->hasValue('resposta') ? $this->Html->link('Respostas de avaliação', ['controller' => 'respostas', 'action' => 'view', '?' => ['estagiario_id' => $estagiarios->id]]) : 'Sem avaliações cadastradas' ?>
                             </td>
                         <?php else: ?>
-                            <td><?= $estagiarios->hasValue('folhadeatividade') ? $this->Html->link('Atividades de estágio', ['controller' => 'folhadeatividades', 'action' => 'index', $estagiarios->id]) : "Sem atividades cadastradas" ?>
+                            <td><?= $estagiarios->hasValue('folhadeatividades') ? $this->Html->link('Atividades de estágio', ['controller' => 'folhadeatividades', 'action' => 'index', '?' => ['estagiario_id' => $estagiarios->id]]) : "Sem atividades cadastradas" ?>
+                            </td>
+                            <td><?= $estagiarios->hasValue('resposta') ? $this->Html->link('Respostas de avaliação', ['controller' => 'respostas', 'action' => 'view', '?' => ['estagiario_id' => $estagiarios->id]]) : 'Sem avaliações cadastradas' ?>
                             </td>
                         <?php endif; ?>
-                        <td><?= $estagiarios->hasValue('avaliacao') ? $this->Html->link('Avaliacao de estágio', ['controller' => 'avaliacoes', 'action' => 'view', '?' => ['estagiario_id' => $estagiarios->id]]) : 'Sem avaliações cadastradas' ?>
-                        </td>
                         <td><?= h($estagiarios->turno) ?></td>
                         <td><?= h($estagiarios->nivel) ?></td>
                         <td><?= $estagiarios->hasValue('instituicao') ? $estagiarios->instituicao->instituicao : "" ?>
@@ -358,9 +359,7 @@ use Cake\I18n\Date;
                         <?php if (isset($user) && ($user->categoria == '1' || $user->categoria == '3')): ?>
                             <td class="editable-field" data-field="nota"><?= h($estagiarios->nota) ?></td>
                             <td class="editable-field" data-field="ch"><?= h($estagiarios->ch) ?></td>
-                            <td><?= h($estagiarios->observacoes) ?></td>
                             <td>
-                                <?= $this->Html->link(__('Atividades'), ['controller' => 'Folhadeatividades', 'action' => 'index', '?' => ['estagiario_id' => $estagiarios->id]]) ?>
                                 <button type="button" class="btn btn-sm btn-warning btn-edit"><?= __('Editar') ?></button>
                                 <button type="button" class="btn btn-sm btn-primary btn-save" style="display:none">Salvar</button>
                                 <button type="button" class="btn btn-sm btn-secondary btn-cancel" style="display:none">Cancelar</button>
@@ -368,9 +367,9 @@ use Cake\I18n\Date;
                         <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php endif; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
 
 <script type="text/javascript">
 
@@ -432,19 +431,33 @@ function saveRow(row) {
         data: $.param(data),
         success: function(response) {
             console.log('Success:', response);
+            if (response.status === 'success') {
+                // Add a brief success indicator
+                const saveBtn = row.querySelector('.btn-save');
+                saveBtn.textContent = 'Salvo!';
+                saveBtn.classList.remove('btn-primary');
+                saveBtn.classList.add('btn-success');
+                
+                setTimeout(() => {
+                    row.classList.remove('editing');
+                    row.querySelector('.btn-edit').style.display = 'inline-block';
+                    saveBtn.style.display = 'none';
+                    saveBtn.textContent = 'Salvar';
+                    saveBtn.classList.remove('btn-success');
+                    saveBtn.classList.add('btn-primary');
+                    row.querySelector('.btn-cancel').style.display = 'none';
+                }, 1000);
+            }
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
+            alert('Erro ao salvar as alterações. Verifique o console para mais detalhes.');
+            // Revert state if needed or keep editable
         }
     });
-    
-    row.classList.remove('editing');
-    row.querySelector('.btn-edit').style.display = 'inline-block';
-    row.querySelector('.btn-save').style.display = 'none';
-    row.querySelector('.btn-cancel').style.display = 'none';
 }
 
- function cancelEdit(row) {
+function cancelEdit(row) {
     row.classList.remove('editing');
     const cells = row.querySelectorAll('.editable-field');
     cells.forEach(cell => {

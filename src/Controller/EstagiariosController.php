@@ -645,9 +645,20 @@ class EstagiariosController extends AppController
                 $this->request->getData(),
             );
             if ($this->Estagiarios->save($estagiario)) {
+                if ($this->request->is('ajax')) {
+                    return $this->response->withType('application/json')
+                        ->withStringBody(json_encode(['status' => 'success', 'data' => $estagiario]));
+                }
                 $this->Flash->success(__("Registro de estagiario atualizado."));
                 return $this->redirect(["action" => "view", $id]);
             }
+
+            if ($this->request->is('ajax')) {
+                 return $this->response->withStatus(400)
+                    ->withType('application/json')
+                    ->withStringBody(json_encode(['status' => 'error', 'errors' => $estagiario->getErrors()]));
+            }
+
             $this->Flash->error(
                 __("Registro de estagiario nao foi atualizado. Tente novamente."),
             );
