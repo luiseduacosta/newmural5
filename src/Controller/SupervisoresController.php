@@ -24,7 +24,7 @@ class SupervisoresController extends AppController
             $this->Authorization->authorize($this->Supervisores);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         $query = $this->Supervisores->find();
@@ -53,7 +53,10 @@ class SupervisoresController extends AppController
     public function view($id = null)
     {
         $this->Authorization->skipAuthorization();
-        
+        if ($this->user->categoria == 4) {
+            $id = $this->user->supervisor_id;
+        }
+
         if ($id === null) {
                 $this->Flash->error(__('Supervisora não encontrada.'));
                 return $this->redirect(['action' => 'index']);
@@ -72,7 +75,7 @@ class SupervisoresController extends AppController
             $this->Authorization->authorize($supervisor);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         $this->set(compact('supervisor'));
@@ -108,7 +111,7 @@ class SupervisoresController extends AppController
             $this->Authorization->authorize($supervisor);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         if ($this->request->is('post')) {
@@ -118,10 +121,10 @@ class SupervisoresController extends AppController
                     $this->user->supervisor_id = $supervisor->id;
                     $this->fetchTable('Users')->save($this->user);
                 }
-                $this->Flash->success(__('Registro de supervisora realizado.'));
+                $this->Flash->success(__('Registro de supervisora atualizado.'));
                 return $this->redirect(['action' => 'view', $supervisor->id]);
             }
-            $this->Flash->error(__('O registro da supervisora não foi realizado. Tente novamente.'));
+            $this->Flash->error(__('O registro da supervisora não foi atualizado. Tente novamente.'));
             // return $this->redirect(['action' => 'index']);
         }
         $instituicoes = $this->Supervisores->Instituicoes->find('list', ['order' => ['instituicao' => 'ASC']]);
@@ -150,7 +153,7 @@ class SupervisoresController extends AppController
             $this->Authorization->authorize($supervisor);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -186,7 +189,16 @@ class SupervisoresController extends AppController
             $this->Authorization->authorize($supervisor);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
+        }
+
+        // Delete the supervisor from the Users table if the user is a supervisor
+        $user = $this->Supervisores->Users
+            ->find()
+            ->where(["Users.supervisor_id" => $id])
+            ->first();
+        if ($user) {
+            $this->Supervisores->Users->delete($user);
         }
 
         if ($this->Supervisores->delete($supervisor)) {

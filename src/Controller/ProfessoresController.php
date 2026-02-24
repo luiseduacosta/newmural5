@@ -37,7 +37,7 @@ class ProfessoresController extends AppController
             $this->Authorization->authorize($this->Professores);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         $query = $this->Professores->find();
@@ -65,7 +65,10 @@ class ProfessoresController extends AppController
      */
     public function view($id = null)
     {
-         
+        if ($this->user->categoria == 3) {
+            $id = $this->user->professor_id;
+        }
+        
         if ($id == null) {
              $this->Flash->error(__('Professor(a) não identificado(a).'));
              return $this->redirect(['action' => 'index']);
@@ -90,7 +93,7 @@ class ProfessoresController extends AppController
             $this->Authorization->authorize($professor);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         $this->set(compact('professor'));
@@ -129,7 +132,7 @@ class ProfessoresController extends AppController
             $this->Authorization->authorize($professor);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         if ($this->request->is('post')) {
@@ -172,7 +175,7 @@ class ProfessoresController extends AppController
             $this->Authorization->authorize($professor);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -210,12 +213,21 @@ class ProfessoresController extends AppController
             $this->Authorization->authorize($professor);
         } catch (\Authorization\Exception\ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
-            return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller' => 'Muralestagios', 'action' => 'index']);
         }
         
         if (count($professor->estagiarios) > 0) {
             $this->Flash->error(__('Professor(a) tem estagiários associados'));
             return $this->redirect(['controller' => 'Professores', 'action' => 'view', $id]);
+        }
+
+        // Delete the professor from the Users table if the user is a teacher
+        $user = $this->Professores->Users
+            ->find()
+            ->where(["Users.professor_id" => $id])
+            ->first();
+        if ($user) {
+            $this->Professores->Users->delete($user);
         }
 
         if ($this->Professores->delete($professor)) {

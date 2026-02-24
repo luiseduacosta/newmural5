@@ -81,9 +81,14 @@ class AlunosController extends AppController
     public function view($id = null)
     {        
         if ($this->user->categoria == 2) {
-            $user = $this->fetchTable('Users')->find()->where(['id' => $this->user->id])->first();
-            $id = $user->aluno_id;
+            $id = $this->user->aluno_id;
         }
+
+        if ($id === null) {
+            $this->Flash->error(__("Aluno não encontrado."));
+            return $this->redirect(["action" => "index"]);
+        }
+        
         $aluno = $this->Alunos
             ->find()
             ->contain([
@@ -189,8 +194,9 @@ class AlunosController extends AppController
             $aluno = $this->Alunos->patchEntity($aluno, $data);
             if ($this->Alunos->save($aluno)) {
                 $this->Flash->success(__("Dados do aluno inseridos."));
+                // Store the aluno_id in the Users table if the user is a student
                 $user = $this->fetchTable('Users')->get($this->user->id);
-                if ($user->categoria == 2 && $user->aluno_id == null) {
+                if ($this->user->categoria == 2 && $this->user->aluno_id == null) {
                     $user->aluno_id = $aluno->id;
                     $this->fetchTable('Users')->save($user);
                 }
@@ -280,12 +286,12 @@ class AlunosController extends AppController
         }
 
         // Users must be deleted before the student
-        $users = $this->Alunos->Users
+        $user = $this->Alunos->Users
             ->find()
             ->where(["Users.aluno_id" => $id])
             ->first();
-        if ($users) {
-            $this->Alunos->Users->delete($users);
+        if ($user) {
+            $this->Alunos->Users->delete($user);
         }
 
         if ($this->Alunos->delete($aluno)) {
@@ -433,8 +439,14 @@ class AlunosController extends AppController
      */
     public function certificadoperiodo($id = null)
     {
+        $this->Authorization->skipAuthorization();
+
         $totalperiodos = $this->request->getQuery("totalperiodos");
         $novoperiodo = $this->request->getQuery("novoperiodo");
+
+        if ($this->user->categoria == 2) {
+            $id = $this->user->aluno_id;
+        }
 
         if ($id == null) {
             $this->Flash->error(__("Operação não pode ser realizada porque o 'id' não foi informado."));
@@ -498,9 +510,15 @@ class AlunosController extends AppController
      */
     public function certificadoperiodopdf($id = null)
     {
+        $this->Authorization->skipAuthorization();
+
         $id = $this->request->getQuery("id");
         $totalperiodos = $this->request->getQuery("totalperiodos");
         
+        if ($this->user->categoria == 2) {
+            $id = $this->user->aluno_id;
+        }
+
         if ($id === null) {
             $this->Flash->error(__("Operação não pode ser realizada porque o 'id' não foi informado."));
             return $this->redirect(["action" => "index"]);
@@ -535,6 +553,10 @@ class AlunosController extends AppController
 
         $id = $this->request->getData("id");
         
+        if ($id == null && $this->user->categoria == 2) {
+            $id = $this->user->aluno_id;
+        }
+
         $estagiario = $this->Alunos->Estagiarios
             ->find()
             ->where(["Estagiarios.aluno_id" => $id])
