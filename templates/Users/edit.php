@@ -5,7 +5,7 @@
  */
 ?>
 
-<?= $this->element('menu_monografias') ?>
+<?= $this->element('menu_mural') ?>
 
 <nav class="navbar navbar-expand-lg navbar-light" id="actions-sidebar">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerUsereEdit"

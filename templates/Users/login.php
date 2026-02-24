@@ -5,7 +5,7 @@
  */
 ?>
 
-<?= $this->element('menu_monografias') ?></div>
+<?= $this->element('menu_mural') ?></div>
 
 <?= $this->element('templates') ?>
 

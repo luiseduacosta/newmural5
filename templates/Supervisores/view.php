@@ -69,12 +69,13 @@
     </ul>
 </div>
 
-<div class="row">
-    <div class="tab-content">
+<div class="tab-content container">
 
         <div id="supervisora" class="tab-pane container active show">
             <h3><?= $supervisor->nome ?></h3>
-            <table>
+            <table class="table table-striped table-hover table-responsive">
+                <col style="width: 30%;">
+                <col style="width: 70%;">
                 <tr>
                     <th><?= __("Id") ?></th>
                     <td><?= $this->Number->format($supervisor->id, [
@@ -186,8 +187,9 @@
 
         <div id="instituicao" class="tab-pane container fade">
             <h4><?= __("Instituição de estágio") ?></h4>
-            <?php if (!empty($supervisor->instituicoes)): ?>
+            <?php if ($supervisor->hasValue('instituicao')): ?>
                 <table class="table table-striped table-hover table-responsive">
+                    <thead>
                     <tr>
                         <th><?= __("Id") ?></th>
                         <th><?= __("Instituição") ?></th>
@@ -204,6 +206,8 @@
                         <th><?= __("Observações") ?></th>
                         <th><?= __("Ações") ?></th>
                     </tr>
+                    </thead>
+                    <tbody>
                     <?php foreach (
                         $supervisor->instituicoes
                         as $instituicoes
@@ -266,6 +270,7 @@
                             </td>
                         </tr>
                     <?php endforeach; ?>
+                    </tbody>
                 </table>
             <?php endif; ?>
         </div>
@@ -274,6 +279,7 @@
             <h4><?= __("Estagiarios") ?></h4>
             <?php if (!empty($supervisor->estagiarios)): ?>
                 <table class="table table-striped table-hover table-responsive">
+                    <thead>
                     <tr>
                         <th><?= __("ID") ?></th>
                         <th><?= __("Estudante") ?></th>
@@ -287,6 +293,8 @@
                         <th><?= __("Observações") ?></th>
                         <th><?= __("Ações") ?></th>
                     </tr>
+                    </thead>
+                    <tbody>
                     <?php foreach ($supervisor->estagiarios as $estagiarios): ?>
                         <tr>
                             <td><?= h($estagiarios->id) ?></td>
@@ -369,8 +377,8 @@
                             </td>
                         </tr>
                     <?php endforeach; ?>
+                    </tbody>
                 </table>
             <?php endif; ?>
         </div>
-    </div>
 </div>

@@ -5,6 +5,8 @@
  */
 ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
 <script type="text/javascript">
     $(document).ready(function() {
         $('#cpf').mask('000.000.000-00');
@@ -47,7 +49,7 @@
     </ul>
 </nav>
 
-<?php $this->element("templates"); ?>
+<?php echo $this->element("templates"); ?>
 
 <div class="container col-lg-8 shadow p-3 mb-5 bg-white rounded">
     <?= $this->Form->create($supervisor, [
@@ -139,6 +141,8 @@
         echo $this->Form->control("observacoes", [
             "label" => "Observações",
             "type" => "textarea",
+            "class" => "form-control",
+            "rows" => "5",
         ]);
         echo $this->Form->control("instituicoes._ids", [
             "label" => "Instituição",
