@@ -66,7 +66,10 @@ class ProfessoresController extends AppController
     public function view($id = null)
     {
         if ($this->user->categoria == 3) {
-            $id = $this->user->professor_id;
+            // After adding a new record, the user table needs to be reloaded to get the new value of professor_id
+            $usercadastrado = $this->fetchTable('Users')->get($this->user->id);
+            $this->set('user', $usercadastrado);
+            $id = $usercadastrado->professor_id;
         }
         
         if ($id == null) {

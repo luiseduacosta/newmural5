@@ -80,13 +80,17 @@ class AlunosController extends AppController
      */
     public function view($id = null)
     {        
+        $this->Authorization->skipAuthorization();
         if ($this->user->categoria == 2) {
-            $id = $this->user->aluno_id;
+            // After the add of a student, the user is redirected to the view of the student he registered. But the user still not have the aluno_id.
+            $usercadastrado = $this->fetchTable("Users")->get($this->user->id);
+            $this->set("user", $usercadastrado);
+            $id = $usercadastrado->aluno_id;
         }
 
         if ($id === null) {
             $this->Flash->error(__("Aluno não encontrado."));
-            return $this->redirect(["action" => "index"]);
+            return $this->redirect(['controller' => 'Muralestagios', "action" => "index"]);
         }
         
         $aluno = $this->Alunos

@@ -13,15 +13,15 @@
         $('#cpf').mask('000.000.000-00');
         $('#telefone').mask('(00) 0000.0000');
         $('#celular').mask('(00) 00000.0000');
-        $('#cep').mask('00000-000');
+        $('#cep').mask('00000-000', {
+            onComplete: function(cep, e, masks) {
+                buscarEndereco(cep);
+            }
+        });
         $('#ingresso').mask('0000-0');
         $('#novoperiodo').val($('#ingresso').val());
         $('#novoperiodo').mask('0000-0');
         $('#nascimento').mask('00-00-0000', { placeholder: "dd-MM-yyyy" });
-
-        onComplete: function(cep, e, masks) {
-            buscarEndereco(cep);
-        }
     });
 
     function buscarEndereco(cep) {
@@ -79,6 +79,7 @@
                 'value' => $dre,
                 "label" => "Registro",
                 "class" => "form-control",
+                "readonly" => true,
             ]);
         } else {
             echo $this->Form->control("registro", [
@@ -96,10 +97,17 @@
             'placeholder' => 'diurno, noturno ou outro',
             "label" => "Turno",
             "class" => "form-control",
+            "options" => ["diurno" => "Diurno", "noturno" => "Noturno", "outro" => "Outro"],
+            "templates" => [
+                    'formGroup' => '<div class="form-group row">{{label}}<div class="col-sm-9">{{input}}</div></div>',
+                    'label' => '<label class="col-sm-3 form-label"{{attrs}}>{{text}}</label>',
+                    'select' => '<select name="{{name}}"{{attrs}} class="form-select">{{content}}</select>'
+                ],
         ]);
         echo $this->Form->control("nascimento", [
             "label" => "Data de nascimento",
             "placeholder" => "dd-MM-yyyy",
+            "type" => "string",
             "empty" => true,
             "class" => "form-control",
         ]);
@@ -123,6 +131,7 @@
                 'value' => $email,
                 "label" => "E-mail",
                 "class" => "form-control",
+                "readonly" => true,
             ]);
         } else {
             echo $this->Form->control("email", [

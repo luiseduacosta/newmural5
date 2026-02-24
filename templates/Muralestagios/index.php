@@ -3,8 +3,6 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Muralestagio[]|\Cake\Collection\CollectionInterface $muralestagios
  */
-$user = $this->getRequest()->getAttribute('identity');
-// die();
 ?>
 
 <script type="text/javascript">

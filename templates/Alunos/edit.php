@@ -38,14 +38,14 @@
             $('#celular').mask('(00) 0000-0000');
         }
         $('#nascimento').mask('00-00-0000', { placeholder: "dd-MM-yyyy" });
-        $('#cep').mask('00000-000');
+        $('#cep').mask('00000-000', {
+            onComplete: function(cep, e, masks) {
+                buscarEndereco(cep);
+            }
+        });        
         $('#ingresso').mask('0000-0');
         $('#novoperiodo').val($('#ingresso').val());
         $('#novoperiodo').mask('0000-0');
-
-        $('#cep').on('blur', function() {
-            buscarEndereco($(this).val());
-        });
     });
 
     function buscarEndereco(cep) {
@@ -105,11 +105,6 @@
         echo $this->Form->control("nome", [
             "label" => "Nome",
             "class" => "form-control",
-            'templates' => [
-                'formGroup' => '<div class="form-group row">{{label}}<div class="col-sm-9">{{input}}</div></div>',
-                'label' => '<label class="col-sm-3 form-label"{{attrs}}>{{text}}</label>',
-                'select' => '<div class="col-sm-9"><select class="form-select" name="{{name}}"{{attrs}}>{{content}}</select></div>',
-            ],
         ]);
         echo $this->Form->control("nomesocial", [
             "label" => "Nome social",
@@ -133,6 +128,12 @@
             ],
             "label" => "Turno",
             "class" => "form-control",
+            'templates' => [
+                'formGroup' => '<div class="form-group row">{{label}}<div class="col-sm-9">{{input}}</div></div>',
+                'label' => '<label class="col-sm-3 form-label"{{attrs}}>{{text}}</label>',
+                'select' => '<div class="col-sm-9"><select class="form-select" name="{{name}}"{{attrs}}>{{content}}</select></div>',
+            ],
+
         ]);
         echo $this->Form->control("nascimento", [
             'value' => $aluno->nascimento ? $aluno->nascimento->i18nFormat('dd-MM-yyyy') : '',

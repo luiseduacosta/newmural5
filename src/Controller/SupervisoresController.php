@@ -54,7 +54,10 @@ class SupervisoresController extends AppController
     {
         $this->Authorization->skipAuthorization();
         if ($this->user->categoria == 4) {
-            $id = $this->user->supervisor_id;
+            // After adding a new record, the user table needs to be reloaded to get the new value of supervisor_id
+            $usercadastrado = $this->fetchTable('Users')->get($this->user->id);
+            $this->set('user', $usercadastrado);
+            $id = $usercadastrado->supervisor_id;
         }
 
         if ($id === null) {
