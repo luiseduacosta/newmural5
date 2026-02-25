@@ -71,8 +71,18 @@ class SupervisoresController extends AppController
         }
 
         try {
+            // Ordenar os estagiários por período
             $supervisor = $this->Supervisores->get($id, [
-                'contain' => ['Instituicoes' => ['Areainstituicoes'], 'Estagiarios' => ['Alunos', 'Supervisores', 'Professores', 'Instituicoes']],
+                'contain' => [
+                    'Instituicoes' => ['Areainstituicoes'],
+                    'Estagiarios' => [
+                        'sort' => ['Estagiarios.periodo' => 'DESC'],
+                        'Alunos',
+                        'Supervisores',
+                        'Professores',
+                        'Instituicoes',
+                    ],
+                ],
             ]);
         } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('Supervisora não encontrada.'));

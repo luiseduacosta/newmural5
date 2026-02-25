@@ -43,11 +43,13 @@ foreach ($perguntas as $key => $value):
     }
 ?>
 <tr>
-    <th>
-        <p style="text-align: justify; font-weight: normal;"><?= $label ?></p>
-    </th>
-    <td>
-        <p style="text-align: justify;"><?= $displayValue ?></p>
+    <td colspan="2" style="padding-bottom: 2px;">
+        <p style="text-align: justify; font-weight: bold; margin-bottom: 5px;"><?= $label ?></p>
+    </td>
+</tr>
+<tr>
+    <td colspan="2" style="padding-top: 0;">
+        <p style="text-align: justify; margin-top: 0;"><?= $displayValue ?></p>
     </td>
 </tr>
 <?php endforeach; ?>

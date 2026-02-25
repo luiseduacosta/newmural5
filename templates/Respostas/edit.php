@@ -38,38 +38,47 @@
             $resultado = null;
             $respostaporpergunta = null;
             foreach ($avaliacoes as $avaliacao) { ?>
-            <?php // pr($avaliacao); ?>
-            <div class="row mb-3">
-                <?php
-                    $resultado = json_decode($resposta['response'], true);
-                    $respostaporpergunta = $resultado['avaliacao' . $avaliacao['id']];
-                    $opcoes = isset($avaliacao['options']) ? $avaliacao['options'] : [];
-                ?>
-                <?php if ($avaliacao['type'] === 'select') { ?>
+            <?php
+                $resultado = json_decode($resposta['response'], true);
+                $respostaporpergunta = $resultado['avaliacao' . $avaliacao['id']];
+                $opcoes = isset($avaliacao['options']) ? $avaliacao['options'] : [];
+            ?>
+            <?php if ($avaliacao['type'] === 'select') { ?>
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <label class="fw-bold"><?= h($avaliacao['text']) ?></label>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-12">
                         <?= $this->Form->control('avaliacao' . $avaliacao['id'], [
                             'type' => $avaliacao['type'],
                             'div' => false,
-                            'label' => $avaliacao['text'],
+                            'label' => false,
                             'value' => $respostaporpergunta['valor'] ?? '',
                             'options' => $opcoes,
                             'empty' => 'Seleciona',
-                            'class' => 'form-control',
-                            'templates' => [
-                                'inputContainer' => '<div class="col-sm-12" {{type}}{{required}}">{{content}}</div>',
-                                'select' => '<select class="form-select" name="{{name}}"{{attrs}}>{{content}}</select>'
-                            ]
+                            'class' => 'form-select',
                         ]); ?>
-                <?php } elseif ($avaliacao['type'] === 'radio' || $avaliacao['type'] === 'checkbox') { ?>
+                    </div>
+                </div>
+            <?php } elseif ($avaliacao['type'] === 'radio' || $avaliacao['type'] === 'checkbox') { ?>
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <label class="fw-bold"><?= h($avaliacao['text']) ?></label>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-12">
                         <?= $this->Form->control('avaliacao' . $avaliacao['id'], [
                             'type' => $avaliacao['type'],
                             'div' => false,
-                            'label' => ['text' => $avaliacao['text'], 'class' => 'd-block fw-bold mb-2'],
+                            'label' => false,
                             'value' => $respostaporpergunta['valor'] ?? '',
                             'options' => $opcoes,
                             'class' => 'form-check-input',
                             'nestedInput' => false,
                             'templates' => [
-                                'inputContainer' => '<div class="col-sm-12 mb-3" {{type}}{{required}}">{{content}}</div>',
                                 'radioWrapper' => '<div class="form-check">{{input}}{{label}}</div>',
                                 'checkboxWrapper' => '<div class="form-check">{{input}}{{label}}</div>',
                                 'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
@@ -77,54 +86,85 @@
                                 'labelOption' => '<label class="form-check-label"{{attrs}}>{{text}}</label>'
                             ]
                         ]); ?>
-                <?php } elseif ($avaliacao['type'] === 'boolean') { ?>
+                    </div>
+                </div>
+            <?php } elseif ($avaliacao['type'] === 'boolean') { ?>
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <label class="fw-bold"><?= h($avaliacao['text']) ?></label>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-12">
                         <?= $this->Form->control('avaliacao' . $avaliacao['id'], [
                             'type' => 'radio',
                             'div' => false,
+                            'label' => false,
                             'default' => $respostaporpergunta['valor'] ?? '',
-                            'label' => ['text' => $avaliacao['text'], 'class' => 'd-block fw-bold mb-2'],
                             'options' => ['0' => 'Não', '1' => 'Sim'],
                             'class' => 'form-check-input',
                             'templates' => [
-                                'inputContainer' => '<div class="col-sm-12 mb-3" {{type}}{{required}}">{{content}}</div>',
                                 'radioWrapper' => '<div class="form-check">{{input}}{{label}}</div>',
                                 'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>'
                             ]
                         ]); ?>
-                <?php } elseif ($avaliacao['type'] === 'escala') { ?>
+                    </div>
+                </div>
+            <?php } elseif ($avaliacao['type'] === 'escala') { ?>
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <label class="fw-bold"><?= h($avaliacao['text']) ?></label>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-12">
                         <?= $this->Form->control('avaliacao' . $avaliacao['id'], [
                             'type' => 'number',
                             'div' => false,
+                            'label' => false,
                             'min' => 1,
                             'max' => 5,
-                            'label' => $avaliacao['text'],
                             'value' => $respostaporpergunta['valor'] ?? '',
                             'class' => 'form-control',
                         ]); ?>
-                <?php } elseif ($avaliacao['type'] === 'text' || $avaliacao['type'] === 'textarea') { ?>
+                    </div>
+                </div>
+            <?php } elseif ($avaliacao['type'] === 'text' || $avaliacao['type'] === 'textarea') { ?>
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <label class="fw-bold"><?= h($avaliacao['text']) ?></label>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-12">
                         <?= $this->Form->control('avaliacao' . $avaliacao['id'], [
                             'type' => $avaliacao['type'],
                             'div' => false,
-                            'label' => $avaliacao['text'],
+                            'label' => false,
                             'value' => $respostaporpergunta['valor'] ?? '',
                             'class' => 'form-control',
-                            'templates' => [
-                                'inputContainer' => '<div class="col-sm-12" {{type}}{{required}}">{{content}}</div>',
-                                'textarea' => '<textarea name="{{name}}"{{attrs}}>{{value}}</textarea>'
-                            ]
                         ]); ?>
-                <?php } else { ?>
-                        <?= $this->Form->setTemplates(['input' => '<div class="col-sm-9"><input type="{{type}}" name="{{name}}" class="form-control" {{attrs}}></div>']); ?>
+                    </div>
+                </div>
+            <?php } else { ?>
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <label class="fw-bold"><?= h($avaliacao['text']) ?></label>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-12">
                         <?= $this->Form->control('avaliacao' . $avaliacao['id'], [
                             'type' => 'text',
                             'div' => false,
-                            'label' => $avaliacao['text'],
+                            'label' => false,
                             'value' => $respostaporpergunta['valor'] ?? '',
                             'class' => 'form-control'
                         ]); ?>
-                <?php } ?>
+                    </div>
                 </div>
-                <?php } ?>
+            <?php } ?>
+            <?php } ?>
         </fieldset>
         <?= $this->Form->button(__('Confirma'), ['class' => 'btn btn-primary']) ?>
         <?= $this->Form->end() ?>

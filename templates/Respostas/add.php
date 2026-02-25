@@ -35,116 +35,179 @@
             ]);
             ?>
             <?php foreach ($questoes as $questao): ?>
-                <div class="row mb-3">
-                    <?php
-                    $opcoes = is_string($questao->options) ? json_decode($questao->options, true) : [];
+                <?php
+                $opcoes = is_string($questao->options) ? json_decode($questao->options, true) : [];
+                echo $this->Form->control('questao_text' . $questao->id, [
+                    'type' => 'hidden',
+                    'value' => $questao->text ?? ''
+                ]);
+                if ($questao->type === 'select') {
                     echo $this->Form->control('questao_text' . $questao->id, [
                         'type' => 'hidden',
-                        'value' => $questao->text ?? ''
+                        'value' => $opcoes
                     ]);
-                    if ($questao->type === 'select') {
-                        echo $this->Form->control('questao_text' . $questao->id, [
-                            'type' => 'hidden',
-                            'value' => $opcoes
-                        ]);
-                        echo $this->Form->control('avaliacao' . $questao->id, [
-                            'type' => $questao->type,
-                            'div' => false,
-                            'label' => ['text' => $questao->text, 'class' => 'd-block fw-bold mb-2'],
-                            'options' => $opcoes,
-                            'empty' => 'Seleciona',
-                            'class' => 'form-control',
-                            'templates' => [
-                                'inputContainer' => '<div class="col-sm-12" {{type}}{{required}}">{{content}}</div>',
-                                'select' => '<select class="form-select" name="{{name}}"{{attrs}}>{{content}}</select>'
-                            ]
-                        ]);
-                    } elseif ($questao->type === 'radio' || $questao->type === 'checkbox') {
-                        echo $this->Form->control('questao_text' . $questao->id, [
-                            'type' => 'hidden',
-                            'value' => $opcoes
-                        ]);
-                        echo $this->Form->control('avaliacao' . $questao->id, [
-                            'type' => $questao->type,
-                            'div' => false,
-                            'label' => ['text' => $questao->text, 'class' => 'd-block fw-bold mb-2'],
-                            'options' => $opcoes,
-                            'class' => 'form-check-input',
-                            'nestedInput' => false,
-                            'templates' => [
-                                'inputContainer' => '<div class="col-sm-12 mb-3" {{type}}{{required}}">{{content}}</div>',
-                                'radioWrapper' => '<div class="form-check">{{input}}{{label}}</div>',
-                                'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
-                                'checkboxWrapper' => '<div class="form-check">{{input}}{{label}}</div>',
-                                'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
-                                'labelOption' => '<label class="form-check-label"{{attrs}}>{{text}}</label>'
-                            ]
-                        ]);
-                        } elseif ($questao->type === 'boolean') {
-                            echo $this->Form->control('questao_text' . $questao->id, [
-                                'type' => 'hidden',
-                                'value' => $opcoes
+                    ?>
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <label class="fw-bold"><?= h($questao->text) ?></label>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            <?php
+                            echo $this->Form->control('avaliacao' . $questao->id, [
+                                'type' => $questao->type,
+                                'div' => false,
+                                'label' => false,
+                                'options' => $opcoes,
+                                'empty' => 'Selecione',
+                                'class' => 'form-select',
                             ]);
+                            ?>
+                        </div>
+                    </div>
+                    <?php
+                } elseif ($questao->type === 'radio' || $questao->type === 'checkbox') {
+                    echo $this->Form->control('questao_text' . $questao->id, [
+                        'type' => 'hidden',
+                        'value' => $opcoes
+                    ]);
+                    ?>
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <label class="fw-bold"><?= h($questao->text) ?></label>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            <?php
+                            echo $this->Form->control('avaliacao' . $questao->id, [
+                                'type' => $questao->type,
+                                'div' => false,
+                                'label' => false,
+                                'options' => $opcoes,
+                                'class' => 'form-check-input',
+                                'nestedInput' => false,
+                                'templates' => [
+                                    'radioWrapper' => '<div class="form-check">{{input}}{{label}}</div>',
+                                    'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
+                                    'checkboxWrapper' => '<div class="form-check">{{input}}{{label}}</div>',
+                                    'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}"{{attrs}}>',
+                                    'labelOption' => '<label class="form-check-label"{{attrs}}>{{text}}</label>'
+                                ]
+                            ]);
+                            ?>
+                        </div>
+                    </div>
+                    <?php
+                } elseif ($questao->type === 'boolean') {
+                    echo $this->Form->control('questao_text' . $questao->id, [
+                        'type' => 'hidden',
+                        'value' => $opcoes
+                    ]);
+                    ?>
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <label class="fw-bold"><?= h($questao->text) ?></label>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            <?php
                             echo $this->Form->control('avaliacao' . $questao->id, [
                                 'type' => 'radio',
                                 'div' => false,
+                                'label' => false,
                                 'default' => '0',
-                                'label' => ['text' => $questao->text, 'class' => 'd-block fw-bold mb-2'],
                                 'options' => ['0' => 'Não', '1' => 'Sim'],
                                 'class' => 'form-check-input',
                                 'templates' => [
-                                'inputContainer' => '<div class="col-sm-12 mb-3" {{type}}{{required}}">{{content}}</div>',
-                                'radioWrapper' => '<div class="form-check">{{input}}{{label}}</div>',
-                                'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
-                                'labelOption' => '<label class="form-check-label"{{attrs}}>{{text}}</label>',
-                            ]
-                        ]);
-                    } elseif ($questao->type === 'escala') {
-                        echo $this->Form->control('questao_text' . $questao->id, [
-                            'type' => 'hidden',
-                            'value' => $opcoes
-                        ]);
-                        echo $this->Form->control('avaliacao' . $questao->id, [
-                            'type' => 'number',
-                            'div' => false,
-                            'default' => 1,
-                            'min' => 1,
-                            'max' => 5,
-                            'label' => ['text' => $questao->text, 'class' => 'd-block fw-bold mb-2'],
-                            'class' => 'form-control',
-                        ]);
-                    } elseif ($questao->type === 'text' || $questao->type === 'textarea') {
-                        echo $this->Form->control('questao_text' . $questao->id, [
-                            'type' => 'hidden',
-                            'value' => $opcoes
-                        ]);
-                        echo $this->Form->control('avaliacao' . $questao->id, [
-                            'type' => $questao->type,
-                            'div' => false,
-                            'label' => ['text' => $questao->text, 'class' => 'd-block fw-bold mb-2'],
-                            'class' => 'form-control',
-                            'templates' => [
-                                'inputContainer' => '<div class="col-sm-12" {{type}}{{required}}">{{content}}</div>',
-                                'textarea' => '<textarea name="{{name}}"{{attrs}}>{{value}}</textarea>'
-                            ]
-                        ]);
-                    } else {
-                        echo $this->Form->control('questao_text' . $questao->id, [
-                            'type' => 'hidden',
-                            'value' => $opcoes  
-                        ]);
-                        echo $this->Form->control('avaliacao' . $questao->id, [
-                            'type' => 'text',
-                            'div' => false,
-                            'label' => ['text' => $questao->text, 'class' => 'd-block fw-bold mb-2'],
-                            'class' => 'form-control',
-                            'templates' => [
-                                'inputContainer' => '<div class="col-sm-12" {{type}}{{required}}">{{content}}</div>',
-                            ]
-                        ]);
-                    }
+                                    'radioWrapper' => '<div class="form-check">{{input}}{{label}}</div>',
+                                    'radio' => '<input type="radio" name="{{name}}" value="{{value}}"{{attrs}}>',
+                                    'labelOption' => '<label class="form-check-label"{{attrs}}>{{text}}</label>',
+                                ]
+                            ]);
+                            ?>
+                        </div>
+                    </div>
+                    <?php
+                } elseif ($questao->type === 'escala') {
+                    echo $this->Form->control('questao_text' . $questao->id, [
+                        'type' => 'hidden',
+                        'value' => $opcoes
+                    ]);
                     ?>
-                </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <label class="fw-bold"><?= h($questao->text) ?></label>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            <?php
+                            echo $this->Form->control('avaliacao' . $questao->id, [
+                                'type' => 'number',
+                                'div' => false,
+                                'label' => false,
+                                'default' => 1,
+                                'min' => 1,
+                                'max' => 5,
+                                'class' => 'form-control',
+                            ]);
+                            ?>
+                        </div>
+                    </div>
+                    <?php
+                } elseif ($questao->type === 'text' || $questao->type === 'textarea') {
+                    echo $this->Form->control('questao_text' . $questao->id, [
+                        'type' => 'hidden',
+                        'value' => $opcoes
+                    ]);
+                    ?>
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <label class="fw-bold"><?= h($questao->text) ?></label>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            <?php
+                            echo $this->Form->control('avaliacao' . $questao->id, [
+                                'type' => $questao->type,
+                                'div' => false,
+                                'label' => false,
+                                'class' => 'form-control',
+                            ]);
+                            ?>
+                        </div>
+                    </div>
+                    <?php
+                } else {
+                    echo $this->Form->control('questao_text' . $questao->id, [
+                        'type' => 'hidden',
+                        'value' => $opcoes
+                    ]);
+                    ?>
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <label class="fw-bold"><?= h($questao->text) ?></label>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            <?php
+                            echo $this->Form->control('avaliacao' . $questao->id, [
+                                'type' => 'text',
+                                'div' => false,
+                                'label' => false,
+                                'class' => 'form-control',
+                            ]);
+                            ?>
+                        </div>
+                    </div>
+                    <?php
+                }
+                ?>
             <?php endforeach; ?>
             <?php
             echo $this->Form->control('created', [

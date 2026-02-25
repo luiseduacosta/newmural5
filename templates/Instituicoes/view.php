@@ -86,7 +86,7 @@
                     <td><?= h($instituicao->email) ?></td>
                 </tr>
                 <tr>
-                    <th><?= __('Url') ?></th>
+                    <th><?= __('Endereço do site') ?></th>
                     <td><?= h($instituicao->url) ?></td>
                 </tr>
                 <tr>
