@@ -32,7 +32,7 @@ class EstagiarioPolicy
          */
         public function canEdit(?IdentityInterface $user, Estagiario $estagiario)
         {
-                return isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2');
+                return isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2' || $user->categoria == '3');
         }
 
         /**

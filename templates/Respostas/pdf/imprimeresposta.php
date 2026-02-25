@@ -18,8 +18,8 @@ use Cake\I18n\DateTime;
 <div class="container mt-4">
     <div class="card">
         <div class="card-body" style="font-size: 12px;">
-            <p><strong>Aluno(a):</strong> <?= $resposta->estagiario->aluno->nome ?><span><strong>DRE:</strong> <?= $resposta->estagiario->aluno->registro ?></span></p>
-            <p><strong>Supervisor(a):</strong> <?= $resposta->estagiario->supervisor->nome ?><span><strong>CRESS:</strong> <?= $resposta->estagiario->supervisor->cress ?></span></p>
+            <p><strong>Aluno(a):</strong> <?= $resposta->estagiario->aluno->nome ?><span>&nbsp;<strong>DRE:</strong> <?= $resposta->estagiario->aluno->registro ?></span></p>
+            <p><strong>Supervisor(a):</strong> <?= $resposta->estagiario->supervisor->nome ?><span>&nbsp;<strong>CRESS:</strong> <?= $resposta->estagiario->supervisor->cress ?></span></p>
             <p><strong>Instituição:</strong> <?= $resposta->estagiario->instituicao->instituicao ?></p>
             <p><strong>Período:</strong> <?= $resposta->estagiario->periodo ?></p>
             <p><strong>Nível de estágio:</strong> <?= $resposta->estagiario->nivel ?></p>
@@ -56,7 +56,7 @@ foreach ($perguntas as $key => $value):
 
 <p style="text-align:right; line-height:100%;">
 <?php $today = new DateTime('now') ?>
-Rio de Janeiro, <?= $today->i18nFormat('dd de MMMM de yyyy', null, 'pt_BR'); ?>
+Rio de Janeiro, <?= $today->i18nFormat('dd \'de\' MMMM \'de\' yyyy', null, 'pt_BR'); ?>
 </p>
 
 <br />

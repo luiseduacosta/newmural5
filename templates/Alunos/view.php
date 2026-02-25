@@ -66,7 +66,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab" href="#inscricoes" role="tab" aria-controls="inscricoes"
-                    aria-selected="false">Inscrições para estágio</a>
+                    aria-selected="false">Inscrições para seleção</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab" href="#estagios" role="tab" aria-controls="estagios"

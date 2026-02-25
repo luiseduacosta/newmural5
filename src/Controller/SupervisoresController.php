@@ -73,7 +73,7 @@ class SupervisoresController extends AppController
             $this->Flash->error(__('Supervisora não encontrada.'));
             return $this->redirect(['action' => 'index']);
         }
-        
+
         try {
             $this->Authorization->authorize($supervisor);
         } catch (\Authorization\Exception\ForbiddenException $e) {

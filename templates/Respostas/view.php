@@ -18,10 +18,10 @@ use Cake\I18n\Time;
             <span class="navbar-toggler-icon"></span>
         </button>
         <ul class="navbar-nav collapse navbar-collapse" id="resposta">
-            <li class="nav-item">
-                <?= $this->Html->link(__('Listar'), ['action' => 'index'], ['class' => 'btn btn-primary me-1']) ?>
-            </li>
             <?php if (isset($user->categoria) && $user->categoria == '1'): ?>
+                <li class="nav-item">
+                    <?= $this->Html->link(__('Listar'), ['action' => 'index'], ['class' => 'btn btn-primary me-1']) ?>
+                </li>
                 <li class="nav-item">
                     <?= $this->Html->link(__('Editar'), ['action' => 'edit', $resposta->id], ['class' => 'btn btn-primary me-1']) ?>
                 </li>
@@ -31,13 +31,19 @@ use Cake\I18n\Time;
                 <li class="nav-item">
                     <?= $this->Html->link(__('Nova'), ['action' => 'add', '?' => ['estagiario_id' => $resposta->estagiario->id]], ['class' => 'btn btn-primary me-1']) ?>
                 </li>
-                <?php if (isset($user->supervisor_id)): ?>
+                <?php endif ?>
+                <?php if (isset($user->supervisor_id) && ($user->supervisor_id == $resposta->estagiario->supervisor_id)): ?>
                     <li class="nav-item">
                         <?= $this->Html->link(__('Supervisor(a)'), ['controller' => 'Supervisores', 'action' => 'view', '?' => ['id' => $user->supervisor_id]], ['class' => 'btn btn-primary me-1']) ?>
                     </li>
+                    <li class="nav-item">
+                        <?= $this->Html->link(__('Editar'), ['action' => 'edit', $resposta->id], ['class' => 'btn btn-primary me-1']) ?>
+                    </li>
+                    <li class="nav-item">
+                        <?= $this->Form->postLink(__('Excluir'), ['action' => 'delete', $resposta->id], ['confirm' => __('Tem certeza que deseja excluir este registo # {0}?', $resposta->id), 'class' => 'btn btn-danger me-1']) ?>
+                    </li>
                 <?php endif ?>
-            <?php endif ?>
-            <?php if (isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2')): ?>
+            <?php if (isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2' || $user->categoria == '4')): ?>
                 <li class="nav-item">
                     <?= $this->Html->link(__('Imprimir'), ['action' => 'imprimeresposta', '?' => ['estagiario_id' => $resposta->estagiario->id]], ['class' => 'btn btn-primary me-1']) ?>
                 </li>

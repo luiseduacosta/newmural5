@@ -13,12 +13,12 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <ul class="navbar-nav collapse navbar-collapse" id="navbarTogglerSupervisores">
-        <?= $this->Html->link(
-            __("Listar supervisores(as)"),
-            ["action" => "index"],
-            ["class" => "btn btn-primary me-1"],
-        ) ?>
         <?php if (isset($user) && $user->categoria == "1"): ?>
+            <?= $this->Html->link(
+                __("Listar supervisores(as)"),
+                ["action" => "index"],
+                ["class" => "btn btn-primary me-1"],
+            ) ?>
             <?= $this->Html->link(
                 __("Editar supervisor(a)"),
                 ["action" => "edit", $supervisor->id],
@@ -187,7 +187,7 @@
 
         <div id="instituicao" class="tab-pane container fade">
             <h4><?= __("Instituição de estágio") ?></h4>
-            <?php if ($supervisor->hasValue('instituicao')): ?>
+            <?php if ($supervisor->hasValue('instituicoes')): ?>
                 <table class="table table-striped table-hover table-responsive">
                     <thead>
                     <tr>

@@ -629,7 +629,13 @@ class EstagiariosController extends AppController
             $this->Flash->error(__("Estagiário não encontrado."));
             return $this->redirect(["action" => "index"]);
         }
-
+        
+        $user = $this->Authentication->getIdentity();
+        if ($user && $user->categoria == '3' && $estagiario->professor_id != $user->professor_id) {
+            $this->Flash->error(__('Acesso negado. Você não tem permissão para editar este estagiário.'));
+            return $this->redirect(['action' => 'index']);
+        }
+        
         try {
             $this->Authorization->authorize($estagiario);
         } catch (\Authorization\Exception\ForbiddenException $e) {

@@ -371,6 +371,9 @@ use Cake\I18n\Date;
         </table>
     <?php endif; ?>
 
+    </div>
+</div>
+
 <script type="text/javascript">
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -419,14 +422,15 @@ function saveRow(row) {
         cell.textContent = value;
         data[fieldName] = value;
     });
-    
+ 
     $.ajax({
         url: '<?= $this->Url->build(['controller' => 'Estagiarios', 'action' => 'edit']) ?>',
         type: 'POST',
         dataType: 'json',
         contentType: 'application/x-www-form-urlencoded',
         headers: {
-            'X-CSRF-Token': '<?= $this->request->getAttribute('csrfToken') ?>'
+            'X-CSRF-Token': '<?= $this->request->getAttribute('csrfToken') ?>',
+            'Accept': 'application/json'
         },
         data: $.param(data),
         success: function(response) {
@@ -450,7 +454,8 @@ function saveRow(row) {
             }
         },
         error: function(xhr, status, error) {
-            console.error('Error:', error);
+            console.error('Error details:', xhr.responseText);
+            // console.error('Error:', error);
             alert('Erro ao salvar as alterações. Verifique o console para mais detalhes.');
             // Revert state if needed or keep editable
         }
@@ -467,5 +472,3 @@ function cancelEdit(row) {
 
 </script>    
 
-    </div>
-</div>
