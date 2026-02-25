@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Cake\I18n\DateTime;
-use Cake\I18n\I18n;
+use Authorization\Exception\ForbiddenException;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Exception;
 
 /**
  * Folhadeatividades Controller
@@ -25,13 +26,15 @@ class FolhadeatividadesController extends AppController
     {
         try {
             $this->Authorization->authorize($this->Folhadeatividades);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
         $estagiario_id = $this->getRequest()->getQuery('estagiario_id');
         if ($estagiario_id === null) {
             $this->Flash->error(__('Selecione o estagiário e o período da folha de atividades'));
+
             return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
         }
 
@@ -48,7 +51,7 @@ class FolhadeatividadesController extends AppController
         if ($query->count() == 0) {
             $this->Flash->error(__('Nenhum registro encontrado.'));
         }
-        
+
         $folhadeatividades = $this->paginate($query);
         $this->set(compact('folhadeatividades', 'estagiario'));
     }
@@ -60,34 +63,37 @@ class FolhadeatividadesController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view(?string $id = null)
     {
         $this->Authorization->skipAuthorization();
-        
+
         try {
              $folhadeatividade = $this->Folhadeatividades->get($id, [
-                'contain' => ['Estagiarios' => ['Alunos']]
-            ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+                'contain' => ['Estagiarios' => ['Alunos']],
+             ]);
+        } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('Atividade não encontrada.'));
-            return $this->redirect(['action' => 'index']);    
+
+            return $this->redirect(['action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($folhadeatividade);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
         if (isset($this->user) && $this->user->categoria == '2') {
              // Student check
-             if ($this->user->aluno_id != $folhadeatividade->estagiario->aluno_id) {
-                  $this->Flash->error(__('Você não tem permissão para acessar esta página'));
-                  return $this->redirect(['controller' => 'Alunos', 'action' => 'view', $this->user->aluno_id]);
-             }
+            if ($this->user->aluno_id != $folhadeatividade->estagiario->aluno_id) {
+                 $this->Flash->error(__('Você não tem permissão para acessar esta página'));
+
+                 return $this->redirect(['controller' => 'Alunos', 'action' => 'view', $this->user->aluno_id]);
+            }
         }
-        
+
         $this->set(compact('folhadeatividade'));
     }
 
@@ -97,49 +103,53 @@ class FolhadeatividadesController extends AppController
      * @param string|null $id Folhadeatividade id.
      * @return \Cake\Http\Response|null|void Renders view
      */
-    public function atividade($id = null)
+    public function atividade(?string $id = null)
     {
         $this->Authorization->skipAuthorization();
         $estagiario_id = $this->getRequest()->getQuery('estagiario_id');
-        
-        // If ID provided, maybe it's Folhadeatividade ID? Original logic was murky. 
+
+        // If ID provided, maybe it's Folhadeatividade ID? Original logic was murky.
         // Original logic: if $id passed, find Estagiario via Folhadeatividade. Else use getQuery('estagiario_id').
-        
+
         if ($id) {
-             try {
+            try {
                 $activity = $this->Folhadeatividades->get($id, ['contain' => 'Estagiarios']);
                 $estagiario_id = $activity->estagiario_id;
-             } catch(\Exception $e) {
+            } catch (Exception $e) {
                 $this->Flash->error(__('Atividade não encontrada.'));
-             }
+            }
         }
-        
+
         if (!$estagiario_id) {
             $this->Flash->error(__('Selecione o estagiário'));
+
             return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
         }
-        
+
         // Fetch Estagiario with all details
         $folhadeatividade = $this->Folhadeatividades->Estagiarios->find()
              ->where(['Estagiarios.id' => $estagiario_id])
              ->contain(['Folhadeatividades' => ['sort' => ['dia' => 'ASC']], 'Alunos', 'Supervisores', 'Instituicoes', 'Professores'])
              ->first();
-             
+
         if (!$folhadeatividade) {
             $this->Flash->error(__('Estagiário não encontrado'));
+
             return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
         }
-        
+
         // Security check
         if (isset($this->user) && $this->user->categoria == '2') {
-             if ($this->user->aluno_id != $folhadeatividade->aluno_id) {
-                  $this->Flash->error(__('Você não tem permissão para acessar esta página'));
-                  return $this->redirect(['controller' => 'Alunos', 'action' => 'view', $this->user->aluno_id]);
-             }
+            if ($this->user->aluno_id != $folhadeatividade->aluno_id) {
+                 $this->Flash->error(__('Você não tem permissão para acessar esta página'));
+
+                 return $this->redirect(['controller' => 'Alunos', 'action' => 'view', $this->user->aluno_id]);
+            }
         }
-        
+
         if (empty($folhadeatividade->folhadeatividades)) {
             $this->Flash->error(__('Não há folha de atividades para este estagiário'));
+
             return $this->redirect(['controller' => 'Folhadeatividades', 'action' => 'add', '?' => ['estagiario_id' => $estagiario_id]]);
         }
 
@@ -152,24 +162,26 @@ class FolhadeatividadesController extends AppController
      * @param string|null $id Estagiário id (unused in sig, used via query)
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
-    public function add($id = NULL)
+    public function add()
     {
         $this->Authorization->skipAuthorization();
         $estagiario_id = $this->getRequest()->getQuery('estagiario_id');
-        
+
         if ($estagiario_id === null) {
             $this->Flash->error(__('Selecione o estagiário'));
+
             return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
         }
-        
+
         $estagiario = $this->Folhadeatividades->Estagiarios
             ->find()
             ->contain(['Alunos'])
             ->where(['Estagiarios.id' => $estagiario_id])
             ->first();
-            
+
         if (!$estagiario) {
             $this->Flash->error(__('Estagiário não encontrado'));
+
             return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
         }
 
@@ -177,15 +189,17 @@ class FolhadeatividadesController extends AppController
 
         try {
             $this->Authorization->authorize($folhadeatividade);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
-        
+
         if ($this->request->is('post')) {
             $folhadeatividade = $this->Folhadeatividades->patchEntity($folhadeatividade, $this->request->getData());
             if ($this->Folhadeatividades->save($folhadeatividade)) {
                 $this->Flash->success(__('Atividades cadastrada!'));
+
                 return $this->redirect(['controller' => 'Folhadeatividades', 'action' => 'atividade', '?' => ['estagiario_id' => $estagiario_id]]);
             }
             $this->Flash->error(__('Atividade não foi cadastrada. Tente mais uma vez.'));
@@ -201,21 +215,23 @@ class FolhadeatividadesController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit(?string $id = null)
     {
         try {
             $folhadeatividade = $this->Folhadeatividades->get($id, [
                 'contain' => [],
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('Registro não encontrado.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($folhadeatividade);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
@@ -223,17 +239,18 @@ class FolhadeatividadesController extends AppController
             $folhadeatividade = $this->Folhadeatividades->patchEntity($folhadeatividade, $this->request->getData());
             if ($this->Folhadeatividades->save($folhadeatividade)) {
                 $this->Flash->success(__('Atividade atualizada.'));
+
                 return $this->redirect(['action' => 'view', $id]);
             }
             $this->Flash->error(__('Não foi possível atualizar. Tente outra vez.'));
         }
-        
+
         // Find Estagiario for context
         $estagiario = $this->Folhadeatividades->Estagiarios->find()
             ->where(['Estagiarios.id' => $folhadeatividade->estagiario_id])
             ->contain(['Alunos'])
             ->first();
-            
+
         $this->set(compact('folhadeatividade', 'estagiario'));
     }
 
@@ -244,20 +261,22 @@ class FolhadeatividadesController extends AppController
      * @return \Cake\Http\Response|null|void Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete(?string $id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
         try {
             $folhadeatividade = $this->Folhadeatividades->get($id);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('Registro não encontrado.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($folhadeatividade);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
@@ -266,6 +285,7 @@ class FolhadeatividadesController extends AppController
         } else {
             $this->Flash->error(__('Folha de atividade não excluída.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 
@@ -275,27 +295,30 @@ class FolhadeatividadesController extends AppController
      * @param string|null $id Folhadeatividade id.
      * @return \Cake\Http\Response|null|void Redirects to index.
      */
-    public function folhadeatividadespdf($id = NULL)
+    public function folhadeatividadespdf(?string $id = null)
     {
         $estagiario_id = $this->getRequest()->getQuery('estagiario_id');
         $this->Authorization->skipAuthorization();
-        
+
         if (is_null($estagiario_id)) {
             // Try to use $id as fallback if needed? Or error.
-            if ($id) $estagiario_id = $id; // Not guaranteed but legacy mixup happens
-            else {
+            if ($id) {
+                $estagiario_id = $id; // Not guaranteed but legacy mixup happens
+            } else {
                 $this->Flash->error(__('Selecione o estagiário e o período da folha de atividades'));
+
                 return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
             }
         }
-        
+
         $estagiario = $this->Folhadeatividades->Estagiarios->find()
             ->contain(['Folhadeatividades' => ['sort' => ['dia' => 'ASC']], 'Alunos', 'Professores', 'Instituicoes', 'Supervisores'])
             ->where(['Estagiarios.id' => $estagiario_id])
             ->first();
-            
+
         if (!$estagiario) {
              $this->Flash->error(__('Estagiário não encontrado.'));
+
              return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
         }
 
@@ -308,8 +331,8 @@ class FolhadeatividadesController extends AppController
             [
                 'orientation' => 'portrait',
                 'download' => true,
-                'filename' => 'folha_de_atividades_' . $estagiario->aluno->nome . '.pdf'
-            ]
+                'filename' => 'folha_de_atividades_' . $estagiario->aluno->nome . '.pdf',
+            ],
         );
         $this->set('folha', $folha);
         $this->set('estagiario', $estagiario);

@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Authorization\Exception\ForbiddenException;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Exception;
+
 /**
  * Instituicoes Controller
  *
@@ -14,22 +18,23 @@ class InstituicoesController extends AppController
 {
     /**
      * Index method
-     * 
+     *
      * @return \Cake\Http\Response|null|void Renders view
      */
-    public function index($instituicao = null)
+    public function index()
     {
         try {
             $this->Authorization->authorize($this->Instituicoes);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
         $query = $this->Instituicoes->find()->contain(['Areainstituicoes']);
-        
+
         $query->order(['Instituicoes.instituicao' => 'ASC']);
-        
+
         $instituicoes = $this->paginate($query);
         $this->set(compact('instituicoes'));
     }
@@ -41,24 +46,26 @@ class InstituicoesController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view(?string $id = null)
     {
         // Aumentar a memória
         ini_set('memory_limit', '512M');
- 
+
         try {
             $instituicao = $this->Instituicoes->get($id, [
-                'contain' => ['Areainstituicoes', 'Supervisores', 'Estagiarios' => ['Alunos', 'Instituicoes', 'Professores', 'Supervisores', 'Turmaestagios'], 'Muralestagios', 'Visitas']
+                'contain' => ['Areainstituicoes', 'Supervisores', 'Estagiarios' => ['Alunos', 'Instituicoes', 'Professores', 'Supervisores', 'Turmaestagios'], 'Muralestagios', 'Visitas'],
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('Instituição não encontrada.'));
+
             return $this->redirect(['action' => 'index']);
         }
- 
+
         try {
             $this->Authorization->authorize($instituicao);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
@@ -75,8 +82,9 @@ class InstituicoesController extends AppController
         $instituicao = $this->Instituicoes->newEmptyEntity();
         try {
             $this->Authorization->authorize($instituicao);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
@@ -84,6 +92,7 @@ class InstituicoesController extends AppController
             $instituicao = $this->Instituicoes->patchEntity($instituicao, $this->request->getData());
             if ($this->Instituicoes->save($instituicao)) {
                 $this->Flash->success(__('Instituição de estágio criada.'));
+
                 return $this->redirect(['action' => 'view', $instituicao->id]);
             }
             $this->Flash->error(__('Não foi possível criar a instituição de estágio. Tente novamente.'));
@@ -100,21 +109,23 @@ class InstituicoesController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit(?string $id = null)
     {
         try {
             $instituicao = $this->Instituicoes->get($id, [
                 'contain' => ['Supervisores'],
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('Instituição não encontrada.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($instituicao);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
@@ -122,6 +133,7 @@ class InstituicoesController extends AppController
             $instituicao = $this->Instituicoes->patchEntity($instituicao, $this->request->getData());
             if ($this->Instituicoes->save($instituicao)) {
                 $this->Flash->success(__('Instituição de estágio atualizada.'));
+
                 return $this->redirect(['action' => 'view', $instituicao->id]);
             }
             $this->Flash->error(__('Instituição de estágio não foi atualizada.'));
@@ -138,29 +150,68 @@ class InstituicoesController extends AppController
      * @return \Cake\Http\Response|null|void Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete(?string $id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
         try {
             $instituicao = $this->Instituicoes->get($id);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('Instituição não encontrada.'));
+
             return $this->redirect(['action' => 'index']);
         }
-        
+
         try {
             $this->Authorization->authorize($instituicao);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
-        
+
+        // Check for associated records to prevent data integrity issues
+        $supervisoresCount = $this->Instituicoes->Supervisores->find()
+            ->where(['instituicao_id' => $id])
+            ->count();
+
+        $estagiariosCount = $this->Instituicoes->Estagiarios->find()
+            ->where(['instituicao_id' => $id])
+            ->count();
+
+        $visitasCount = $this->Instituicoes->Visitas->find()
+            ->where(['instituicao_id' => $id])
+            ->count();
+
+        $muralestagiosCount = $this->Instituicoes->Muralestagios->find()
+            ->where(['instituicao_id' => $id])
+            ->count();
+
+        if ($supervisoresCount > 0 || $estagiariosCount > 0 || $visitasCount > 0 || $muralestagiosCount > 0) {
+            $this->Flash->error(__('Não é possível excluir a instituição de estágio. Existem registros associados:'));
+            if ($supervisoresCount > 0) {
+                $this->Flash->error(__("- {$supervisoresCount} supervisor(es)"));
+            }
+            if ($estagiariosCount > 0) {
+                $this->Flash->error(__("- {$estagiariosCount} estágio(s)"));
+            }
+            if ($visitasCount > 0) {
+                $this->Flash->error(__("- {$visitasCount} visita(s)"));
+            }
+            if ($muralestagiosCount > 0) {
+                $this->Flash->error(__("- {$muralestagiosCount} mural(is) de estágio"));
+            }
+
+            return $this->redirect(['action' => 'view', $id]);
+        }
+
         if ($this->Instituicoes->delete($instituicao)) {
             $this->Flash->success(__('Instituição de estágio excluída.'));
         } else {
             $this->Flash->error(__('Instituição de estágio não foi excluída.'));
+
             return $this->redirect(['action' => 'view', $instituicao->id]);
         }
+
         return $this->redirect(['action' => 'index']);
     }
 
@@ -180,19 +231,16 @@ class InstituicoesController extends AppController
         try {
             $supervisores = $this->Instituicoes->Supervisores->find('list', [
                 'keyField' => 'id',
-                'valueField' => 'nome'
+                'valueField' => 'nome',
             ])
-            ->matching('Instituicoes', function ($q) use ($instituicao_id) {
-                return $q->where(['Instituicoes.id' => $instituicao_id]);
-            })
+            ->where(['instituicao_id' => $instituicao_id])
             ->order(['nome' => 'ASC'])
             ->toArray();
 
             return $this->response
                 ->withType('application/json')
                 ->withStringBody(json_encode($supervisores));
-
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->response
                 ->withStatus(500)
                 ->withType('application/json')
@@ -213,18 +261,18 @@ class InstituicoesController extends AppController
             $query = $this->Instituicoes->find();
             $query->where(['instituicao LIKE' => "%{$instituicao}%"]);
             $query->order(['instituicao' => 'ASC']);
-            
+
             if ($query->count() == 0) {
                 $this->Flash->error(__('Nenhum(a) instituição de estágio encontrado com o nome: ' . $instituicao));
             }
-            
+
             $instituicoes = $this->paginate($query);
             $this->set('instituicoes', $instituicoes);
             $this->render('index');
-            
         } else {
             $this->Flash->error(__('Digite um nome para busca'));
-            return $this->redirect(["action" => "index"]);
+
+            return $this->redirect(['action' => 'index']);
         }
     }
 }

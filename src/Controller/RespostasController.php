@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Cake\I18n\DateTime;
-use Cake\I18n\I18n;
+use Authorization\Exception\ForbiddenException;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Exception;
 
 /**
  * Respostas Controller
@@ -25,8 +26,9 @@ class RespostasController extends AppController
     {
         try {
             $this->Authorization->authorize($this->Respostas);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
 
@@ -45,7 +47,7 @@ class RespostasController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view(?string $id = null)
     {
         $this->Authorization->skipAuthorization();
         $resposta = null;
@@ -55,12 +57,13 @@ class RespostasController extends AppController
                 $resposta = $this->Respostas->find()
                     ->contain(['Estagiarios' => ['Alunos', 'Supervisores']])
                     ->where(['Respostas.estagiario_id' => $estagiario_id])
-                    ->first();   
+                    ->first();
                 if (!$resposta) {
                     $this->Flash->error(__('Nenhuma avaliação encontrada para o estagiário ID {0}.', $estagiario_id));
+
                     return $this->redirect(['controller' => 'Respostas', 'action' => 'add', '?' => ['estagiario_id' => $estagiario_id]]);
-                } 
-            } 
+                }
+            }
         }
 
         if (!$resposta) {
@@ -69,19 +72,21 @@ class RespostasController extends AppController
             ]);
             if (!$resposta) {
                 $this->Flash->error(__('Nenhuma avaliação encontrada para o estagiário ID {0}.', $estagiario_id));
+
                 return $this->redirect(['controller' => 'Respostas', 'action' => 'add', '?' => ['estagiario_id' => $estagiario_id]]);
             }
         }
-        
+
         try {
             $this->Authorization->authorize($resposta);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
         $respostasData = json_decode($resposta->response, true) ?? [];
         $avaliacoes = [];
-        
+
         foreach ($respostasData as $key => $value) {
             if (is_array($value) && isset($value['pergunta'])) {
                 $avaliacoes[$value['pergunta']] = $value['texto_valor'] ?? $value['valor'];
@@ -89,7 +94,7 @@ class RespostasController extends AppController
             }
 
             if (str_starts_with($key, 'avaliacao')) {
-                $pergunta_id = (int) substr($key, 9);
+                $pergunta_id = (int)substr($key, 9);
                 if ($pergunta_id > 0) {
                     try {
                         $pergunta = $this->fetchTable('Questoes')->get($pergunta_id);
@@ -103,13 +108,13 @@ class RespostasController extends AppController
                         } else {
                             $avaliacoes[$pergunta->text] = $value;
                         }
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         // Ignore missing questions
                     }
                 }
             }
         }
-        
+
         $this->set(compact('resposta', 'avaliacoes'));
     }
 
@@ -122,38 +127,42 @@ class RespostasController extends AppController
     {
         $this->Authorization->skipAuthorization();
         $estagiario_id = $this->request->getQuery('estagiario_id');
-        
+
         if (!$estagiario_id) {
             $this->Flash->error(__('Estagiário não informado.'));
+
             return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
         }
-        
+
         $estagiario = $this->fetchTable('Estagiarios')->find()
             ->contain(['Alunos'])
             ->where(['Estagiarios.id' => $estagiario_id])
             ->first();
-            
+
         if (!$estagiario) {
             $this->Flash->error(__('Estagiário não localizado.'));
+
             return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
         }
 
         $respostaExistente = $this->Respostas->find()
             ->where(['Respostas.estagiario_id' => $estagiario_id])
             ->first();
-                
+
         if ($respostaExistente) {
             $this->Flash->error(__('Este estagiário já possui uma avaliação preenchida.'));
+
             return $this->redirect(['controller' => 'Respostas', 'action' => 'view', $respostaExistente->id]);
         }
-        
+
         $this->set('estagiario', $estagiario);
 
-        $resposta = $this->Respostas->newEmptyEntity();     
+        $resposta = $this->Respostas->newEmptyEntity();
         try {
             $this->Authorization->authorize($resposta);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
 
@@ -164,11 +173,13 @@ class RespostasController extends AppController
             $saveData['estagiario_id'] = $estagiario_id;
 
             // Enrich response data with question text and values
-            $questoes = $this->fetchTable('Questoes')->find()->all()->combine('id', function($entity) { return $entity; })->toArray();
+            $questoes = $this->fetchTable('Questoes')->find()->all()->combine('id', function ($entity) {
+                return $entity;
+            })->toArray();
             $enrichedData = [];
             foreach ($data as $key => $value) {
                 if (str_starts_with($key, 'avaliacao')) {
-                    $pergunta_id = (int) substr($key, 9);
+                    $pergunta_id = (int)substr($key, 9);
                     if (isset($questoes[$pergunta_id])) {
                         $questao = $questoes[$pergunta_id];
                         $texto_valor = $value;
@@ -184,7 +195,7 @@ class RespostasController extends AppController
                         $enrichedData[$key] = [
                             'pergunta' => $questao->text,
                             'valor' => $value,
-                            'texto_valor' => $texto_valor
+                            'texto_valor' => $texto_valor,
                         ];
                     } else {
                         $enrichedData[$key] = $value;
@@ -193,17 +204,18 @@ class RespostasController extends AppController
                     $enrichedData[$key] = $value;
                 }
             }
-            
-            $saveData['response'] = json_encode($enrichedData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);            
+
+            $saveData['response'] = json_encode($enrichedData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             $resposta = $this->Respostas->patchEntity($resposta, $saveData);
-            
+
             if ($this->Respostas->save($resposta)) {
-                $this->Flash->success(__('Respuesta inserida.'));
+                $this->Flash->success(__('Resposta inserida.'));
+
                 return $this->redirect(['action' => 'view', $resposta->id]);
             }
-            $this->Flash->error(__('Respuesta não inserida. Tente novamente.'));
+            $this->Flash->error(__('Resposta não inserida. Tente novamente.'));
         }
-        
+
         $questoes = $this->fetchTable('Questoes')->find()->all();
         $this->set(compact('resposta', 'questoes', 'estagiario_id'));
     }
@@ -215,36 +227,38 @@ class RespostasController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit(?string $id = null)
     {
         try {
             $resposta = $this->Respostas->get($id, [
                 'contain' => ['Questionarios'],
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('Registro não encontrado.'));
+
             return $this->redirect(['controller' => 'Respostas', 'action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($resposta);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
 
         $estagiario = $this->fetchTable('Estagiarios')->get($resposta->estagiario_id, [
-            'contain' => ['Alunos']
+            'contain' => ['Alunos'],
         ]);
-        
+
         $respostasUnique = json_decode($resposta->response, true);
         $avaliacoes = [];
         $i = 0;
-        
+
         if ($respostasUnique) {
             foreach ($respostasUnique as $key => $value) {
                 if (str_starts_with($key, 'avaliacao')) {
-                    $pergunta_id = (int) substr($key, 9);
+                    $pergunta_id = (int)substr($key, 9);
                     try {
                         $pergunta = $this->fetchTable('Questoes')->get($pergunta_id);
                         $avaliacoes[$i]['id'] = $pergunta->id;
@@ -253,14 +267,14 @@ class RespostasController extends AppController
                         $avaliacoes[$i]['type'] = $pergunta->type;
                         $avaliacoes[$i]['options'] = $pergunta->options;
                         $avaliacoes[$i]['ordem'] = $pergunta->ordem;
-                        
+
                         if (in_array($pergunta->type, ['select', 'radio', 'checkbox', 'boolean'])) {
                             $avaliacoes[$i]['options'] = json_decode($pergunta->options, true);
                         } else {
                             $avaliacoes[$i]['opcoes'] = null;
                         }
                         $i++;
-                    } catch(\Exception $e) {
+                    } catch (Exception $e) {
                          // Skip
                     }
                 }
@@ -269,43 +283,46 @@ class RespostasController extends AppController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
              $data = $this->request->getData();
-             
+
              // Enrich response data with question text and values
-             $questoes = $this->fetchTable('Questoes')->find()->all()->combine('id', function($entity) { return $entity; })->toArray();
+             $questoes = $this->fetchTable('Questoes')->find()->all()->combine('id', function ($entity) {
+                return $entity;
+             })->toArray();
              $enrichedData = [];
-             foreach ($data as $key => $value) {
-                 if (str_starts_with($key, 'avaliacao')) {
-                     $pergunta_id = (int) substr($key, 9);
-                     if (isset($questoes[$pergunta_id])) {
-                         $questao = $questoes[$pergunta_id];
-                         $texto_valor = $value;
-                         if (in_array($questao->type, ['select', 'radio', 'checkbox', 'boolean'])) {
-                             $opcoes = json_decode($questao->options, true);
-                             if ($questao->type === 'boolean') {
-                                 $opcoes = ['0' => 'Não', '1' => 'Sim'];
-                             }
-                             if (is_array($opcoes) && isset($opcoes[$value])) {
-                                 $texto_valor = $opcoes[$value];
-                             }
-                         }
-                         $enrichedData[$key] = [
-                             'pergunta' => $questao->text,
-                             'valor' => $value,
-                             'texto_valor' => $texto_valor
-                         ];
-                     } else {
-                         $enrichedData[$key] = $value;
-                     }
-                 } else {
-                     $enrichedData[$key] = $value;
-                 }
-             }
+            foreach ($data as $key => $value) {
+                if (str_starts_with($key, 'avaliacao')) {
+                    $pergunta_id = (int)substr($key, 9);
+                    if (isset($questoes[$pergunta_id])) {
+                        $questao = $questoes[$pergunta_id];
+                        $texto_valor = $value;
+                        if (in_array($questao->type, ['select', 'radio', 'checkbox', 'boolean'])) {
+                            $opcoes = json_decode($questao->options, true);
+                            if ($questao->type === 'boolean') {
+                                $opcoes = ['0' => 'Não', '1' => 'Sim'];
+                            }
+                            if (is_array($opcoes) && isset($opcoes[$value])) {
+                                $texto_valor = $opcoes[$value];
+                            }
+                        }
+                        $enrichedData[$key] = [
+                            'pergunta' => $questao->text,
+                            'valor' => $value,
+                            'texto_valor' => $texto_valor,
+                        ];
+                    } else {
+                        $enrichedData[$key] = $value;
+                    }
+                } else {
+                    $enrichedData[$key] = $value;
+                }
+            }
              $resposta->response = json_encode($enrichedData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-             
-             if ($this->Respostas->save($resposta)) {
-                 $this->Flash->success(__('Resposta atualizada.'));
-                 return $this->redirect(['controller' => 'Respostas', 'action' => 'view', $resposta->id]);
-             }
+
+            if ($this->Respostas->save($resposta)) {
+                $this->Flash->success(__('Resposta atualizada.'));
+
+                return $this->redirect(['controller' => 'Respostas', 'action' => 'view', $resposta->id]);
+            }
              $this->Flash->error(__('Resposta não atualizada. Tente novamente.'));
         }
         $this->set(compact('resposta', 'avaliacoes', 'estagiario'));
@@ -318,29 +335,31 @@ class RespostasController extends AppController
      * @return \Cake\Http\Response|null|void Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete(?string $id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
         try {
             $resposta = $this->Respostas->get($id);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('Registro não encontrado.'));
+
             return $this->redirect(['controller' => 'Respostas', 'action' => 'index']);
         }
-        
+
         try {
             $this->Authorization->authorize($resposta);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
-        
+
         if ($this->Respostas->delete($resposta)) {
             $this->Flash->success(__('Resposta excluída.'));
         } else {
             $this->Flash->error(__('Resposta não excluída. Tente novamente.'));
         }
-        
+
         return $this->redirect(['controller' => 'Respostas', 'action' => 'index']);
     }
 
@@ -352,60 +371,63 @@ class RespostasController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function imprimeresposta($id = null)
+    public function imprimeresposta(?string $id = null)
     {
-        $estagiario_id = $this->request->getQuery("estagiario_id");
+        $estagiario_id = $this->request->getQuery('estagiario_id');
 
         $this->Authorization->skipAuthorization();
 
         if ($estagiario_id === null) {
-            $this->Flash->error(__("Selecionar estagiário."));
+            $this->Flash->error(__('Selecionar estagiário.'));
+
             return $this->redirect([
-                "controller" => "estagiarios",
-                "action" => "index",
+                'controller' => 'estagiarios',
+                'action' => 'index',
             ]);
         }
- 
+
         try {
             $resposta = $this->Respostas->find()
                 ->contain([
-                    "Estagiarios" => [
-                        "Alunos",
-                        "Supervisores",
-                        "Professores",
-                        "Instituicoes",
+                    'Estagiarios' => [
+                        'Alunos',
+                        'Supervisores',
+                        'Professores',
+                        'Instituicoes',
                         ],
-                    "Questionarios" => [
-                        "Questoes",
+                    'Questionarios' => [
+                        'Questoes',
                         ],
                     ])
-                ->where(["Estagiarios.id" => $estagiario_id])
+                ->where(['Estagiarios.id' => $estagiario_id])
                 ->first();
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
-            $this->Flash->error(__("Resposta não foi encontrada."));
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('Resposta não foi encontrada.'));
+
             return $this->redirect([
-                "controller" => "estagiarios",
-                "action" => "view",
+                'controller' => 'estagiarios',
+                'action' => 'view',
                 $estagiario_id,
             ]);
         }
 
         if ($resposta === null) {
-            $this->Flash->error(__("Resposta não foi encontrada."));
+            $this->Flash->error(__('Resposta não foi encontrada.'));
+
             return $this->redirect([
-                "controller" => "estagiarios",
-                "action" => "view",
+                'controller' => 'estagiarios',
+                'action' => 'view',
                 $estagiario_id,
             ]);
         }
-        
+
         $this->viewBuilder()->enableAutoLayout(false);
-        $this->viewBuilder()->setClassName("CakePdf.Pdf");
-        $this->viewBuilder()->setOption("pdfConfig", [
-            "orientation" => "portrait",
-            "download" => true,
-            "filename" => "avaliacao_discente_" . $id . ".pdf",
+        $this->viewBuilder()->setClassName('CakePdf.Pdf');
+        $this->viewBuilder()->setOption('pdfConfig', [
+            'orientation' => 'portrait',
+            'download' => true,
+            'filename' => 'avaliacao_discente_' . $id . '.pdf',
         ]);
-        $this->set("resposta", $resposta);
+        $this->set('resposta', $resposta);
     }
 }

@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Authorization\Exception\ForbiddenException;
+use Cake\Datasource\Exception\RecordNotFoundException;
+
 /**
  * Visitas Controller
  *
@@ -22,8 +25,9 @@ class VisitasController extends AppController
     {
         try {
             $this->Authorization->authorize($this->Visitas);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
@@ -39,21 +43,23 @@ class VisitasController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view(?string $id = null)
     {
         try {
             $visita = $this->Visitas->get($id, [
                 'contain' => ['Instituicoes'],
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
-            $this->Flash->error(__('Nao ha registros de visitas para esse numero!'));
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('Não há registros de visitas para esse número!'));
+
             return $this->redirect(['action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($visita);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Erro ao carregar os dados. Tente novamente.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
@@ -70,8 +76,9 @@ class VisitasController extends AppController
         $visita = $this->Visitas->newEmptyEntity();
         try {
             $this->Authorization->authorize($visita);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
@@ -79,6 +86,7 @@ class VisitasController extends AppController
             $visita = $this->Visitas->patchEntity($visita, $this->request->getData());
             if ($this->Visitas->save($visita)) {
                 $this->Flash->success(__('Visita inserida.'));
+
                 return $this->redirect(['action' => 'view', $visita->id]);
             }
             $this->Flash->error(__('Visita não inserida.'));
@@ -94,21 +102,23 @@ class VisitasController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit(?string $id = null)
     {
         try {
             $visita = $this->Visitas->get($id, [
-                'contain' => ['Instituicoes']
+                'contain' => ['Instituicoes'],
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
-             $this->Flash->error(__('Nao ha registros de visitas para esse numero!'));
+        } catch (RecordNotFoundException $e) {
+             $this->Flash->error(__('Não há registros de visitas para esse número!'));
+
              return $this->redirect(['action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($visita);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
@@ -116,6 +126,7 @@ class VisitasController extends AppController
             $visita = $this->Visitas->patchEntity($visita, $this->request->getData());
             if ($this->Visitas->save($visita)) {
                 $this->Flash->success(__('Visita atualizada.'));
+
                 return $this->redirect(['action' => 'view', $visita->id]);
             }
             $this->Flash->error(__('Visita não atualizada.'));
@@ -131,28 +142,32 @@ class VisitasController extends AppController
      * @return \Cake\Http\Response|null|void Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete(?string $id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
         try {
             $visita = $this->Visitas->get($id);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
-            $this->Flash->error(__('Nao ha registros de visitas para esse numero!'));
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('Não há registros de visitas para esse número!'));
+
             return $this->redirect(['action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($visita);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['action' => 'index']);
         }
 
         if ($this->Visitas->delete($visita)) {
             $this->Flash->success(__('Visita excluída.'));
+
              return $this->redirect(['action' => 'index']);
         } else {
             $this->Flash->error(__('Visita não excluída.'));
+
              return $this->redirect(['action' => 'view', $visita->id]);
         }
     }

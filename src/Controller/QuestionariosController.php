@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Authorization\Controller\Component\AuthorizationComponent;
-use Authentication\Controller\Component\AuthenticationComponent;
+use Authorization\Exception\ForbiddenException;
+use Cake\Datasource\Exception\RecordNotFoundException;
 
 /**
  * Questionarios Controller
@@ -23,6 +23,7 @@ class QuestionariosController extends AppController
         $this->loadComponent('Authorization.Authorization');
         $this->loadComponent('Authentication.Authentication');
     }
+
     /**
      * Index method
      *
@@ -32,8 +33,9 @@ class QuestionariosController extends AppController
     {
         try {
             $this->Authorization->authorize($this->Questionarios);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
         $questionarios = $this->paginate($this->Questionarios);
@@ -47,21 +49,23 @@ class QuestionariosController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view(?string $id = null)
     {
         try {
             $questionario = $this->Questionarios->get($id, [
                 'contain' => ['Questoes'],
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('Registro não encontrado.'));
+
             return $this->redirect(['controller' => 'Questionarios', 'action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($questionario);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
         $this->set(compact('questionario'));
@@ -78,8 +82,9 @@ class QuestionariosController extends AppController
 
         try {
             $this->Authorization->authorize($questionario);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
 
@@ -87,6 +92,7 @@ class QuestionariosController extends AppController
             $questionario = $this->Questionarios->patchEntity($questionario, $this->request->getData());
             if ($this->Questionarios->save($questionario)) {
                 $this->Flash->success(__('Questionário inserido.'));
+
                 return $this->redirect(['controller' => 'Questionarios', 'action' => 'view', $questionario->id]);
             }
             $this->Flash->error(__('Questionário não inserido. Tente novamente.'));
@@ -101,28 +107,31 @@ class QuestionariosController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit(?string $id = null)
     {
         try {
             $questionario = $this->Questionarios->get($id, [
                 'contain' => [],
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('Registro não encontrado.'));
+
             return $this->redirect(['controller' => 'Questionarios', 'action' => 'index']);
         }
 
         try {
             $this->Authorization->authorize($questionario);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
-        
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $questionario = $this->Questionarios->patchEntity($questionario, $this->request->getData());
             if ($this->Questionarios->save($questionario)) {
                 $this->Flash->success(__('Questionário atualizado.'));
+
                 return $this->redirect(['controller' => 'Questionarios', 'action' => 'view', $questionario->id]);
             }
             $this->Flash->error(__('Questionário não atualizado. Tente novamente.'));
@@ -137,15 +146,16 @@ class QuestionariosController extends AppController
      * @return \Cake\Http\Response|null|void Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete(?string $id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
         try {
             $questionario = $this->Questionarios->get($id, [
                 'contain' => [],
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('Registro não encontrado.'));
+
             return $this->redirect(['controller' => 'Questionarios', 'action' => 'index']);
         }
 
@@ -156,22 +166,24 @@ class QuestionariosController extends AppController
 
         if ($respostasCount > 0) {
             $this->Flash->error(__('Este questionário possui respostas associadas. Exclua as respostas antes de excluir o questionário.'));
+
             return $this->redirect(['controller' => 'Questionarios', 'action' => 'view', $questionario->id]);
         }
-        
+
         try {
             $this->Authorization->authorize($questionario);
-        } catch (\Authorization\Exception\ForbiddenException $e) {
+        } catch (ForbiddenException $e) {
             $this->Flash->error(__('Acesso negado. Você não tem permissão para acessar esta página.'));
+
             return $this->redirect(['controller' => 'Muralestagiarios', 'action' => 'index']);
         }
-        
+
         if ($this->Questionarios->delete($questionario)) {
             $this->Flash->success(__('Questionário excluído.'));
         } else {
             $this->Flash->error(__('Questionário não excluído. Tente novamente.'));
         }
-        
+
         return $this->redirect(['controller' => 'Questionarios', 'action' => 'index']);
     }
 }
