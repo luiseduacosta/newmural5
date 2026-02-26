@@ -9,6 +9,14 @@
 
 <?= $this->element('menu_mural') ?>
 
+<?php
+$user = $this->request->getAttribute('identity');
+if ($user && $user->categoria == 1): ?>
+    <div class="container mt-2">
+        <button id="btn-report-md" class="btn btn-info btn-sm"><i class="fas fa-download"></i> Baixar Documentação</button>
+    </div>
+<?php endif; ?>
+
 <script>
     var base_url = "<?= $this->Html->Url->build(['controller' => 'Alunos', 'action' => 'planilhaseguro']); ?>";
 
@@ -182,4 +190,52 @@ function sortTable(columnIndex, type) {
   rows.forEach(row => fragment.appendChild(row));
   tbody.appendChild(fragment);
 }
+
+// Generate and download Markdown report
+$(document).ready(function() {
+  $("#btn-report-md").on("click", function () {
+    const table = document.getElementById("sortableTable");
+    if (!table) return;
+    
+    const tbody = table.tBodies[0];
+    if (!tbody || tbody.rows.length === 0) {
+      alert("Não há dados para exportar.");
+      return;
+    }
+    
+    const periodo = $("#periodo").val() || '<?= $periodoselecionado ?>';
+
+    let markdown = `# Relatório de Seguro de Vida - Período: ${periodo}\n\n`;
+    markdown += `| Nome | CPF | Nascimento | DRE | Curso | Nível | Ajuste 2020 | Período | Início | Final | Instituição |\n`;
+    markdown += `| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n`;
+
+    Array.from(tbody.rows).forEach(row => {
+      const cells = row.cells;
+      const nome = cells[0]?.textContent.trim() || "-";
+      const cpf = cells[1]?.textContent.trim() || "-";
+      const nascimento = cells[2]?.textContent.trim() || "-";
+      const dre = cells[3]?.textContent.trim() || "-";
+      const curso = cells[4]?.textContent.trim() || "-";
+      const nivel = cells[5]?.textContent.trim() || "-";
+      const ajuste2020 = cells[6]?.textContent.trim() || "-";
+      const periodo = cells[7]?.textContent.trim() || "-";
+      const inicio = cells[8]?.textContent.trim() || "-";
+      const final = cells[9]?.textContent.trim() || "-";
+      const instituicao = cells[10]?.textContent.trim() || "-";
+
+      markdown += `| ${nome} | ${cpf} | ${nascimento} | ${dre} | ${curso} | ${nivel} | ${ajuste2020} | ${periodo} | ${inicio} | ${final} | ${instituicao} |\n`;
+    });
+
+    const blob = new Blob([markdown], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `relatorio_estagiarios_${periodo.replace(/\//g, '-')}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+});
+
 </script>

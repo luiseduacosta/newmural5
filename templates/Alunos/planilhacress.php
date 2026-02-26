@@ -7,6 +7,16 @@
 
 <?= $this->element('menu_mural') ?>
 
+<?php
+$user = $this->request->getAttribute('identity');
+if ($user && $user->categoria == 1): ?>
+    <div class="container mt-2">
+        <button id="btn-report-md" class="btn btn-info btn-sm">
+            <i class="fas fa-download"></i>Baixar Relatório (Markdown)
+        </button>
+    </div>
+<?php endif; ?>
+
 <script>
     var base_url = "<?= $this->Html->Url->build(['controller' => 'alunos', 'action' => 'planilhacress']); ?>";
 
@@ -149,4 +159,48 @@ function sortTable(columnIndex, type) {
   rows.forEach(row => fragment.appendChild(row));
   tbody.appendChild(fragment);
 }
+
+// Generate and download Markdown report
+$(document).ready(function() {
+  $("#btn-report-md").on("click", function () {
+    const table = document.getElementById("sortableTable");
+    if (!table) return;
+    
+    const tbody = table.tBodies[0];
+    if (!tbody || tbody.rows.length === 0) {
+      alert("Não há dados para exportar.");
+      return;
+    }
+    
+    const periodo = $("#EstudantesPeriodo").val() || '<?= $periodoselecionado ?>';
+
+    let markdown = `# Relatório de Estagiários - Período: ${periodo}\n\n`;
+    markdown += `| Aluno | Instituição | Endereço | CEP | Bairro | Supervisor | CRESS | Professor |\n`;
+    markdown += `| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n`;
+
+    Array.from(tbody.rows).forEach(row => {
+      const cells = row.cells;
+      const aluno = cells[0]?.textContent.trim() || "-";
+      const instituicao = cells[1]?.textContent.trim() || "-";
+      const endereco = cells[2]?.textContent.trim() || "-";
+      const cep = cells[3]?.textContent.trim() || "-";
+      const bairro = cells[4]?.textContent.trim() || "-";
+      const supervisor = cells[5]?.textContent.trim() || "-";
+      const cress = cells[6]?.textContent.trim() || "-";
+      const professor = cells[7]?.textContent.trim() || "-";
+
+      markdown += `| ${aluno} | ${instituicao} | ${endereco} | ${cep} | ${bairro} | ${supervisor} | ${cress} | ${professor} |\n`;
+    });
+
+    const blob = new Blob([markdown], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `relatorio_estagiarios_${periodo.replace(/\//g, '-')}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+});
 </script>
