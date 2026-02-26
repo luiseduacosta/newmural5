@@ -77,6 +77,8 @@ use Cake\I18n\Time;
                     <th>
                         <?= h($key) ?>
                     </th>
+                </tr>
+                <tr>    
                     <td>
                         <?= h($value) ?>
                     </td>

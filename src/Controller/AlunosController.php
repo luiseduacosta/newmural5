@@ -863,7 +863,8 @@ class AlunosController extends AppController
                 $t_seguro[$i]['id'] = $c_seguro->aluno->id;
                 $t_seguro[$i]['nome'] = $c_seguro->aluno->nome ?: 's/d';
                 $t_seguro[$i]['cpf'] = $c_seguro->aluno->cpf ?: 's/d';
-                $t_seguro[$i]['nascimento'] = $c_seguro->aluno->nascimento ? $c_seguro->aluno->nascimento->format('d/m/Y') : 's/d';
+                // Nascimento is a date field. Format it as 'd/m/Y' if it has a value, otherwise use 's/d'.
+                $t_seguro[$i]['nascimento'] = $c_seguro->aluno->nascimento ? $c_seguro->aluno->nascimento->i18nFormat('dd/MM/yyyy') : 's/d';
                 $t_seguro[$i]['sexo'] = '';
                 $t_seguro[$i]['registro'] = $c_seguro->aluno->registro ?: 's/d';
             } else {
