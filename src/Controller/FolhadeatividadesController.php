@@ -173,11 +173,12 @@ class FolhadeatividadesController extends AppController
             return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
         }
 
-        $estagiario = $this->Folhadeatividades->Estagiarios
+        $estagiario = $this->fetchTable('Estagiarios')
             ->find()
             ->contain(['Alunos'])
             ->where(['Estagiarios.id' => $estagiario_id])
             ->first();
+
 
         if (!$estagiario) {
             $this->Flash->error(__('Estagiário não encontrado'));
@@ -204,7 +205,6 @@ class FolhadeatividadesController extends AppController
             }
             $this->Flash->error(__('Atividade não foi cadastrada. Tente mais uma vez.'));
         }
-
         $this->set(compact('folhadeatividade', 'estagiario'));
     }
 
@@ -317,9 +317,9 @@ class FolhadeatividadesController extends AppController
             ->first();
 
         if (!$estagiario) {
-             $this->Flash->error(__('Estagiário não encontrado.'));
+            $this->Flash->error(__('Estagiário não encontrado.'));
 
-             return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
+            return $this->redirect(['controller' => 'Estagiarios', 'action' => 'index']);
         }
 
         $folha = $estagiario->folhadeatividades; // already contained

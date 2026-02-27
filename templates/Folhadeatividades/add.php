@@ -27,7 +27,12 @@ $user = $this->getRequest()->getAttribute('identity');
         <fieldset>
             <legend><?= __('Adicionar atividade') ?></legend>
             <?php
-            echo $this->Form->control('estagiario_id', ['options' => [$estagiario->id => $estagiario->aluno->nome], 'readonly', 'class' => 'form-control']);
+            echo $this->Form->control('estagiario_id', ['value' => $estagiario->id, 'options' => [$estagiario->id => $estagiario->aluno->nome], 'readonly' => true, 
+            'templates' => [
+                'label' => '<div class="col-sm-3"><label class="form-label">{{text}}</label></div>',
+                'select' => '<div class="col-sm-9"><select name="{{name}}" class="form-control" {{attrs}}>{{content}}</select></div>',
+                ]
+            ]);
             echo $this->Form->control('dia', ['class' => 'form-control']);
             echo $this->Form->control('inicio', ['label' => __('Horário de início'), 'class' => 'form-control']);
             echo $this->Form->control('final', ['label' => __('Horário de finalização'), 'class' => 'form-control']);

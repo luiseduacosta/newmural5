@@ -20,46 +20,36 @@ $user = $this->getRequest()->getAttribute('identity');
                 $this->Form->postLink(
                     __('Excluir'),
                     ['action' => 'delete', $folhadeatividade->id],
-                    ['confirm' => __('Tem certeza que quer excluir esta atividade # {0}?', $folhadeatividade->id), 'class' => 'btn btn-danger']
+                    ['confirm' => __('Tem certeza que quer excluir esta atividade # {0}?', $folhadeatividade->id), 'class' => 'btn btn-danger me-1']
             )
             ?>
         </li>
         <?php endif; ?>
         <li class="nav-item">
-            <?= $this->Html->link(__('Lista de atividades'), ['action' => 'index', $estagiario->estagiario->id], ['class' => 'btn btn-primary']) ?>
+            <?= $this->Html->link(__('Lista de atividades'), ['action' => 'index', $estagiario->id], ['class' => 'btn btn-primary']) ?>
         </li>
     </ul>
 </nav>        
+
+<?= $this->element('templates') ?>
 
 <div class="container col-lg-8 shadow p-3 mb-5 bg-white rounded">
         <?= $this->Form->create($folhadeatividade) ?>
         <fieldset>
             <legend><?= __('Editar atividade') ?></legend>
             <?php
-            echo $this->Form->control('estagiario_id', ['options' => [$estagiario->estagiario->id => $estagiario->estagiario->estudante->nome]]);
-            echo $this->Form->control('dia');
-            ?>
-            <table class="table table-bordered">
-                <tr>
-                    <td>
-                        <?= __('Horário de início') ?>
-                    </td>
-                    <td>
-                        <?php echo $this->Form->control('inicio', ['label' => False]); ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <?= __('Horário de finalização') ?>
-                    </td>
-                    <td>
-                        <?php echo $this->Form->control('final', ['label' => False, 'class' => 'form-control']); ?>
-                    </td>
-                </tr>
-            </table>
-            <?php echo $this->Form->control('atividade', ['class' => 'form-control']); ?>
-            <?php echo $this->Form->control('horario', ['type' => 'hidden', 'empty' => true]); ?>
-        </fieldset>
+            echo $this->Form->control('estagiario_id', ['options' => [$estagiario->id => $estagiario->aluno->nome], 'readonly' => true,
+                'templates' => [
+                    'label' => '<div class="col-sm-3"><label class="form-label">{{text}}</label></div>',
+                    'select' => '<div class="col-sm-9"><select name="{{name}}" class="form-control" {{attrs}}>{{content}}</select></div>',
+                ]
+            ]);
+            echo $this->Form->control('dia', ['label' => __('Dia')]);
+            echo $this->Form->control('inicio', ['label' => __('Horário de início')]);
+            echo $this->Form->control('final', ['label' => __('Horário de finalização')]);
+            echo $this->Form->control('atividade', ['label' => __('Atividade')]);
+            echo $this->Form->control('horario', ['type' => 'hidden', 'empty' => true]);
+        ?>
         <div class="d-flex justify-content-end">
             <?= $this->Form->button(__('Confirmar'), ['class' => 'btn btn-primary']) ?>
         </div>

@@ -20,7 +20,7 @@ class FolhadeatividadePolicy {
      * @return bool
      */
     public function canAdd(?IdentityInterface $user, Folhadeatividade $folhadeatividade) {
-        return isset($user->categoria) && $user->categoria == '1' || $user->categoria == '2';
+        return isset($user->categoria) && ($user->categoria == '1' || $user->categoria == '2');
     }
 
     /**
@@ -34,8 +34,8 @@ class FolhadeatividadePolicy {
         if ($user->categoria == '1') {
             return true;
         } elseif ($user->categoria == '2') {
-            $estagiario = TableRegistry::getTableLocator()->get('Estagiario')->get($user->aluno_id);
-            return $folhadeatividade->estagiario_id == $estagiario->aluno_id;
+            $estagiario = \Cake\ORM\TableRegistry::getTableLocator()->get('Estagiarios')->get($user->aluno_id);
+            return $folhadeatividade->estagiario_id == $estagiario->id;
         }
         return false;
     }
@@ -48,11 +48,11 @@ class FolhadeatividadePolicy {
      * @return bool
      */
     public function canDelete(?IdentityInterface $user, Folhadeatividade $folhadeatividade) {
-                if ($user->categoria == '1') {
+        if ($user->categoria == '1') {
             return true;
         } elseif ($user->categoria == '2') {
-            $estagiario = TableRegistry::getTableLocator()->get('Estagiario')->get($user->aluno_id);
-            return $folhadeatividade->estagiario_id == $estagiario->aluno_id;
+            $estagiario = \Cake\ORM\TableRegistry::getTableLocator()->get('Estagiarios')->get($user->aluno_id);
+            return $folhadeatividade->estagiario_id == $estagiario->id;
         }
         return false;
     }

@@ -1,13 +1,19 @@
 <?php
-/*
- * @var \Cake\I18n\DateTime $hoje
+/**
+ * Termo de Compromisso PDF
  * 
+ * @var \App\Model\Entity\Estagiario $estagiario
+ * @var \App\Model\Entity\Configuracao $configuracao
  */
+
 use Cake\I18n\DateTime;
 use Cake\I18n\I18n;
 
 I18n::setLocale('pt-BR');
-$hoje = DateTime::now('America/Sao_Paulo', 'pt-BR');
+$hoje = DateTime::now('America/Sao_Paulo', 'pt_BR');
+
+$this->layout = 'pdf/default';
+$this->assign('title', 'Termo de Compromisso');
 ?>
 
 <style>

@@ -588,64 +588,6 @@ class EstagiariosController extends AppController
         $this->set('estagiario', $estagiario);
     }
 
-    public function selecionaavaliacaodiscente($id = null)
-    {
-        $this->Authorization->skipAuthorization();
-        $estagiario_id = $this->getRequest()->getQuery('estagiario_id');
-
-        if (empty($estagiario_id)) {
-            if (isset($this->user) && $this->user->categoria == '2') {
-                $estagiario = $this->Estagiarios
-                    ->find()
-                    ->contain(['Alunos', 'Supervisores', 'Instituicoes'])
-                    ->where(['Estagiarios.aluno_id' => $this->user->aluno_id])
-                    ->first();
-            } else {
-                 $this->Flash->error(__('Selecionar o estudante estagiário'));
-
-                 return $this->redirect(['controller' => 'Alunos', 'action' => 'index']);
-            }
-        } else {
-            $estagiario = $this->Estagiarios
-                ->find()
-                ->contain(['Alunos', 'Supervisores', 'Instituicoes'])
-                ->where(['Estagiarios.id' => $estagiario_id])
-                ->first();
-        }
-        $this->set('estagiario', $estagiario);
-    }
-
-    public function avaliacaodiscentepdf($id = null)
-    {
-        $this->Authorization->skipAuthorization();
-        $estagiario_id = $this->getRequest()->getQuery('estagiario_id');
-
-        if (!$estagiario_id) {
-             $this->Flash->error(__('Sem estagiarios cadastrados'));
-
-             return $this->redirect(['action' => 'index']);
-        }
-
-        try {
-            $estagiario = $this->Estagiarios->get($estagiario_id, [
-                'contain' => ['Alunos', 'Supervisores', 'Instituicoes', 'Professores', 'Avaliacoes'],
-            ]);
-        } catch (RecordNotFoundException $e) {
-            $this->Flash->error(__('Estagiário não encontrado.'));
-
-            return $this->redirect(['action' => 'index']);
-        }
-
-        $this->viewBuilder()->enableAutoLayout(false);
-        $this->viewBuilder()->setClassName('CakePdf.Pdf');
-        $this->viewBuilder()->setOption('pdfConfig', [
-            'orientation' => 'portrait',
-            'download' => true,
-            'filename' => 'avaliacao_discente_' . $estagiario_id . '.pdf',
-        ]);
-        $this->set('estagiario', $estagiario);
-    }
-
     /**
      * Edit method
      *

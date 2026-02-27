@@ -6,6 +6,7 @@ namespace App\Controller;
 use Authorization\Exception\ForbiddenException;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Exception;
+use PhpParser\Node\Expr\Cast\Object_;
 
 /**
  * Respostas Controller
@@ -403,31 +404,31 @@ class RespostasController extends AppController
                 ->first();
         } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('Resposta não foi encontrada.'));
-
-            return $this->redirect([
-                'controller' => 'estagiarios',
-                'action' => 'view',
-                $estagiario_id,
-            ]);
         }
 
+        // Nothing happens if no resposta found, but we want to generate an empty PDF with student info
         if ($resposta === null) {
-            $this->Flash->error(__('Resposta não foi encontrada.'));
+            $this->Flash->error(__('Avaliação não realizada.'));
+            echo 'Nenhuma avaliação encontrada para este estagiário. Gerando PDF vazio com as informações do estagiário...';
+            // Fetch a empty record resposta with question and without answers to avoid errors in the template
+            $questoes = $this->fetchTable('Questoes')->find()
+                ->where(['Questoes.questionario_id' => 1])
+                ->all();
 
-            return $this->redirect([
-                'controller' => 'estagiarios',
-                'action' => 'view',
-                $estagiario_id,
-            ]);
-        }
+            $estagiario = $this->fetchTable('Estagiarios')->get($estagiario_id, [
+                    'contain' => ['Alunos', 'Supervisores', 'Professores', 'Instituicoes'],
+                ]);
 
-        $this->viewBuilder()->enableAutoLayout(false);
+            $respostavazia = ['respostas' => $questoes, 'estagiario' => $estagiario];
+            }
+
+        $this->viewBuilder()->enableAutoLayout(enable: false);
         $this->viewBuilder()->setClassName('CakePdf.Pdf');
         $this->viewBuilder()->setOption('pdfConfig', [
             'orientation' => 'portrait',
             'download' => true,
             'filename' => 'avaliacao_discente_' . $id . '.pdf',
         ]);
-        $this->set('resposta', $resposta);
+        $this->set('resposta', $resposta ?? (object)$respostavazia);
     }
 }

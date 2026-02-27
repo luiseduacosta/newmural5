@@ -1,74 +1,46 @@
-<style>
-
-    table {
-        width: 100%;
-    }
-
-    table tr td {
-        border: 1px solid black;
-        border-collapse: collapse;
-        font-size: 80%;
-        height: 20px;
-    }
-
-    td {
-        text-align: center !important;
-    }
-
-    .auxiliar {
-        border: 1px solid white;
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 1px 1px;
-    }
-
-</style>
-
 <?php
+/**
+ * Folha de Atividades PDF
+ * 
+ * @var \App\Model\Entity\Estagiario $estagiario
+ */
 
-$dia = strftime('%e', time());
-$mes = strftime('%B', time());
-$ano = strftime('%Y', time());
+use Cake\I18n\DateTime;
+use Cake\I18n\I18n;
 
-$supervisora = isset($estagiario->supervisor->nome);
-if ($supervisora) {
-    $supervisora = $estagiario->supervisor->nome;
-} else {
+I18n::setLocale('pt-BR');
+$hoje = DateTime::now('America/Sao_Paulo', 'pt_BR');
+
+$this->layout = 'pdf/default';
+$this->assign('title', 'Folha de Atividades');
+
+$supervisora = $estagiario->supervisor->nome ?? null;
+if (empty($supervisora)) {
     $supervisora = "______________________________________";
 }
 
-$regiao = isset($estagiario->supervisor->regiao);
-if ($regiao) {
-    $regiao = $estagiario->supervisor->regiao;
-} else {
+$regiao = $estagiario->supervisor->regiao ?? null;
+if (empty($regiao)) {
     $regiao = '___';
 }
 
-$cress = isset($estagiario->supervisor->cress);
-if ($cress) {
-    $cress = $estagiario->supervisor->cress;
-} else {
+$cress = $estagiario->supervisor->cress ?? null;
+if (empty($cress)) {
     $cress = '_______';
 }
 
-$codigo_celular = isset($estagiario->supervisor->cod_celular);
-if ($codigo_celular) {
-    $codigo_celular = $estagiario->supervisor->cod_celular;
-} else {
+$codigo_celular = $estagiario->supervisor->cod_celular ?? null;
+if (empty($codigo_celular)) {
     $codigo_celular = '____';
 }
 
-$celular = isset($estagiario->supervisor->celular);
-if ($celular) {
-    $celular = $estagiario->supervisor->celular;
-} else {
+$celular = $estagiario->supervisor->celular ?? null;
+if (empty($celular)) {
     $celular = '_______________';
 }
 
-$professora = isset($estagiario->docente->nome);
-if ($professora) {
-    $professora = $estagiario->docente->nome;
-} else {
+$professora = $estagiario->docente->nome ?? null;
+if (empty($professora)) {
     $professora = "______________________________________";
 }
 ?>
@@ -1093,7 +1065,7 @@ if ($professora) {
 </p>
 
 <p style="text-align:right; line-height:100%; font-size: 90%">
-    Rio de Janeiro, <?= $dia; ?> de <?= $mes; ?> de <?= $ano; ?>
+    Rio de Janeiro, <?= $hoje->i18nFormat("dd ' de ' MMMM ' de ' yyyy") ?>
 </p>
 
 <div>

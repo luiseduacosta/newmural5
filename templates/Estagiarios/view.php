@@ -461,13 +461,13 @@
                         <p>Este estagiário ainda não possui avaliação.</p>
                         <hr>
                         <?php if (isset($user->categoria)): ?>
-                            <p class="mb-0">Clique no botão
+                            <p class="mb-0">Clique no botão para
                                 <?= $this->Html->link(
-                                    "Preencher Avaliação",
-                                    ['controller' => 'respostas', 'action' => 'add', '?' => ['estagiario_id' => $estagiario->id]],
+                                    "imprimir",
+                                    ['controller' => 'respostas', 'action' => 'imprimeresposta', '?' => ['estagiario_id' => $estagiario->id]],
                                     ['class' => 'btn btn-sm btn-info me-1']
                                 ) ?>
-                                para adicionar uma avaliação.
+                                uma folha de avaliação.
                             </p>
                         <?php endif; ?>
                     </div>
